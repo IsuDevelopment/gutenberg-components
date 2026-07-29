@@ -1,0 +1,1 @@
+export { TaxonomySelectControl } from './TaxonomySelectControl';

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+# Vendored third-party repos studied for prior art only (they carry their own .git).
+.agents/examples
+.tmp/
+.turbo/
+*.log
+.DS_Store
+.env
+.env.*

@@ -1,0 +1,74 @@
+{
+	"name": "@isudev/gutenberg",
+	"version": "0.1.0",
+	"description": "Standalone components, controls, fields and hooks for the WordPress Gutenberg editor.",
+	"license": "MIT",
+	"type": "module",
+	"sideEffects": false,
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./appenders": {
+			"types": "./dist/appenders/index.d.ts",
+			"import": "./dist/appenders/index.js"
+		},
+		"./components": {
+			"types": "./dist/components/index.d.ts",
+			"import": "./dist/components/index.js"
+		},
+		"./controls": {
+			"types": "./dist/controls/index.d.ts",
+			"import": "./dist/controls/index.js"
+		},
+		"./fields": {
+			"types": "./dist/fields/index.d.ts",
+			"import": "./dist/fields/index.js"
+		},
+		"./meta": {
+			"types": "./dist/meta/index.d.ts",
+			"import": "./dist/meta/index.js"
+		},
+		"./taxonomy": {
+			"types": "./dist/taxonomy/index.d.ts",
+			"import": "./dist/taxonomy/index.js"
+		},
+		"./hooks": {
+			"types": "./dist/hooks/index.d.ts",
+			"import": "./dist/hooks/index.js"
+		}
+	},
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"clean": "rm -rf dist .turbo node_modules",
+		"typecheck": "tsc --noEmit",
+		"test": "echo \"TODO: add Jest + @testing-library/react (stage 6.5)\" && exit 0"
+	},
+	"peerDependencies": {
+		"@wordpress/block-editor": "*",
+		"@wordpress/components": "*",
+		"@wordpress/core-data": "*",
+		"@wordpress/data": "*",
+		"@wordpress/editor": "*",
+		"@wordpress/element": "*",
+		"@wordpress/i18n": "*",
+		"react": "^18.0.0"
+	},
+	"devDependencies": {
+		"@types/react": "^18.3.0",
+		"@wordpress/block-editor": "^14.19.0",
+		"@wordpress/components": "^28.13.0",
+		"@wordpress/core-data": "^7.24.0",
+		"@wordpress/data": "^10.24.0",
+		"@wordpress/editor": "^14.24.0",
+		"@wordpress/element": "^6.24.0",
+		"@wordpress/i18n": "^5.24.0",
+		"tsup": "^8.3.0",
+		"typescript": "^5.6.0"
+	}
+}

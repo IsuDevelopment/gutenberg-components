@@ -1,0 +1,16 @@
+{
+	"name": "@isudev/test-blocks",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Example WordPress plugin exercising @isudev/gutenberg in the editor.",
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start"
+	},
+	"dependencies": {
+		"@isudev/gutenberg": "*"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}
