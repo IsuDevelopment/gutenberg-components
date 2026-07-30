@@ -103,4 +103,36 @@ Done:
    stays `false` until then; see the BreakpointSwitcher README and decision 0001 for what
    must change when one ships.
 
+### Carried over from the `feat/breakpoint-switcher` review
+
+Real but deliberately not fixed in that branch. None blocks anything; each is recorded so it
+is not rediscovered from scratch.
+
+6. **Source maps ship without their sources.** `npm pack` includes `dist/**/*.js.map`, but
+   `files` publishes no `src/*.ts`, so the maps are dead weight for consumers. Decide: publish
+   `src`, or drop `sourcemap` for release builds.
+7. **The README drift guard cannot handle `extends`.** `propsFromInterface` now throws loudly
+   on `heritageClauses` instead of silently under-counting, but that means
+   `ResponsiveControlRenderArgs` — which extends `UseResponsiveAttributeResult`, and is the
+   obvious next entry for the guard — cannot join `CASES` until the helper resolves inherited
+   members. Consequence today: those inherited render-prop fields (`hasValue`, `hasOwnValue`,
+   `attrNameForBreakpoint`, `reset`, `resetAll`, `breakpoint`) are undocumented and unguarded.
+8. **`bindings/`, `types/` and `utils/` build to `dist/` with no `exports` key**, so they ship
+   as orphan files (~2 KB). Nothing is truly unreachable, since the root barrel re-exports
+   them. Consider adding `./bindings` — `AGENTS.md` calls the binding engine the central design
+   idea, yet it has no subpath of its own.
+9. **`useDebouncedValue` and `usePrevious` still import from `@wordpress/element`** while all
+   newer code imports from `react` (decision 0002 amendment). Migrating them is what finally
+   makes `@wordpress/element` droppable from the peer list.
+10. **Three ways to resolve "the active breakpoint"** exist across `useBreakpoint`,
+    `useResponsiveAttribute` and `DropdownSwitcher`, with different fallbacks (base vs
+    `breakpoints[0]`). They coincide now that the base is validated to be first, so this is
+    cosmetic — but one kernel helper would collapse all three.
+11. **`useValidatedBreakpoints` is public, named as a hook, and calls no hooks.** It is an
+    internal guard carrying React's hook-rules expectations for no reason. Renaming or
+    unexporting it is a pre-1.0 cleanup.
+12. **`AGENTS.md`'s "Build & tooling (to finalize in Stage 1)" section is stale** — the JSX
+    runtime question it poses was settled by decision 0002, and `tsup` is configured with
+    discovered entries rather than `preserveModules`.
+
 See `architecture-plan.md` for the full staged checklist.
