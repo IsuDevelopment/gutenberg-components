@@ -4,12 +4,13 @@ import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import { SelectField } from '@isudev/gutenberg/fields';
+import { TaxonomySelectControl } from '@isudev/gutenberg/taxonomy';
 
 import metadata from './block.json';
 
 registerBlockType( metadata.name, {
 	edit( { attributes, setAttributes } ) {
-		const { layout, postType } = attributes;
+		const { layout, postType, taxonomySelected } = attributes;
 		const blockProps = useBlockProps();
 
 		return (
@@ -38,6 +39,12 @@ registerBlockType( metadata.name, {
 								setAttributes( { postType: next } )
 							}
 						/>
+
+						<TaxonomySelectControl
+							label={ __( 'Taxonomy', 'isudev-test-blocks' ) }
+							taxonomy={ 'category' }
+						/>
+
 					</PanelBody>
 				</InspectorControls>
 
@@ -46,6 +53,7 @@ registerBlockType( metadata.name, {
 					{ ' — ' }
 					{ __( 'layout', 'isudev-test-blocks' ) }: <strong>{ layout }</strong>
 					{ ', ' }
+					{ __( 'taxonomy', 'isudev-test-blocks' ) }: <strong>{ taxonomySelected || '—' }</strong>{ ', ' }
 					{ __( 'post type', 'isudev-test-blocks' ) }:{ ' ' }
 					<strong>{ postType || '—' }</strong>
 				</p>

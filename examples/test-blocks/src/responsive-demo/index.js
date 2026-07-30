@@ -54,12 +54,31 @@ registerBlockType( metadata.name, {
 							attributes={ attributes }
 							setAttributes={ setAttributes }
 						>
-							{ ( { value, inheritedValue, onChange } ) => (
+							{ ( {
+								value,
+								inheritedValue,
+								hasOwnValue,
+								onChange,
+							} ) => (
+								/*
+								 * `RangeControl` has no `placeholder` — it spreads unknown props
+								 * onto `<input type="range">`, where one is inert. So the slider
+								 * shows the resolved value and `help` says where it came from.
+								 * Bind `inheritedValue` to a real `placeholder` only on controls
+								 * that have one, such as `TextControl`.
+								 */
 								<RangeControl
 									min={ 0 }
 									max={ 100 }
-									value={ value }
-									placeholder={ inheritedValue }
+									value={ value ?? inheritedValue }
+									help={
+										hasOwnValue || inheritedValue === undefined
+											? undefined
+											: `${ __(
+													'Inherited:',
+													'isudev-test-blocks'
+											  ) } ${ inheritedValue }`
+									}
 									onChange={ onChange }
 									__next40pxDefaultSize
 									__nextHasNoMarginBottom

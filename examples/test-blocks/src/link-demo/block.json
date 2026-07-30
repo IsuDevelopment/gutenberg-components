@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "isudev/link-demo",
+	"title": "ISUdev Link Demo",
+	"category": "widgets",
+	"icon": "admin-links",
+	"description": "Demonstrates arbitrary, block-toolbar and editable-text link controls.",
+	"attributes": {
+		"cardTitle": { "type": "string", "default": "Linked card" },
+		"cardLink": { "type": "object", "default": {} },
+		"linkText": { "type": "string", "default": "Read more" },
+		"textLink": { "type": "object", "default": {} }
+	},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "isudev-test-blocks",
+	"editorScript": "file:./index.js"
+}
