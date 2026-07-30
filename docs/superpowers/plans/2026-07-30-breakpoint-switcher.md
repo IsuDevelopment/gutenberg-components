@@ -448,9 +448,26 @@ npm run build --workspace=packages/gutenberg
 npm run verify:package --workspace=packages/gutenberg
 ```
 
-Expected: `dist/` contains `index.js`, `breakpoints/index.js`, `components/index.js`, `controls/index.js`, `fields/index.js`, `fields/SelectField/index.js`, `fields/RadioField/index.js`, `hooks/index.js`, `meta/index.js`, `taxonomy/index.js`, `appenders/index.js`, each with a matching `.d.ts`. `publint` and `attw` both report no problems.
+Expected: `dist/` mirrors `src/` — `index.js`, `components/index.js`, `controls/index.js`,
+`fields/index.js`, `fields/SelectField/index.js`, `fields/RadioField/index.js`,
+`hooks/index.js`, `meta/index.js`, `taxonomy/index.js`, `appenders/index.js`,
+`bindings/index.js`, `types/index.js`, `utils/index.js`, each with a matching `.d.ts`. The
+presence of `fields/SelectField/index.js` is the thing to confirm: it proves the per-folder
+convention the wildcards depend on actually produces a separate entry.
 
-If `attw` complains about a wildcard subpath, it is telling you a folder has no `index.ts` — fix the source layout, not the exports map.
+**`verify:package` is expected to FAIL at this point, with exactly six errors.** Three
+export targets do not exist yet: `./breakpoints` (Task 4 creates `src/breakpoints/`), and the
+`./components/*` and `./controls/*` wildcards (no folder under those categories uses the
+per-folder convention until Tasks 7 and 8). `./fields/*` already passes, which is the proof
+that the wildcard mechanism itself is correct.
+
+This is a pre-publish gate reporting, accurately, that a half-built package is not
+publishable. Do **not** delete the export keys, stub the directories, or drop `--strict` to
+get a green run — the errors disappear on their own as Tasks 4, 7 and 8 land, and Task 10
+step 6 is where `verify:package` must come back clean. Record the exact output in your report.
+
+(An earlier draft of this plan expected a clean run here. That was a sequencing error in the
+plan, corrected after Task 3 surfaced it.)
 
 - [ ] **Step 5: Correct the stale note in the development instructions**
 
