@@ -23,11 +23,12 @@ export default defineConfig( {
 	treeshake: true,
 	/**
 	 * WordPress exposes most @wordpress/* packages as script globals, and
-	 * DependencyExtractionWebpackPlugin maps bare imports onto them. Three packages are
-	 * NOT exposed that way and are meant to be bundled by the consumer's build:
-	 * @wordpress/icons, @wordpress/interface, @wordpress/style-engine. We keep them as
-	 * bare imports too (they are declared peer dependencies), so the consumer bundles a
-	 * single copy rather than us inlining one per entry point.
+	 * DependencyExtractionWebpackPlugin maps bare imports onto them. A handful are NOT
+	 * exposed that way and are meant to be bundled by the consumer's build — as of DEWP
+	 * 6.50.0: admin-ui, dataviews, fields, grid, icons, interface, style-runtime, ui,
+	 * undo-manager, views. We keep those as bare imports too, so the consumer bundles a
+	 * single copy rather than us inlining one per entry point. Any package from that list
+	 * we actually import must be declared a peer dependency — today only @wordpress/icons.
 	 */
 	external: [ /^@wordpress\//, 'react', 'react-dom', 'react/jsx-runtime' ],
 	esbuildOptions( options ) {
