@@ -3,6 +3,8 @@ dist/
 build/
 # Vendored third-party repos studied for prior art only (they carry their own .git).
 .agents/examples
+# Scratch workspace for plan execution (ledgers, briefs, review packages).
+.superpowers/
 .tmp/
 .turbo/
 *.log
