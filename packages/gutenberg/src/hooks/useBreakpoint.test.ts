@@ -1,21 +1,24 @@
 import { act, renderHook } from '@testing-library/react';
-import { useSelect } from '@wordpress/data';
 import { useBreakpoint } from './useBreakpoint';
 
 const setDeviceType = jest.fn();
+let editorDeviceTypeFromStore: string | undefined;
 
 jest.mock( '@wordpress/data', () => ( {
-	useSelect: jest.fn(),
+	// Invoke the real mapSelect callback so the hook's own read-path logic
+	// (including the lowercase transform) is exercised rather than bypassed.
+	useSelect: ( mapSelect: ( select: unknown ) => unknown ) =>
+		mapSelect( () => ( {
+			getDeviceType: () => editorDeviceTypeFromStore,
+		} ) ),
 	useDispatch: () => ( { setDeviceType } ),
 } ) );
 
 jest.mock( '@wordpress/editor', () => ( { store: 'core/editor' } ) );
 
-const mockedUseSelect = useSelect as unknown as jest.Mock;
-
 beforeEach( () => {
 	jest.clearAllMocks();
-	mockedUseSelect.mockReturnValue( null );
+	editorDeviceTypeFromStore = undefined;
 } );
 
 describe( 'useBreakpoint', () => {
@@ -41,7 +44,7 @@ describe( 'useBreakpoint', () => {
 	} );
 
 	it( 'follows the editor device type when syncFromEditor is set', () => {
-		mockedUseSelect.mockReturnValue( 'mobile' );
+		editorDeviceTypeFromStore = 'Mobile';
 
 		const { result } = renderHook( () =>
 			useBreakpoint( { syncFromEditor: true } )
@@ -51,7 +54,7 @@ describe( 'useBreakpoint', () => {
 	} );
 
 	it( 'ignores an editor device type outside the breakpoint set', () => {
-		mockedUseSelect.mockReturnValue( 'watch' );
+		editorDeviceTypeFromStore = 'Watch';
 
 		const { result } = renderHook( () =>
 			useBreakpoint( { syncFromEditor: true } )
