@@ -42,7 +42,12 @@ function findEntries( root: string ): Record< string, string > {
 export default defineConfig( {
 	entry: findEntries( SRC ),
 	format: [ 'esm' ],
-	dts: true,
+	/**
+	 * Declarations come from `tsc -p tsconfig.build.json`, not from tsup. tsup builds one
+	 * rollup program per entry, which ran out of heap once every component folder became an
+	 * entry; `tsc` types the package once. See the comment in tsconfig.build.json.
+	 */
+	dts: false,
 	clean: true,
 	sourcemap: true,
 	treeshake: true,

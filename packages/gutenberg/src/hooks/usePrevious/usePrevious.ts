@@ -1,4 +1,4 @@
-import { useEffect, useRef } from '@wordpress/element';
+import { useEffect, useRef } from 'react';
 
 /**
  * Returns the value from the previous render.

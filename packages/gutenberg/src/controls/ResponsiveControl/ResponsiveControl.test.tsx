@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import { ResponsiveControl } from './ResponsiveControl';
+import { ResponsiveControl } from './ResponsiveControl.js';
 
 jest.mock( '@wordpress/data', () => ( {
 	useSelect: () => null,

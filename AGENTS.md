@@ -11,13 +11,16 @@ editor: components, controls, fields, hooks and helpers for building blocks and 
 panels without rewriting the same logic each time.
 
 It ships to **npm** and is consumed **per component** — every entry point (`breakpoints`,
-`components`, `controls`, `fields`, `meta`, `taxonomy`, `hooks`, `appenders`) is importable
-on its own via subpath `exports`. Keep imports **convenient and minimal**; never require deep
-`dist/...` paths.
+`bindings`, `components`, `controls`, `fields`, `meta`, `taxonomy`, `hooks`, `appenders`) is
+importable on its own via subpath `exports`, and each of the component categories also has a
+wildcard subpath so a single component can be imported without its barrel. Keep imports
+**convenient and minimal**; never require deep `dist/...` paths.
 
 ```tsx
 import { SelectField } from '@isudev/gutenberg/fields';
 import { MetaSelectControl } from '@isudev/gutenberg/meta';
+// or one component at a time, no barrel:
+import { useBreakpoint } from '@isudev/gutenberg/hooks/useBreakpoint';
 ```
 
 ## Core principles (non-negotiable)
@@ -36,7 +39,12 @@ import { MetaSelectControl } from '@isudev/gutenberg/meta';
 5. **Stable public API.** Public surface is controlled by `exports` in `package.json`.
    Anything under `_internal/` is private and never exported.
 6. **Only `@wordpress/*` at runtime** (peer deps). Nothing else.
-7. **Every component ships a `README.md` in its own folder**, documenting *all* of its
+7. **One component, one folder.** Every public component, control, field, easy-mode wrapper
+   and hook lives in its own directory — `src/hooks/useBreakpoint/`, not
+   `src/hooks/useBreakpoint.ts`. The folder is what gives it room for its README,
+   screenshots, tests and `types.ts`. Public types belong in `<Folder>/types.ts`; the
+   category barrel re-exports the value **and** its type.
+8. **Every component ships a `README.md` in its own folder**, documenting *all* of its
    features — every prop, variant and behaviour — with runnable usage examples. The docs
    site and the MCP tool descriptions are **generated from these files**, so an
    undocumented feature is invisible and a stale README ships as wrong documentation and a
@@ -67,9 +75,37 @@ import { MetaSelectControl } from '@isudev/gutenberg/meta';
   skills/                # Reusable skills / procedures
   specs/                 # Approved designs — YYYY-MM-DD-<topic>-design.md
   plans/                 # Implementation plans — YYYY-MM-DD-<feature>.md
-packages/gutenberg/src/  # Library source (see plan for the full tree)
-examples/                # Example blocks consuming the library
+packages/gutenberg/      # The library (see the code map below)
+examples/test-blocks/    # WordPress plugin with example blocks consuming the library
 ```
+
+### Code map — `packages/gutenberg/`
+
+```
+src/
+  index.ts               # root barrel; prefer the subpath entry points
+  breakpoints/           # kernel: cascade resolution, presence rule, validation. No UI, no stores.
+  bindings/              # the one engine: useFieldBinding → useOptionsSource + useValueBinding
+    options/             #   terms, posts, users, postTypes, manual
+    values/              #   meta, taxonomy, custom
+  components/<Name>/     # pure UI, props-only. BreakpointSwitcher.
+  controls/<Name>/       # Editor UI: ResponsiveControl, LinkPickerControl, BlockLinkControl, LinkText.
+  fields/<Name>/         # advanced mode: compose optionsSource + valueBinding. SelectField, RadioField.
+  meta/<Name>/           # easy mode over a field, meta binding pre-filled
+  taxonomy/<Name>/       # easy mode over a field, taxonomy binding pre-filled
+  hooks/<useName>/       # one folder per hook; hooks/README.md is the index
+  appenders/             # inserter/appender UI (empty, stage 8)
+  types/                 # shared public types: fields, options, bindings
+  utils/                 # tiny shared helpers
+  _internal/             # private. Never exported. Only place allowed to import __experimental*.
+tests/                   # cross-cutting tests + helpers (the README props drift guard)
+tsup.config.ts           # entries discovered from the filesystem — no entry list to maintain
+tsconfig.typecheck.json  # what `npm run typecheck` uses; covers src AND tests
+```
+
+Every directory under `components/`, `controls/`, `fields/`, `meta/`, `taxonomy/` and
+`hooks/` holds one component: its implementation, `types.ts`, `index.ts`, its colocated
+test, and its `README.md`.
 
 **All project knowledge — skills, instructions, decisions, specs, plans — lives under
 `.agents/`.** When you make an architectural decision, record it in `.agents/decisions/`.
@@ -101,12 +137,18 @@ Current prior art:
 
 ## Build & tooling
 
-- Bundler: `tsup` (esbuild), ESM only, emits `.d.ts`. Build **entries are discovered from
+- Bundler: `tsup` (esbuild), ESM only. Build **entries are discovered from
   the filesystem** — every `index.ts` under `src/` becomes one, so `dist/` mirrors `src/`
   and adding a component folder needs no config change. `_internal/` is skipped.
+- **Declarations come from `tsc -p tsconfig.build.json`**, not tsup — tsup builds one program
+  per entry and ran out of heap once every component folder became an entry (decision 0006).
+- **Relative imports must carry an explicit `.js` extension**: `'./types.js'`,
+  `'../../breakpoints/index.js'`. Without it the emitted `.d.ts` files do not resolve under
+  Node's ESM rules. TypeScript, Jest and the WordPress webpack build all accept it, so only
+  `verify:package` catches a violation — which is why that gate matters.
 - Subpath `exports` in `package.json` are **hand-maintained**, with wildcards for
-  `./components/*`, `./controls/*` and `./fields/*`. A new top-level source directory needs
-  its key added by hand.
+  `./components/*`, `./controls/*`, `./fields/*`, `./meta/*`, `./taxonomy/*` and `./hooks/*`.
+  A new top-level source directory needs its key added by hand.
 - JSX runtime: automatic, `jsxImportSource: "react"`. `@wordpress/*`, `react`, `react-dom`
   and `react/jsx-runtime` are external (decision 0002).
 - Tests: Jest + `@swc/jest` + `@testing-library/react` + jsdom.

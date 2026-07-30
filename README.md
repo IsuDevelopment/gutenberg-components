@@ -6,8 +6,16 @@ consumed **per component** via subpath exports.
 - Library: [`packages/gutenberg`](./packages/gutenberg)
 - Example blocks (WP plugin): [`examples/test-blocks`](./examples/test-blocks)
 
-**Agents / contributors: read [`AGENTS.md`](./AGENTS.md) first.** All project knowledge
-(architecture plan, decisions, instructions, skills) lives under [`.agents/`](./.agents/).
+**Agents / contributors: read [`AGENTS.md`](./AGENTS.md) first** — it carries the code map
+and the core principles. All project knowledge (architecture plan, decisions, instructions,
+skills, specs, plans) lives under [`.agents/`](./.agents/).
+
+Every component lives in its own folder with its own `README.md` documenting all of its
+features and usage examples; the docs and MCP tool descriptions are generated from those
+files. Start from
+[`.agents/instructions/adding-a-component.md`](./.agents/instructions/adding-a-component.md)
+or
+[`changing-a-component.md`](./.agents/instructions/changing-a-component.md).
 
 ## Local development
 

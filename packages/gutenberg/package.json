@@ -22,11 +22,15 @@
 		"./fields": { "types": "./dist/fields/index.d.ts", "import": "./dist/fields/index.js" },
 		"./fields/*": { "types": "./dist/fields/*/index.d.ts", "import": "./dist/fields/*/index.js" },
 		"./meta": { "types": "./dist/meta/index.d.ts", "import": "./dist/meta/index.js" },
+		"./meta/*": { "types": "./dist/meta/*/index.d.ts", "import": "./dist/meta/*/index.js" },
 		"./taxonomy": { "types": "./dist/taxonomy/index.d.ts", "import": "./dist/taxonomy/index.js" },
-		"./hooks": { "types": "./dist/hooks/index.d.ts", "import": "./dist/hooks/index.js" }
+		"./taxonomy/*": { "types": "./dist/taxonomy/*/index.d.ts", "import": "./dist/taxonomy/*/index.js" },
+		"./hooks": { "types": "./dist/hooks/index.d.ts", "import": "./dist/hooks/index.js" },
+		"./hooks/*": { "types": "./dist/hooks/*/index.d.ts", "import": "./dist/hooks/*/index.js" },
+		"./bindings": { "types": "./dist/bindings/index.d.ts", "import": "./dist/bindings/index.js" }
 	},
 	"scripts": {
-		"build": "tsup",
+		"build": "tsup && tsc -p tsconfig.build.json",
 		"dev": "tsup --watch",
 		"clean": "rm -rf dist .turbo node_modules",
 		"typecheck": "tsc -p tsconfig.typecheck.json",

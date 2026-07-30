@@ -1,6 +1,6 @@
-import type { FieldBindingProps, FieldBindingResult } from '../types/fields';
-import { useOptionsSource } from './useOptionsSource';
-import { useValueBinding } from './useValueBinding';
+import type { FieldBindingProps, FieldBindingResult } from '../types/fields.js';
+import { useOptionsSource } from './useOptionsSource.js';
+import { useValueBinding } from './useValueBinding.js';
 
 /**
  * The engine behind every field. Resolves options and value from props and returns a

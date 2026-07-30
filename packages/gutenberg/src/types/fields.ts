@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import type { FieldOption, OptionsSource } from './options';
-import type { ValueBinding } from './bindings';
+import type { FieldOption, OptionsSource } from './options.js';
+import type { ValueBinding } from './bindings.js';
 
 /**
  * Props shared by every field. Any extra props are forwarded to the underlying

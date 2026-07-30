@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useResponsiveAttribute } from './useResponsiveAttribute';
+import { useResponsiveAttribute } from './useResponsiveAttribute.js';
 
 function setup(
 	attributes: Record< string, unknown >,

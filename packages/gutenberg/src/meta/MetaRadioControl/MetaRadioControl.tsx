@@ -1,12 +1,5 @@
-import { RadioField } from '../fields/RadioField';
-import type { FieldBindingProps } from '../types/fields';
-
-interface MetaRadioControlProps extends Omit< FieldBindingProps, 'valueBinding' > {
-	/** The post meta key to read from and write to. */
-	metaKey: string;
-	/** Optional post type override; defaults to the current post type. */
-	postType?: string;
-}
+import { RadioField } from '../../fields/RadioField/index.js';
+import type { MetaRadioControlProps } from './types.js';
 
 /**
  * Easy mode: a radio group bound to a post meta value.

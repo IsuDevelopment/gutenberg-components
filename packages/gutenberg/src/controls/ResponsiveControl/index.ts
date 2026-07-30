@@ -1,5 +1,5 @@
-export { ResponsiveControl } from './ResponsiveControl';
+export { ResponsiveControl } from './ResponsiveControl.js';
 export type {
 	ResponsiveControlProps,
 	ResponsiveControlRenderArgs,
-} from './types';
+} from './types.js';

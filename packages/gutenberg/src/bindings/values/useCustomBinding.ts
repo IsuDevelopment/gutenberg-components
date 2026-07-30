@@ -1,5 +1,5 @@
-import type { ValueBinding, ValueResult } from '../../types/bindings';
-import { noop } from '../../utils/noop';
+import type { ValueBinding, ValueResult } from '../../types/bindings.js';
+import { noop } from '../../utils/noop.js';
 
 type CustomBinding = Extract< ValueBinding, { type: 'custom' } >;
 

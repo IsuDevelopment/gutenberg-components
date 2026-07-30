@@ -1,7 +1,7 @@
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
-import type { FieldOption, OptionsResult, OptionsSource } from '../../types/options';
-import { toFieldOption } from './normalizeOptions';
+import type { FieldOption, OptionsResult, OptionsSource } from '../../types/options.js';
+import { toFieldOption } from './normalizeOptions.js';
 
 type PostsSource = Extract< OptionsSource, { type: 'posts' } >;
 

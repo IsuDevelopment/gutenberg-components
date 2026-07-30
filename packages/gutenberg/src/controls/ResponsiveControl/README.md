@@ -55,15 +55,45 @@ import { ResponsiveControl } from '@isudev/gutenberg/controls';
 	attributes={ attributes }
 	setAttributes={ setAttributes }
 >
-	{ ( { value, inheritedValue, onChange } ) => (
+	{ ( { value, inheritedValue, hasOwnValue, onChange } ) => (
+		/*
+		 * `RangeControl` has no `placeholder` — unknown props are spread onto its
+		 * `<input type="range">`, where one is inert. So the slider shows the value that
+		 * actually applies and `help` says where it came from. `??`, not `||`: an explicit
+		 * `0` is a real override.
+		 */
 		<RangeControl
-			value={ value }
-			placeholder={ inheritedValue }
+			min={ 0 }
+			max={ 100 }
+			value={ value ?? inheritedValue }
+			help={
+				hasOwnValue || inheritedValue === undefined
+					? undefined
+					: `${ __( 'Inherited:' ) } ${ inheritedValue }`
+			}
 			onChange={ onChange }
 			__next40pxDefaultSize
+			__nextHasNoMarginBottom
 		/>
 	) }
 </ResponsiveControl>
+```
+
+Bind `inheritedValue` to a `placeholder` only on controls that have one — `TextControl` and
+`InputControl` forward it to their `<input>`:
+
+```jsx
+{ ( { value, inheritedValue, onChange } ) => (
+	<TextControl
+		value={ value ?? '' }
+		placeholder={
+			inheritedValue === undefined ? undefined : String( inheritedValue )
+		}
+		onChange={ onChange }
+		__next40pxDefaultSize
+		__nextHasNoMarginBottom
+	/>
+) }
 ```
 
 ### Compact switcher, linked to the editor preview
@@ -78,11 +108,16 @@ import { ResponsiveControl } from '@isudev/gutenberg/controls';
 	setAttributes={ setAttributes }
 >
 	{ ( { value, onChange } ) => (
+		/*
+		 * The empty option matters: with no override, `value` is `undefined` and a native
+		 * `<select>` would otherwise show the first option as if it were set.
+		 */
 		<SelectControl
 			value={ value ?? '' }
-			options={ LAYOUT_OPTIONS }
+			options={ [ { label: '—', value: '' }, ...LAYOUT_OPTIONS ] }
 			onChange={ onChange }
 			__next40pxDefaultSize
+			__nextHasNoMarginBottom
 		/>
 	) }
 </ResponsiveControl>
@@ -99,8 +134,8 @@ import { ResponsiveControl } from '@isudev/gutenberg/controls';
 - The base breakpoint's value lives in `attrName`; others live in `attrName + suffix`, so
   `columnGap`, `columnGapTablet`, `columnGapMobile`.
 - `value` is the active breakpoint's own value and is `undefined` when it has none.
-  `inheritedValue` is what it would fall back to — bind it to `placeholder`. `resolvedValue`
-  is what actually applies.
+  `inheritedValue` is what it would fall back to — bind it to `placeholder` on controls that
+  have one, otherwise surface it through `help`. `resolvedValue` is what actually applies.
 - Reset writes `undefined`, so the attribute returns to its `block.json` default and
   disappears from serialized markup.
 - The reset button never appears on the base breakpoint: its value is not an override.
@@ -115,7 +150,12 @@ position the whole row.
 
 - `children` is a function, not an element. Passing an element renders nothing useful.
 - Numeric controls: `0` is a real value and will *not* fall back to an inherited value. This
-  is deliberate.
+  is deliberate. Merge with `??` if you must merge at all — `value || inheritedValue` shows the
+  inherited value where `0` was set on purpose.
+- `RangeControl` has no `placeholder` prop, so passing `inheritedValue` to one does nothing
+  visible: it is spread onto the underlying `<input type="range">` and ignored. Reserve that
+  pattern for `TextControl`/`InputControl` and use `value ?? inheritedValue` plus `help`
+  elsewhere.
 - Attributes must be declared in `block.json` for every breakpoint you offer —
   `columnGapTablet` and `columnGapMobile` do not spring into existence.
 - `syncFromEditor` without `syncToEditor` makes the switcher read-only in practice. Clicking

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import type { Breakpoint } from '../../breakpoints';
-import type { UseResponsiveAttributeResult } from '../../hooks/useResponsiveAttribute';
+import type { Breakpoint } from '../../breakpoints/index.js';
+import type { UseResponsiveAttributeResult } from '../../hooks/useResponsiveAttribute/index.js';
 
 export interface ResponsiveControlRenderArgs
 	extends UseResponsiveAttributeResult {

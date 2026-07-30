@@ -1,4 +1,4 @@
-import type { Breakpoint } from '../../breakpoints';
+import type { Breakpoint } from '../../breakpoints/index.js';
 
 export interface BreakpointSwitcherProps {
 	/** Currently selected breakpoint id. */

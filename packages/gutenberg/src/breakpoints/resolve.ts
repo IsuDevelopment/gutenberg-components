@@ -1,4 +1,4 @@
-import type { Breakpoint } from './types';
+import type { Breakpoint } from './types.js';
 
 /**
  * Whether an attribute value counts as set.

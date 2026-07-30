@@ -30,6 +30,8 @@ that no longer runs. Those are on you.
 | Now ships or drops CSS | *Styling*, and `sideEffects` in `package.json` |
 | Deprecated something | *Props* description, *Behavior*, and `status` in the front matter |
 | Fixed a bug people worked around | *Gotchas* — remove the stale warning |
+| Changed a hook's return shape | *Returns*, *Examples* |
+| Added a component or hook | also add a row to the category index (`src/hooks/README.md`) |
 
 If a change makes an example obsolete, **rewrite the example**. Deleting it is second best;
 leaving it is not an option. Examples are what consumers copy.

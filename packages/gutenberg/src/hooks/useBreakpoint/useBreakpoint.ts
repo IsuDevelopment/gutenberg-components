@@ -1,22 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { store as editorStore } from '@wordpress/editor';
-import type { Breakpoint } from '../breakpoints';
-import { useValidatedBreakpoints } from '../breakpoints';
-
-export interface UseBreakpointOptions {
-	/** Breakpoint selected on first render; defaults to the base breakpoint. */
-	initial?: string;
-
-	/** Breakpoint set; defaults to `DEFAULT_BREAKPOINTS`. */
-	breakpoints?: Breakpoint[];
-
-	/** Push the selection to the editor's device preview. */
-	syncToEditor?: boolean;
-
-	/** Follow the editor's device preview. */
-	syncFromEditor?: boolean;
-}
+import { useValidatedBreakpoints } from '../../breakpoints/index.js';
+import type { UseBreakpointOptions } from './types.js';
 
 function capitalize( value: string ): string {
 	return value.charAt( 0 ).toUpperCase() + value.slice( 1 );

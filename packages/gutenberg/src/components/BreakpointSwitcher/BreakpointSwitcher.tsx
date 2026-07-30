@@ -1,9 +1,9 @@
 import type { ReactElement } from 'react';
 import { __ } from '@wordpress/i18n';
-import { useValidatedBreakpoints } from '../../breakpoints';
-import { DropdownSwitcher } from './DropdownSwitcher';
-import { InlineSwitcher } from './InlineSwitcher';
-import type { BreakpointSwitcherProps } from './types';
+import { useValidatedBreakpoints } from '../../breakpoints/index.js';
+import { DropdownSwitcher } from './DropdownSwitcher.js';
+import { InlineSwitcher } from './InlineSwitcher.js';
+import type { BreakpointSwitcherProps } from './types.js';
 
 /**
  * Switches which breakpoint a responsive setting is being edited for.

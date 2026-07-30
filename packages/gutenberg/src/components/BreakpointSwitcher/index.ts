@@ -1,2 +1,2 @@
-export { BreakpointSwitcher } from './BreakpointSwitcher';
-export type { BreakpointSwitcherProps } from './types';
+export { BreakpointSwitcher } from './BreakpointSwitcher.js';
+export type { BreakpointSwitcherProps } from './types.js';

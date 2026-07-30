@@ -5,16 +5,27 @@ Read `../architecture-plan.md` and the core principles in `AGENTS.md` first.
 
 ## 1. Pick the category
 
+**One component, one folder — always.** Every public component, control, field and hook
+gets its own directory, even a five-line hook. The folder is what gives it room for its
+`README.md`, its screenshots, its tests and its `types.ts`. A loose `.tsx` or `.ts` file
+directly inside a category folder is wrong.
+
 | Category | Directory | What belongs there |
 | --- | --- | --- |
 | Component | `src/components/<Name>/` | Pure UI. No editor stores, no knowledge of meta, taxonomies or post types. Everything comes in through props. |
 | Control | `src/controls/<Name>/` | UI wired to editor state or block attributes — composes components and hooks. |
 | Field | `src/fields/<Name>/` | Goes through the binding engine (`useFieldBinding` → `useOptionsSource` + `useValueBinding`). Never a per-combination component. |
-| Hook | `src/hooks/` | Behaviour with no markup. Shares one folder-level README. |
+| Easy-mode wrapper | `src/meta/<Name>/`, `src/taxonomy/<Name>/` | A thin component over a field with the binding pre-filled. One key in, working control out. |
+| Hook | `src/hooks/<useName>/` | Behaviour with no markup. Its own folder and its own README, like everything else. |
 
-If a new *top-level* directory is needed, it also needs an `exports` key added by hand in
-`packages/gutenberg/package.json` — `./components/*`, `./controls/*` and `./fields/*` are
-the only wildcards, so within those three a new folder needs no packaging change.
+Kernel logic with no UI and no store access (pure resolution, validation, defaults) belongs
+in a flat module directory such as `src/breakpoints/` instead — those are libraries, not
+components, and are documented in the README of whatever consumes them.
+
+Wildcard `exports` already cover `./components/*`, `./controls/*`, `./fields/*`, `./meta/*`,
+`./taxonomy/*` and `./hooks/*`, so a new folder inside any of those is importable as
+`@isudev/gutenberg/hooks/useThing` with **no packaging change**. A new *top-level* directory
+still needs its `exports` key added by hand in `packages/gutenberg/package.json`.
 
 ## 2. Create the folder
 
@@ -34,8 +45,26 @@ export { MyThing } from './MyThing';
 export type { MyThingProps } from './types';
 ```
 
-Then re-export from the category barrel (`src/components/index.ts`) so both the deep
-subpath and the category import work.
+Then re-export from the category barrel (`src/components/index.ts`), **value and type
+both**, so the deep subpath and the category import stay equivalent.
+
+A hook folder is the same shape, named after the hook:
+
+```
+src/hooks/useMyThing/
+  useMyThing.ts
+  types.ts           # its options/args and result interfaces
+  index.ts
+  useMyThing.test.ts
+  README.md
+```
+
+Put the options and result interfaces in `types.ts`, not in the hook file — the docs
+tooling and the drift guard both expect to find a component's public types at
+`<Folder>/types.ts`. A hook with no arguments and a primitive return needs no `types.ts`.
+
+`src/hooks/README.md` is the folder's **index** — a table linking to each hook's own README.
+Add a row when you add a hook. It is not a place to document a hook.
 
 Build entries are discovered from the filesystem by `tsup.config.ts` — every `index.ts`
 under `src/` becomes an entry. There is no entry list to update.
@@ -52,6 +81,10 @@ under `src/` becomes an entry. There is no entry list to update.
   editor code. Reach the canvas document via `element.ownerDocument` using `useRefEffect`
   from `@wordpress/compose`.
 - Import hooks and React types from `react`, not `@wordpress/element` (decision 0002).
+- **Relative imports carry an explicit `.js` extension** — `'./types.js'`,
+  `'../../breakpoints/index.js'` (a directory needs `/index.js`). Decision 0006: without it the
+  emitted declarations do not resolve under Node ESM. Tests and `tsc` pass either way, so only
+  `verify:package` will tell you — write it correctly the first time.
 - `__experimental*` / `__unstable*` imports from `@wordpress/components` are allowed in
   exactly one file, `src/_internal/wp-components.ts` (decision 0004). Import the stable
   alias from there.
@@ -93,7 +126,13 @@ Both the category import and the deep subpath.
 
 ## Props
 | Name | Type | Default | Required | Description |
-Every prop. `—` for no default. Escape pipes inside types as `\|`.
+Every prop, including ones inherited through `extends`. `—` for no default. Escape
+pipes inside types as `\|`. Hooks keep this heading too, for their options/args
+object or positional parameters — one heading everywhere is what the docs
+generator and the drift guard parse.
+
+## Returns              <-- hooks only
+A table for an object return, prose for a tuple. Document every field.
 
 ## Examples
 At least two, and they must be real, runnable usage — not signatures.

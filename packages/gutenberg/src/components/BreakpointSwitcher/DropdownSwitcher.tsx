@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { DropdownMenu } from '@wordpress/components';
-import type { Breakpoint } from '../../breakpoints';
-import { optionLabel } from './InlineSwitcher';
+import type { Breakpoint } from '../../breakpoints/index.js';
+import { optionLabel } from './InlineSwitcher.js';
 
 /**
  * `DropdownMenu` is used rather than a hand-positioned overlay because its popover is

@@ -1,6 +1,6 @@
 import { desktop, mobile, tablet } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
-import type { Breakpoint } from './types';
+import type { Breakpoint } from './types.js';
 
 /**
  * The conventional desktop-first set. Desktop is the base, so `columnGap` holds the

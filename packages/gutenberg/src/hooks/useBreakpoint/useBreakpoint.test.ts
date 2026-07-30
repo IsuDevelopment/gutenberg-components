@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import { useBreakpoint } from './useBreakpoint';
+import { useBreakpoint } from './useBreakpoint.js';
 
 const setDeviceType = jest.fn();
 let editorDeviceTypeFromStore: string | undefined;

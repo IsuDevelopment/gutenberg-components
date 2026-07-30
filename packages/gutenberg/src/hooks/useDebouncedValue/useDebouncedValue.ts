@@ -1,4 +1,4 @@
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState } from 'react';
 
 /**
  * Returns a debounced copy of `value` that only updates after `delay` ms of no changes.

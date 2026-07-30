@@ -45,14 +45,21 @@ the category barrel entirely.
 | `@isudev/gutenberg/breakpoints` | `DEFAULT_BREAKPOINTS`, `resolveCascade`, `isPresent`, `validateBreakpoints` and the `Breakpoint` type. |
 | `@isudev/gutenberg/components` | All components. |
 | `@isudev/gutenberg/components/*` | One component, e.g. `.../components/BreakpointSwitcher`. |
-| `@isudev/gutenberg/controls` | All controls. |
-| `@isudev/gutenberg/controls/*` | One control, e.g. `.../controls/ResponsiveControl`. |
+| `@isudev/gutenberg/controls` | All controls — `ResponsiveControl`, `LinkPickerControl`, `BlockLinkControl`, `LinkText` and link helpers. |
+| `@isudev/gutenberg/controls/*` | One control, e.g. `.../controls/LinkPickerControl`. |
 | `@isudev/gutenberg/fields` | All fields — `SelectField`, `RadioField`. |
 | `@isudev/gutenberg/fields/*` | One field. |
 | `@isudev/gutenberg/hooks` | `useBreakpoint`, `useResponsiveAttribute`, `useCurrentPostType`, `useCurrentPostId`, `useDebouncedValue`, `usePrevious`. |
+| `@isudev/gutenberg/hooks/*` | One hook, e.g. `.../hooks/useBreakpoint`. |
 | `@isudev/gutenberg/meta` | Post-meta wrappers — `MetaSelectControl`, `MetaRadioControl`. |
+| `@isudev/gutenberg/meta/*` | One wrapper, e.g. `.../meta/MetaSelectControl`. |
 | `@isudev/gutenberg/taxonomy` | Taxonomy wrappers — `TaxonomySelectControl`. |
+| `@isudev/gutenberg/taxonomy/*` | One wrapper, e.g. `.../taxonomy/TaxonomySelectControl`. |
+| `@isudev/gutenberg/bindings` | The binding engine — `useFieldBinding`, `useOptionsSource`, `useValueBinding` and the individual option/value hooks. |
 | `@isudev/gutenberg/appenders` | Inner-block appenders — reserved, nothing exported yet. |
+
+Every component, control, field, wrapper and hook has a `README.md` beside its source
+documenting all of its props, behaviour and examples; those files ship with the package.
 
 ## Example
 
@@ -90,6 +97,9 @@ table kept in sync with the types by a test:
 
 - [`BreakpointSwitcher`](./src/components/BreakpointSwitcher/README.md)
 - [`ResponsiveControl`](./src/controls/ResponsiveControl/README.md)
+- [`LinkPickerControl`](./src/controls/LinkPickerControl/README.md)
+- [`BlockLinkControl`](./src/controls/BlockLinkControl/README.md)
+- [`LinkText`](./src/controls/LinkText/README.md)
 - [Hooks](./src/hooks/README.md)
 
 ## License

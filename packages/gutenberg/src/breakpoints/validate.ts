@@ -1,5 +1,5 @@
-import { DEFAULT_BREAKPOINTS } from './defaults';
-import type { Breakpoint } from './types';
+import { DEFAULT_BREAKPOINTS } from './defaults.js';
+import type { Breakpoint } from './types.js';
 
 /**
  * Returns a list of problems with a breakpoint set; empty means valid.

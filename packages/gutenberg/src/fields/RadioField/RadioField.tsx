@@ -1,6 +1,6 @@
 import { RadioControl } from '@wordpress/components';
-import { useFieldBinding } from '../../bindings/useFieldBinding';
-import type { FieldBindingProps } from '../../types/fields';
+import { useFieldBinding } from '../../bindings/useFieldBinding.js';
+import type { FieldBindingProps } from '../../types/fields.js';
 
 /**
  * A radio field that composes an options source and a value binding.

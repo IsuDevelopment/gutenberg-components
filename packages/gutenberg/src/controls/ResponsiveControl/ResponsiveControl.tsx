@@ -1,10 +1,10 @@
 import type { ReactElement } from 'react';
 import { BaseControl, Button, Flex, FlexItem } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import { BreakpointSwitcher } from '../../components/BreakpointSwitcher';
-import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { useResponsiveAttribute } from '../../hooks/useResponsiveAttribute';
-import type { ResponsiveControlProps } from './types';
+import { BreakpointSwitcher } from '../../components/BreakpointSwitcher/index.js';
+import { useBreakpoint } from '../../hooks/useBreakpoint/index.js';
+import { useResponsiveAttribute } from '../../hooks/useResponsiveAttribute/index.js';
+import type { ResponsiveControlProps } from './types.js';
 
 /**
  * Makes any control responsive.

@@ -1,8 +1,8 @@
-import type { ValueBinding, ValueResult } from '../types/bindings';
-import { useMetaBinding } from './values/useMetaBinding';
-import { useTaxonomyBinding } from './values/useTaxonomyBinding';
-import { useCustomBinding } from './values/useCustomBinding';
-import { noop } from '../utils/noop';
+import type { ValueBinding, ValueResult } from '../types/bindings.js';
+import { useMetaBinding } from './values/useMetaBinding.js';
+import { useTaxonomyBinding } from './values/useTaxonomyBinding.js';
+import { useCustomBinding } from './values/useCustomBinding.js';
+import { noop } from '../utils/noop.js';
 
 interface UseValueBindingArgs {
 	valueBinding?: ValueBinding;

@@ -1,5 +1,5 @@
-import { DEFAULT_BREAKPOINTS } from './defaults';
-import { validateBreakpoints } from './validate';
+import { DEFAULT_BREAKPOINTS } from './defaults.js';
+import { validateBreakpoints } from './validate.js';
 
 describe( 'validateBreakpoints', () => {
 	it( 'accepts the default set', () => {

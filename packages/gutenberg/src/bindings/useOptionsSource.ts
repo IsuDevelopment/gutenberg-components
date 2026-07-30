@@ -1,8 +1,8 @@
-import type { FieldOption, OptionsResult, OptionsSource } from '../types/options';
-import { useTermsOptions } from './options/useTermsOptions';
-import { usePostsOptions } from './options/usePostsOptions';
-import { useUsersOptions } from './options/useUsersOptions';
-import { usePostTypesOptions } from './options/usePostTypesOptions';
+import type { FieldOption, OptionsResult, OptionsSource } from '../types/options.js';
+import { useTermsOptions } from './options/useTermsOptions.js';
+import { usePostsOptions } from './options/usePostsOptions.js';
+import { useUsersOptions } from './options/useUsersOptions.js';
+import { usePostTypesOptions } from './options/usePostTypesOptions.js';
 
 interface UseOptionsSourceArgs {
 	options?: FieldOption[];

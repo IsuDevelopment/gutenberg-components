@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { DEFAULT_BREAKPOINTS } from '../../breakpoints';
-import { BreakpointSwitcher } from './BreakpointSwitcher';
+import { DEFAULT_BREAKPOINTS } from '../../breakpoints/index.js';
+import { BreakpointSwitcher } from './BreakpointSwitcher.js';
 
 describe( 'BreakpointSwitcher', () => {
 	it( 'renders nothing with fewer than two breakpoints', () => {

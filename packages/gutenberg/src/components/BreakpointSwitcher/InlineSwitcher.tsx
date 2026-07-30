@@ -1,12 +1,12 @@
 import type { ReactElement } from 'react';
 import { sprintf, __ } from '@wordpress/i18n';
-import type { Breakpoint } from '../../breakpoints';
+import type { Breakpoint } from '../../breakpoints/index.js';
 import {
 	ToggleGroupControl,
 	ToggleGroupControlOption,
 	ToggleGroupControlOptionIcon,
-} from '../../_internal/wp-components';
-import { IconWithOverrideDot } from './IconWithOverrideDot';
+} from '../../_internal/wp-components.js';
+import { IconWithOverrideDot } from './IconWithOverrideDot.js';
 
 /**
  * Accessible name for one option. The base breakpoint never gains the "modified" suffix:

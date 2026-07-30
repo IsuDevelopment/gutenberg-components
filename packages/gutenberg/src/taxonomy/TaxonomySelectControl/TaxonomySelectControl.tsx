@@ -1,13 +1,5 @@
-import { SelectField } from '../fields/SelectField';
-import type { FieldBindingProps } from '../types/fields';
-
-interface TaxonomySelectControlProps
-	extends Omit< FieldBindingProps, 'optionsSource' | 'valueBinding' > {
-	/** The taxonomy whose terms are both the options and the stored value. */
-	taxonomy: string;
-	/** REST base override; resolved automatically when omitted. */
-	restBase?: string;
-}
+import { SelectField } from '../../fields/SelectField/index.js';
+import type { TaxonomySelectControlProps } from './types.js';
 
 /**
  * Easy mode: a single-select whose options are taxonomy terms and whose value is stored

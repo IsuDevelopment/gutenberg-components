@@ -1,7 +1,7 @@
 import { useEntityProp } from '@wordpress/core-data';
-import type { ValueBinding, ValueResult } from '../../types/bindings';
-import { useCurrentPostType } from '../../hooks/useCurrentPostType';
-import { noop } from '../../utils/noop';
+import type { ValueBinding, ValueResult } from '../../types/bindings.js';
+import { useCurrentPostType } from '../../hooks/useCurrentPostType/index.js';
+import { noop } from '../../utils/noop.js';
 
 type MetaBinding = Extract< ValueBinding, { type: 'meta' } >;
 

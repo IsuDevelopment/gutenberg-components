@@ -1,10 +1,10 @@
-import { DEFAULT_BREAKPOINTS } from './defaults';
+import { DEFAULT_BREAKPOINTS } from './defaults.js';
 import {
 	buildHasValueMap,
 	isPresent,
 	resolveAttrName,
 	resolveCascade,
-} from './resolve';
+} from './resolve.js';
 
 const [ desktop, tablet ] = DEFAULT_BREAKPOINTS;
 

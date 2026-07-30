@@ -2,7 +2,6 @@
 
 - Status: accepted
 - Date: 2026-07-09
-- Revised: 2026-07-30 (generalized; removed references to a specific prior codebase)
 
 ## Context
 
