@@ -256,11 +256,19 @@ consumers skip the barrel for better tree-shaking.
 
 ### 9.2 `@wordpress/icons` must not be externalized — existing bug
 
-`tsup.config.ts` externalizes `/^@wordpress\//` wholesale. That is wrong for three packages.
-`DependencyExtractionWebpackPlugin` deliberately does **not** externalize
-`@wordpress/icons`, `@wordpress/interface` or `@wordpress/style-engine`, because WordPress
-registers no script global for them — they are meant to be bundled. (10up's
-`webpack.config.js` mirrors this list verbatim.)
+`tsup.config.ts` externalizes `/^@wordpress\//` wholesale. That is wrong for the packages
+`DependencyExtractionWebpackPlugin` deliberately does **not** externalize, because WordPress
+registers no script global for them — they are meant to be bundled. As of DEWP 6.50.0 that
+set is `admin-ui`, `dataviews`, `fields`, `grid`, `icons`, `interface`, `style-runtime`,
+`ui`, `undo-manager` and `views` (read from `lib/util.js` of the installed plugin,
+2026-07-30).
+
+**Corrected 2026-07-30.** An earlier draft of this section named three packages —
+`icons`, `interface`, `style-engine` — copied from 10up's `webpack.config.js`. That list
+reflects an older DEWP: there are ten today, and `style-engine` is not among them at all
+(`style-runtime` is; `style-engine` is externalized normally). Read the installed plugin
+rather than a third-party mirror of it. The load-bearing conclusion is unchanged, since
+`icons` was and remains on the list.
 
 This bites immediately: `DEFAULT_BREAKPOINTS` carries icons from `@wordpress/icons`.
 Resolution: keep them external in our build and declare `@wordpress/icons` a **peer

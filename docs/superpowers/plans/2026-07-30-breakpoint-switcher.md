@@ -173,18 +173,19 @@ In `examples/test-blocks/package.json`, set `"@wordpress/scripts": "31.5.1"` in 
 
 - [ ] **Step 4: Stop externalizing the three bundled WordPress packages**
 
-`DependencyExtractionWebpackPlugin` deliberately does **not** externalize `@wordpress/icons`, `@wordpress/interface` or `@wordpress/style-engine` — WordPress registers no script global for them. Our blanket `/^@wordpress\//` external is therefore wrong for exactly those three. Keeping them external in *our* build is correct (the consumer's build bundles them, which is why Step 2 adds the peer), but the regex must be explicit so the reason is recorded.
+`DependencyExtractionWebpackPlugin` deliberately does **not** externalize a set of packages for which WordPress registers no script global. As of DEWP 6.50.0 (`lib/util.js`) that set is `admin-ui`, `dataviews`, `fields`, `grid`, `icons`, `interface`, `style-runtime`, `ui`, `undo-manager` and `views` — note `style-runtime`, not `style-engine`, which *is* externalized normally. Of these, this library imports only `@wordpress/icons`. Keeping them external in *our* build is correct (the consumer's build bundles them, which is why Step 2 adds the peer), but the regex must be explicit so the reason is recorded.
 
 In `packages/gutenberg/tsup.config.ts`, replace the `external` line with:
 
 ```ts
 	/**
 	 * WordPress exposes most @wordpress/* packages as script globals, and
-	 * DependencyExtractionWebpackPlugin maps bare imports onto them. Three packages are
-	 * NOT exposed that way and are meant to be bundled by the consumer's build:
-	 * @wordpress/icons, @wordpress/interface, @wordpress/style-engine. We keep them as
-	 * bare imports too (they are declared peer dependencies), so the consumer bundles a
-	 * single copy rather than us inlining one per entry point.
+	 * DependencyExtractionWebpackPlugin maps bare imports onto them. A handful are NOT
+	 * exposed that way and are meant to be bundled by the consumer's build — as of DEWP
+	 * 6.50.0: admin-ui, dataviews, fields, grid, icons, interface, style-runtime, ui,
+	 * undo-manager, views. We keep those as bare imports too, so the consumer bundles a
+	 * single copy rather than us inlining one per entry point. Any package from that list
+	 * we actually import must be declared a peer dependency — today only @wordpress/icons.
 	 */
 	external: [ /^@wordpress\//, 'react', 'react-dom', 'react/jsx-runtime' ],
 ```
@@ -384,11 +385,12 @@ export default defineConfig( {
 	treeshake: true,
 	/**
 	 * WordPress exposes most @wordpress/* packages as script globals, and
-	 * DependencyExtractionWebpackPlugin maps bare imports onto them. Three packages are
-	 * NOT exposed that way and are meant to be bundled by the consumer's build:
-	 * @wordpress/icons, @wordpress/interface, @wordpress/style-engine. We keep them as
-	 * bare imports too (they are declared peer dependencies), so the consumer bundles a
-	 * single copy rather than us inlining one per entry point.
+	 * DependencyExtractionWebpackPlugin maps bare imports onto them. A handful are NOT
+	 * exposed that way and are meant to be bundled by the consumer's build — as of DEWP
+	 * 6.50.0: admin-ui, dataviews, fields, grid, icons, interface, style-runtime, ui,
+	 * undo-manager, views. We keep those as bare imports too, so the consumer bundles a
+	 * single copy rather than us inlining one per entry point. Any package from that list
+	 * we actually import must be declared a peer dependency — today only @wordpress/icons.
 	 */
 	external: [ /^@wordpress\//, 'react', 'react-dom', 'react/jsx-runtime' ],
 	esbuildOptions( options ) {
