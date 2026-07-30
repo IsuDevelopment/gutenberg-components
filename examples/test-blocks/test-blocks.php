@@ -3,7 +3,7 @@
  * Plugin Name:       ISUdev Gutenberg — Test Blocks
  * Description:        Example blocks exercising the @isudev/gutenberg component library.
  * Version:           0.1.0
- * Requires at least: 6.6
+ * Requires at least: 7.0
  * Requires PHP:      8.1
  * Author:            ISUdev
  * License:           MIT
@@ -22,9 +22,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Register example blocks from their compiled metadata.
+ *
+ * Every directory under build/ is registered, so adding an example block is a matter of
+ * adding a src/ directory — there is nothing to list here.
  */
 function register_blocks(): void {
-	register_block_type( __DIR__ . '/build/demo' );
+	foreach ( glob( __DIR__ . '/build/*', GLOB_ONLYDIR ) as $block_dir ) {
+		register_block_type( $block_dir );
+	}
 }
 
 add_action( 'init', __NAMESPACE__ . '\\register_blocks' );

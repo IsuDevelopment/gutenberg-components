@@ -1,16 +1,27 @@
 # Project status
 
-Last updated: 2026-07-10
+Last updated: 2026-07-30
 
 ## Where we are
 
 Scaffold is complete and verified end-to-end (built + externalization checked + symlinked
-into a local WordPress site).
+into a local WordPress site). The `feat/breakpoint-switcher` plan (10 tasks) has landed the
+responsive-value stack described below; only the plan's manual in-editor checks (task 10,
+step 4) remain undone — see "Next steps".
 
 Done:
 - Monorepo (npm workspaces): `packages/gutenberg` (library) + `examples/test-blocks` (WP plugin).
-- Build: `tsup` (ESM + `.d.ts`), subpath `exports` for `fields`/`meta`/`taxonomy`/`hooks`/
-  `components`/`controls`/`appenders`. React + `@wordpress/*` external (decision 0002).
+- Toolchain targets **WP 7.0**: `@wordpress/*` deps pinned to the 7.0 line, `@wordpress/icons`
+  declared as a peer, example plugin's `Requires at least` bumped to 7.0. All blocks
+  (`demo`, `responsive-demo`) are `apiVersion: 3` so the post editor can iframe them.
+- Build: `tsup` (ESM + `.d.ts`), with build entries and subpath `exports` **discovered from
+  the filesystem** rather than hand-maintained — adding a new top-level source directory is
+  enough. Wildcard subpath exports (`./components/*`, `./controls/*`, etc.) let consumers
+  import a single component without pulling in the barrel. React + `@wordpress/*` external
+  (decision 0002).
+- Test harness: Jest + `@swc/jest` + `@testing-library/react` + `jest-environment-jsdom`.
+  27 tests pass across breakpoint validation/resolution, both hooks, `BreakpointSwitcher`,
+  `ResponsiveControl`, and a README-vs-`.d.ts` prop-table drift guard.
 - Binding engine: `useFieldBinding` → `useOptionsSource` + `useValueBinding`.
   - Options sources: `terms`, `posts`, `users`, `postTypes`, `manual`
     (loading/error via `hasFinishedResolution` / `getResolutionError`).
@@ -19,9 +30,35 @@ Done:
 - Fields: `SelectField`, `RadioField`. Easy wrappers: `MetaSelectControl`,
   `MetaRadioControl`, `TaxonomySelectControl`.
 - Hooks: `useCurrentPostType`, `useCurrentPostId`, `useDebouncedValue`, `usePrevious`.
+- **Breakpoints kernel** (`src/breakpoints/`): `DEFAULT_BREAKPOINTS`, `isPresent`,
+  `resolveAttrName`, `resolveCascade` (with `skipActive`), `buildHasValueMap`,
+  `validateBreakpoints`/`useValidatedBreakpoints`. Zero-is-a-value semantics throughout.
+- **`useBreakpoint`** (`src/hooks/`): breakpoint selection state with opt-in `syncToEditor`/
+  `syncFromEditor` against `core/editor`'s device-preview store (capitalized device-type
+  values).
+- **`useResponsiveAttribute`** (`src/hooks/`): per-breakpoint attribute read/write/reset
+  against a block's `attributes`/`setAttributes`, built on the kernel above.
+- **`BreakpointSwitcher`** (`src/components/`): inline (`ToggleGroupControl`) and dropdown
+  (`DropdownMenu`) variants, override indicator, dev-warning fallback for invalid
+  breakpoint sets. No CSS shipped; override dot is an inline style.
+- **`ResponsiveControl`** (`src/controls/`): wires switcher + hook + a render-prop child
+  together; `variant`, `syncToEditor`/`syncFromEditor`, `showReset` all exposed.
+- Each component/control ships a `README.md` with a YAML front-matter + prop table, checked
+  against its `.d.ts` by `tests/readme-props-drift.test.ts` — a drift guard that fails the
+  suite if the docs and the types disagree.
+- `verify:package` (`npm run build && publint --strict && attw --pack . --profile esm-only`)
+  is clean: `publint` reports no issues; `attw`'s `esm-only` profile is green for every
+  subpath (wildcard subpaths report as "(wildcard)", which is expected — `attw` cannot
+  resolve a glob export to a concrete file).
 - Demo block (`isudev/demo`) exercises `SelectField` (manual options + `postTypes` source).
-- `tsc` typecheck clean; library and example both build; `@isudev/gutenberg` bundles into
-  the block while `wp-*` + `react-jsx-runtime` stay external.
+  Responsive demo block (`isudev/responsive-demo`) exercises `ResponsiveControl` in both
+  variants: an inline `RangeControl` with no editor sync, and a dropdown `SelectControl`
+  with `syncToEditor`/`syncFromEditor` enabled, printing the resolved value per breakpoint
+  as visible text.
+- `tsc` typecheck clean (library + `tests/`); library and both example blocks build;
+  `@isudev/gutenberg` bundles into each block while `wp-*` + `react-jsx-runtime` stay
+  external. `examples/test-blocks/test-blocks.php` registers every directory under
+  `build/` via `glob()`, so a third example block needs no PHP change.
 
 ## Environment notes
 
@@ -36,20 +73,34 @@ Done:
   0.27.7). Treat the old note as stale, but if a build fails with a native-binary error,
   fall back to installing with `--ignore-scripts` and building in a normal terminal.
 - `TMPDIR` was pointed at `./.tmp` to avoid filling the sandbox tmp volume (gitignored).
-- Not committed yet — `git init` done, no commits.
+- Committed on `feat/breakpoint-switcher`, off `master`; not yet merged.
 
-## Next steps (not started)
+## Next steps
 
-1. Initial commit (+ optional GitHub remote via `gh`).
-2. Stage 6.5 — tests: Jest + `@testing-library/react`, mock `@wordpress/data`/`core-data`;
-   cover `useFieldBinding` (controlled vs bound), each options source, taxonomy single↔array,
-   the dev-warning.
-3. Remaining fields: `TextField`, `ToggleField`, `CheckboxField`; wrappers
+1. **Manual in-editor verification of `isudev/responsive-demo`** (the `feat/breakpoint-switcher`
+   plan's task 10, step 4 — not yet done by anyone; no browser was available while landing
+   this commit). Add the block to a post in a local WP 7.0 site and check:
+   1. The Column Gap row shows three icons; Desktop is selected.
+   2. Set gap 24 on Desktop. Switch to Tablet: the range is empty and shows 24 as
+      placeholder; the list line for tablet reads 24.
+   3. Set gap 0 on Mobile. The mobile line reads 0, not 24 — the zero-is-a-value rule.
+   4. Tablet and Mobile icons show the override dot; Desktop never does.
+   5. A Reset button appears on Tablet and Mobile but not on Desktop.
+   6. The Layout row shows a single dropdown button; opening it lists all three breakpoints
+      with the active one marked.
+   7. Changing the Layout breakpoint also changes the editor's device preview, and using the
+      editor's own preview switcher moves the Layout breakpoint. Column Gap does not follow,
+      since it opted out.
+   8. Browser console: no warnings from `@isudev/gutenberg`, no React key or hook warnings.
+
+   Fix anything that fails. If step 7 misbehaves, check `core/editor`'s device-type values
+   are capitalized.
+2. Remaining fields: `TextField`, `ToggleField`, `CheckboxField`; wrappers
    `MetaTextControl`, `MetaToggleControl`, `TaxonomyRadioControl`, `TaxonomyCheckboxControl`.
-4. Stage 7 — real `components/` and `controls/`, written from scratch with config
-   injected via props and zero host-project coupling (decision 0001). First component:
-   `BreakpointSwitcher` + `useResponsiveAttribute` + `ResponsiveControl`.
-5. Consider `searchable` mode for `posts`/`users` sources (avoid `per_page: -1`).
-6. Decide CSS strategy if any component ships styles.
+3. The other stage 7 components/controls beyond `BreakpointSwitcher`/`ResponsiveControl`.
+4. Consider `searchable` mode for `posts`/`users` sources (avoid `per_page: -1`).
+5. Decide the CSS strategy once a component actually needs a stylesheet — `sideEffects`
+   stays `false` until then; see the BreakpointSwitcher README and decision 0001 for what
+   must change when one ships.
 
 See `architecture-plan.md` for the full staged checklist.
