@@ -244,9 +244,15 @@ Add to `packages/gutenberg/package.json` `devDependencies`:
 		"@testing-library/dom": "^10.4.0",
 		"@testing-library/jest-dom": "^6.5.0",
 		"@testing-library/react": "^16.0.1",
+		"@types/jest": "^29.5.12",
 		"jest": "^29.7.0",
 		"jest-environment-jsdom": "^29.7.0"
 ```
+
+`@types/jest` is required, not optional: the test files use the ambient `describe` / `it` /
+`expect` globals, and `tsc --noEmit` typechecks test files, so without it the typecheck fails
+the moment the first test lands. (An earlier draft of this plan omitted it and Task 4
+discovered the gap.)
 
 Then run `npm install` in a normal terminal.
 
