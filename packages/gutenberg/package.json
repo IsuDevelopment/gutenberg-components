@@ -9,38 +9,18 @@
 		"dist"
 	],
 	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js"
-		},
-		"./appenders": {
-			"types": "./dist/appenders/index.d.ts",
-			"import": "./dist/appenders/index.js"
-		},
-		"./components": {
-			"types": "./dist/components/index.d.ts",
-			"import": "./dist/components/index.js"
-		},
-		"./controls": {
-			"types": "./dist/controls/index.d.ts",
-			"import": "./dist/controls/index.js"
-		},
-		"./fields": {
-			"types": "./dist/fields/index.d.ts",
-			"import": "./dist/fields/index.js"
-		},
-		"./meta": {
-			"types": "./dist/meta/index.d.ts",
-			"import": "./dist/meta/index.js"
-		},
-		"./taxonomy": {
-			"types": "./dist/taxonomy/index.d.ts",
-			"import": "./dist/taxonomy/index.js"
-		},
-		"./hooks": {
-			"types": "./dist/hooks/index.d.ts",
-			"import": "./dist/hooks/index.js"
-		}
+		".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+		"./appenders": { "types": "./dist/appenders/index.d.ts", "import": "./dist/appenders/index.js" },
+		"./breakpoints": { "types": "./dist/breakpoints/index.d.ts", "import": "./dist/breakpoints/index.js" },
+		"./components": { "types": "./dist/components/index.d.ts", "import": "./dist/components/index.js" },
+		"./components/*": { "types": "./dist/components/*/index.d.ts", "import": "./dist/components/*/index.js" },
+		"./controls": { "types": "./dist/controls/index.d.ts", "import": "./dist/controls/index.js" },
+		"./controls/*": { "types": "./dist/controls/*/index.d.ts", "import": "./dist/controls/*/index.js" },
+		"./fields": { "types": "./dist/fields/index.d.ts", "import": "./dist/fields/index.js" },
+		"./fields/*": { "types": "./dist/fields/*/index.d.ts", "import": "./dist/fields/*/index.js" },
+		"./meta": { "types": "./dist/meta/index.d.ts", "import": "./dist/meta/index.js" },
+		"./taxonomy": { "types": "./dist/taxonomy/index.d.ts", "import": "./dist/taxonomy/index.js" },
+		"./hooks": { "types": "./dist/hooks/index.d.ts", "import": "./dist/hooks/index.js" }
 	},
 	"scripts": {
 		"build": "tsup",
@@ -48,7 +28,8 @@
 		"clean": "rm -rf dist .turbo node_modules",
 		"typecheck": "tsc --noEmit",
 		"test": "jest",
-		"test:watch": "jest --watch"
+		"test:watch": "jest --watch",
+		"verify:package": "npm run build && publint --strict && attw --pack . --profile esm-only"
 	},
 	"peerDependencies": {
 		"@wordpress/block-editor": ">=15.0.0",
@@ -63,6 +44,7 @@
 		"react": "^18.0.0 || ^19.0.0"
 	},
 	"devDependencies": {
+		"@arethetypeswrong/cli": "^0.18.5",
 		"@swc/core": "^1.7.0",
 		"@swc/jest": "^0.2.39",
 		"@testing-library/dom": "^10.4.0",
@@ -71,6 +53,7 @@
 		"@types/react": "^18.3.27",
 		"jest": "^29.7.0",
 		"jest-environment-jsdom": "^29.7.0",
+		"publint": "^0.3.22",
 		"@wordpress/block-editor": "15.13.2",
 		"@wordpress/components": "32.2.1",
 		"@wordpress/compose": "7.40.1",
