@@ -89,8 +89,8 @@ export interface Breakpoint {
 	id: string;
 	/** Human label, shown in the dropdown and as the button's accessible name. */
 	label: string;
-	/** Icon element (e.g. from @wordpress/icons). Typed as ReactElement, not
-	 *  JSX.Element — React 19 removed the global JSX namespace. */
+	/** Icon element (e.g. from @wordpress/icons). Imported ReactElement rather than the
+	 *  global JSX.Element, which React 19's types remove — correct under both 18 and 19. */
 	icon?: ReactElement;
 	/** Marks the breakpoint whose attribute carries no suffix. Exactly one required. */
 	isBase?: boolean;
@@ -138,7 +138,8 @@ function isPresent( raw: unknown ): boolean {
 ```ts
 const {
 	value,           // own value for the active breakpoint; undefined when no override
-	inheritedValue,  // value resolved down the cascade; what the frontend would render
+	inheritedValue,  // value from ancestor breakpoints only, ignoring the active one
+	resolvedValue,   // value ?? inheritedValue — what the frontend would render
 	hasOwnValue,     // boolean, for the active breakpoint
 	hasValue,        // Record<breakpointId, boolean>, for the switcher's indicator
 	onChange,        // writes the active breakpoint's attribute
@@ -157,6 +158,10 @@ Keeping these separate is what makes the UI honest. If the control bound to `val
 back to the desktop value, the author could not tell whether a mobile override exists. So
 `value` drives the input and `inheritedValue` drives the input's `placeholder`, which reads
 as "empty here, inherits 24".
+
+`resolvedValue` exists so consumers never have to recombine the two themselves. Each of the
+three is unambiguous on its own: `value` is "what is set here", `inheritedValue` is "what it
+would fall back to", `resolvedValue` is "what actually applies".
 
 `reset` writes `undefined` (not `''`) so the attribute returns to its `block.json` default
 and disappears from serialized block markup.
@@ -278,10 +283,22 @@ pre-publish gate: `npm pack`, then `publint` (package-field correctness) and
 ### 9.4 Toolchain upgrade to WP 7.0
 
 Prerequisite, agreed separately. Current devDependencies pin `@wordpress/components`
-28.13.0 and React 18.3.1 — roughly WP 6.7 — while the target runtime is WP 7.0 with React
-19. Upgrade `@wordpress/*` devDependencies to their WP 7.0 releases, widen the `react` peer
-range to `^18.0.0 || ^19.0.0`, and update `@types/react` accordingly. Without this we would
-typecheck this component against APIs a release-and-a-half old.
+28.13.0 — between the `wp-6.6` and `wp-6.7` tags — while the target runtime is WP 7.0,
+whose tag resolves to 32.2.1. That is four minor lines of drift, and it covers exactly the
+components this design uses. Pin devDependencies from the `wp-7.0` dist-tag (verified
+2026-07-30): `components@32.2.1`, `block-editor@15.13.2`, `core-data@7.40.2`,
+`data@10.40.1`, `editor@14.40.2`, `element@6.40.1`, `i18n@6.13.1`, `icons@11.7.1`,
+`compose@7.40.1`, and `scripts@31.5.1` for the example plugin.
+
+**React version, corrected.** The WP 7.0 npm line is still **React 18**, not 19:
+`@wordpress/element@6.40.1` depends on `react@^18.3.0` and `@types/react@^18.3.27`
+(verified against the registry, 2026-07-30). Development therefore stays on React 18 —
+installing 19 would produce a genuine peer conflict against every `wp-7.0` package.
+
+Published `peerDependencies.react` is nonetheless widened to `^18.0.0 || ^19.0.0`, which is
+what `@wordpress/components@latest` already declares. This costs nothing today and spares
+consumers a peer error once WordPress moves. The distinction matters: the *dev* range
+describes what we typecheck against, the *peer* range describes what we tolerate at runtime.
 
 ## 10. Styling and iframe safety
 
