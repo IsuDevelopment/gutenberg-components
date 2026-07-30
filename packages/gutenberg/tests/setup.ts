@@ -9,6 +9,5 @@ class MockResizeObserver {
 	disconnect() {}
 }
 
-// eslint-disable-next-line no-undef
 ( globalThis as unknown as { ResizeObserver: unknown } ).ResizeObserver =
 	MockResizeObserver;

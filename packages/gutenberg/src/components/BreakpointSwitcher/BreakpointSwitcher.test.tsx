@@ -83,4 +83,22 @@ describe( 'BreakpointSwitcher', () => {
 		expect( onChange ).toHaveBeenCalledWith( 'mobile' );
 	} );
 
+	it( 'falls back to a text option when a breakpoint has no icon', () => {
+		render(
+			<BreakpointSwitcher
+				value="desktop"
+				onChange={ jest.fn() }
+				label="Breakpoint"
+				breakpoints={ [
+					{ id: 'desktop', label: 'Desktop', isBase: true },
+					{ id: 'tablet', label: 'Tablet', suffix: 'Tablet' },
+				] }
+			/>
+		);
+
+		expect( screen.getByRole( 'radio', { name: 'Tablet' } ) ).toHaveTextContent(
+			'Tablet'
+		);
+	} );
+
 } );

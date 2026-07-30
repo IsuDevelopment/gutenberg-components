@@ -3,6 +3,7 @@ import { sprintf, __ } from '@wordpress/i18n';
 import type { Breakpoint } from '../../breakpoints';
 import {
 	ToggleGroupControl,
+	ToggleGroupControlOption,
 	ToggleGroupControlOptionIcon,
 } from '../../_internal/wp-components';
 import { IconWithOverrideDot } from './IconWithOverrideDot';
@@ -55,22 +56,39 @@ export function InlineSwitcher( {
 				}
 			} }
 		>
-			{ breakpoints.map( ( breakpoint ) => (
-				<ToggleGroupControlOptionIcon
-					key={ breakpoint.id }
-					value={ breakpoint.id }
-					label={ optionLabel( breakpoint, hasValue ) }
-					icon={
-						(
-							! breakpoint.isBase && hasValue[ breakpoint.id ] ? (
+			{ breakpoints.map( ( breakpoint ) => {
+				const optLabel = optionLabel( breakpoint, hasValue );
+				const isOverridden =
+					! breakpoint.isBase && hasValue[ breakpoint.id ];
+
+				// A breakpoint may legitimately omit its icon (Breakpoint.icon is optional).
+				// ToggleGroupControlOptionIcon renders nothing for a missing icon, which would
+				// leave a blank clickable square, so fall back to a text option instead.
+				if ( ! breakpoint.icon ) {
+					return (
+						<ToggleGroupControlOption
+							key={ breakpoint.id }
+							value={ breakpoint.id }
+							label={ optLabel }
+						/>
+					);
+				}
+
+				return (
+					<ToggleGroupControlOptionIcon
+						key={ breakpoint.id }
+						value={ breakpoint.id }
+						label={ optLabel }
+						icon={
+							isOverridden ? (
 								<IconWithOverrideDot icon={ breakpoint.icon } />
 							) : (
 								breakpoint.icon
 							)
-						) as ReactElement
-					}
-				/>
-			) ) }
+						}
+					/>
+				);
+			} ) }
 		</ToggleGroupControl>
 	);
 }

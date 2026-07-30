@@ -91,9 +91,9 @@ const BREAKPOINTS = [
 - The inline variant is built on `ToggleGroupControl`, so arrow keys move between options
   and focus is managed for you. The dropdown variant is built on `DropdownMenu`, which
   handles outside-click, focus return and `Escape`.
-- An overridden breakpoint gains `(modified)` in its accessible name and a dot on its icon.
-  The base breakpoint never shows the indicator: it is not an override, it is the value
-  being overridden.
+- An overridden breakpoint gains `(modified)` in its accessible name in both variants, and in the
+  inline variant its icon also carries a dot. The base breakpoint never shows either: it is not an
+  override, it is the value being overridden.
 - An invalid `breakpoints` set warns once in development and falls back to
   `DEFAULT_BREAKPOINTS`.
 
