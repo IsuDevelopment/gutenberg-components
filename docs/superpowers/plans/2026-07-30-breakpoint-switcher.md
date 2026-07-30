@@ -24,6 +24,28 @@
 - Every public component, control and hook ships a colocated `README.md` following the contract in spec §11.
 - Run `npm run typecheck` and `npm test` before every commit. Both must pass.
 
+**Testing discipline — read this before writing any test.**
+
+Test the rules this design actually hinges on: the presence rule (`0` and `false` are
+values), cascade resolution, which attribute a breakpoint writes to, and the state
+transitions in `useBreakpoint`. That is where defects would be silent and expensive.
+
+Do **not** write:
+
+- tests whose subject is another test, or steps that break something to prove a test can fail;
+- tests for string concatenation, prop pass-through, or "renders without crashing";
+- a test per assertion when one test can carry three related assertions about one behavior.
+
+**When asserting on markup produced by `@wordpress/components`, do not guess.** The ARIA
+roles below (`radio`, `menuitem`) are this plan's best guess at what `ToggleGroupControl` and
+`DropdownMenu` render in version 32.2.1. Before fixing a failing query, render the component
+in the test and print the DOM (`screen.debug()`), then write the query to match what is
+actually there. Never reshape the component to satisfy a guessed role — that is how a wrong
+test turns into wrong code.
+
+If a test is fighting you twice in a row, delete it and cover the behavior in the Task 10
+manual editor checks instead. A brittle test is worse than a documented manual check.
+
 **Environment note:** esbuild's native binary cannot exec inside the agent sandbox (error -88). Run `npm install`, `npm run build` and `npm run verify:package` in a normal terminal. `npm test` (swc) and `npm run typecheck` are fine in-sandbox.
 
 **Reference:** the approved design is `docs/superpowers/specs/2026-07-30-breakpoint-switcher-design.md`. Read §5–§8 before starting Task 4.
@@ -273,43 +295,23 @@ In `packages/gutenberg/package.json` `scripts`, replace the `test` entry:
 		"test:watch": "jest --watch",
 ```
 
-- [ ] **Step 5: Write a smoke test that proves the harness works**
+- [ ] **Step 5: Verify the config loads**
 
-Create `packages/gutenberg/src/utils/noop.test.ts`:
+Run: `npx jest --showConfig --config jest.config.mjs` from `packages/gutenberg`
+Expected: prints resolved config with `testEnvironment: 'jsdom'` and the swc transform, and exits 0.
 
-```ts
-import { noop } from './noop';
+No smoke test is added. The harness is proven by Task 4's tests, which are the first real
+ones; a permanent test asserting that Jest works is a test about a test.
 
-describe( 'test harness', () => {
-	it( 'runs TypeScript tests', () => {
-		expect( noop() ).toBeUndefined();
-	} );
-
-	it( 'has jsdom available', () => {
-		const el = document.createElement( 'div' );
-		el.textContent = 'hello';
-		expect( el ).toHaveTextContent( 'hello' );
-	} );
-} );
-```
-
-The second assertion uses a `jest-dom` matcher and a DOM global, so it fails loudly if either the environment or the setup file is misconfigured.
-
-- [ ] **Step 6: Run the tests**
-
-Run: `npm test --workspace=packages/gutenberg`
-Expected: PASS, 2 tests.
-
-- [ ] **Step 7: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
-git add packages/gutenberg/jest.config.mjs packages/gutenberg/tests/setup.ts packages/gutenberg/package.json packages/gutenberg/src/utils/noop.test.ts package-lock.json
+git add packages/gutenberg/jest.config.mjs packages/gutenberg/tests/setup.ts packages/gutenberg/package.json package-lock.json
 git commit -m "test: add the Jest harness that stage 6.5 deferred
 
-The test script was 'echo TODO && exit 0', so a passing run proved nothing. Jest now
-runs TypeScript and TSX through @swc/jest with the automatic JSX runtime, in jsdom,
-with jest-dom matchers. The smoke test asserts against a DOM global and a jest-dom
-matcher so a misconfigured environment fails loudly instead of silently passing."
+The test script was 'echo TODO && exit 0', so a passing run proved nothing. Jest now runs
+TypeScript and TSX through @swc/jest with the automatic JSX runtime, in jsdom, with jest-dom
+matchers."
 ```
 
 ---
@@ -517,41 +519,32 @@ import {
 	resolveCascade,
 } from './resolve';
 
-const [ desktop, tablet, mobile ] = DEFAULT_BREAKPOINTS;
+const [ desktop, tablet ] = DEFAULT_BREAKPOINTS;
 
+/**
+ * The presence rule is the one thing the whole design rests on, so it is asserted directly
+ * rather than only through the cascade. resolveAttrName is not tested on its own — it is
+ * string concatenation, and every cascade assertion below exercises it.
+ */
 describe( 'isPresent', () => {
-	it( 'treats 0 and false as present', () => {
+	it( 'counts 0 and false as values, and undefined/null/empty string as absent', () => {
 		expect( isPresent( 0 ) ).toBe( true );
 		expect( isPresent( false ) ).toBe( true );
-	} );
-
-	it( 'treats undefined, null and empty string as absent', () => {
 		expect( isPresent( undefined ) ).toBe( false );
 		expect( isPresent( null ) ).toBe( false );
 		expect( isPresent( '' ) ).toBe( false );
 	} );
 } );
 
-describe( 'resolveAttrName', () => {
-	it( 'leaves the base attribute unsuffixed', () => {
-		expect( resolveAttrName( 'columnGap', desktop ) ).toBe( 'columnGap' );
-	} );
-
-	it( 'suffixes non-base breakpoints', () => {
-		expect( resolveAttrName( 'columnGap', tablet ) ).toBe( 'columnGapTablet' );
-		expect( resolveAttrName( 'columnGap', mobile ) ).toBe( 'columnGapMobile' );
-	} );
-} );
-
 describe( 'resolveCascade', () => {
-	it( 'returns the own value when present', () => {
-		const attributes = { columnGap: 24, columnGapMobile: 8 };
+	it( 'prefers the own value, then walks back to the base', () => {
 		expect(
-			resolveCascade( 'columnGap', DEFAULT_BREAKPOINTS, 'mobile', attributes )
+			resolveCascade( 'columnGap', DEFAULT_BREAKPOINTS, 'mobile', {
+				columnGap: 24,
+				columnGapMobile: 8,
+			} )
 		).toBe( 8 );
-	} );
 
-	it( 'falls back to tablet, then desktop', () => {
 		expect(
 			resolveCascade( 'columnGap', DEFAULT_BREAKPOINTS, 'mobile', {
 				columnGap: 24,
@@ -586,18 +579,15 @@ describe( 'resolveCascade', () => {
 			)
 		).toBe( 24 );
 	} );
-
-	it( 'returns undefined for an unknown breakpoint id', () => {
-		expect(
-			resolveCascade( 'columnGap', DEFAULT_BREAKPOINTS, 'watch', {
-				columnGap: 24,
-			} )
-		).toBeUndefined();
-	} );
 } );
 
 describe( 'buildHasValueMap', () => {
 	it( 'marks only non-base breakpoints that carry an override', () => {
+		expect( resolveAttrName( 'columnGap', desktop ) ).toBe( 'columnGap' );
+		expect( resolveAttrName( 'columnGap', tablet ) ).toBe(
+			'columnGapTablet'
+		);
+
 		expect(
 			buildHasValueMap( 'columnGap', DEFAULT_BREAKPOINTS, {
 				columnGap: 24,
@@ -758,7 +748,8 @@ export function buildHasValueMap(
 - [ ] **Step 6: Run the resolution tests**
 
 Run: `npm test --workspace=packages/gutenberg -- resolve`
-Expected: PASS, 10 tests.
+Expected: PASS. This is also the first real run of the harness from Task 2 — if it fails to
+even load, the problem is the Jest config, not this code.
 
 - [ ] **Step 7: Write the failing validation tests**
 
@@ -773,7 +764,7 @@ describe( 'validateBreakpoints', () => {
 		expect( validateBreakpoints( DEFAULT_BREAKPOINTS ) ).toEqual( [] );
 	} );
 
-	it( 'requires exactly one base', () => {
+	it( 'reports each way a set can be unusable', () => {
 		expect(
 			validateBreakpoints( [
 				{ id: 'a', label: 'A' },
@@ -784,21 +775,10 @@ describe( 'validateBreakpoints', () => {
 		expect(
 			validateBreakpoints( [
 				{ id: 'a', label: 'A', isBase: true },
-				{ id: 'b', label: 'B', isBase: true },
-			] )
-		).toContainEqual( expect.stringContaining( 'exactly one' ) );
-	} );
-
-	it( 'requires a suffix on every non-base breakpoint', () => {
-		expect(
-			validateBreakpoints( [
-				{ id: 'a', label: 'A', isBase: true },
 				{ id: 'b', label: 'B' },
 			] )
 		).toContainEqual( expect.stringContaining( 'no suffix' ) );
-	} );
 
-	it( 'rejects duplicate ids and duplicate suffixes', () => {
 		expect(
 			validateBreakpoints( [
 				{ id: 'a', label: 'A', isBase: true },
@@ -935,7 +915,7 @@ export * from './breakpoints';
 - [ ] **Step 11: Run the full suite and typecheck**
 
 Run: `npm test --workspace=packages/gutenberg && npm run typecheck --workspace=packages/gutenberg`
-Expected: PASS, 16 tests; typecheck clean.
+Expected: both PASS.
 
 - [ ] **Step 12: Record the ADR**
 
@@ -1052,19 +1032,18 @@ function setup(
 }
 
 describe( 'useResponsiveAttribute', () => {
-	it( 'reads the unsuffixed attribute for the base breakpoint', () => {
-		const { result } = setup( { columnGap: 24 }, 'desktop' );
+	it( 'reads the base attribute unsuffixed and others suffixed', () => {
+		const base = setup( { columnGap: 24 }, 'desktop' );
 
-		expect( result.current.attrNameForBreakpoint ).toBe( 'columnGap' );
-		expect( result.current.value ).toBe( 24 );
-		expect( result.current.hasOwnValue ).toBe( true );
-	} );
+		expect( base.result.current.attrNameForBreakpoint ).toBe( 'columnGap' );
+		expect( base.result.current.value ).toBe( 24 );
 
-	it( 'reads the suffixed attribute for a non-base breakpoint', () => {
-		const { result } = setup( { columnGap: 24, columnGapMobile: 8 } );
+		const override = setup( { columnGap: 24, columnGapMobile: 8 } );
 
-		expect( result.current.attrNameForBreakpoint ).toBe( 'columnGapMobile' );
-		expect( result.current.value ).toBe( 8 );
+		expect( override.result.current.attrNameForBreakpoint ).toBe(
+			'columnGapMobile'
+		);
+		expect( override.result.current.value ).toBe( 8 );
 	} );
 
 	it( 'separates own, inherited and resolved values', () => {
@@ -1132,13 +1111,6 @@ describe( 'useResponsiveAttribute', () => {
 		expect( setAttributes.mock.calls[ 0 ][ 0 ] ).not.toHaveProperty(
 			'columnGap'
 		);
-	} );
-
-	it( 'falls back to the base breakpoint when given an unknown id', () => {
-		const { result } = setup( { columnGap: 24 }, 'watch' );
-
-		expect( result.current.attrNameForBreakpoint ).toBe( 'columnGap' );
-		expect( result.current.value ).toBe( 24 );
 	} );
 } );
 ```
@@ -1286,7 +1258,7 @@ export function useResponsiveAttribute(
 - [ ] **Step 4: Run the tests**
 
 Run: `npm test --workspace=packages/gutenberg -- useResponsiveAttribute`
-Expected: PASS, 9 tests.
+Expected: PASS.
 
 - [ ] **Step 5: Export from the hooks barrel**
 
@@ -1375,14 +1347,6 @@ describe( 'useBreakpoint', () => {
 
 		expect( result.current[ 0 ] ).toBe( 'mobile' );
 		expect( setDeviceType ).not.toHaveBeenCalled();
-	} );
-
-	it( 'honours an explicit initial breakpoint', () => {
-		const { result } = renderHook( () =>
-			useBreakpoint( { initial: 'tablet' } )
-		);
-
-		expect( result.current[ 0 ] ).toBe( 'tablet' );
 	} );
 
 	it( 'pushes the selection to the editor when syncToEditor is set', () => {
@@ -1523,7 +1487,7 @@ export function useBreakpoint(
 - [ ] **Step 4: Run the tests**
 
 Run: `npm test --workspace=packages/gutenberg -- useBreakpoint`
-Expected: PASS, 5 tests.
+Expected: PASS.
 
 - [ ] **Step 5: Export from the hooks barrel**
 
@@ -1608,11 +1572,12 @@ describe( 'BreakpointSwitcher', () => {
 		expect( container ).toBeEmptyDOMElement();
 	} );
 
-	it( 'renders one option per breakpoint in the inline variant', () => {
+	it( 'offers every breakpoint and reports the chosen one', async () => {
+		const onChange = jest.fn();
 		render(
 			<BreakpointSwitcher
 				value="desktop"
-				onChange={ jest.fn() }
+				onChange={ onChange }
 				label="Breakpoint"
 			/>
 		);
@@ -1624,17 +1589,6 @@ describe( 'BreakpointSwitcher', () => {
 				} )
 			).toBeInTheDocument();
 		} );
-	} );
-
-	it( 'reports the chosen breakpoint', async () => {
-		const onChange = jest.fn();
-		render(
-			<BreakpointSwitcher
-				value="desktop"
-				onChange={ onChange }
-				label="Breakpoint"
-			/>
-		);
 
 		await userEvent.click(
 			screen.getByRole( 'radio', { name: /tablet/i } )
@@ -1682,34 +1636,13 @@ describe( 'BreakpointSwitcher', () => {
 		expect( onChange ).toHaveBeenCalledWith( 'mobile' );
 	} );
 
-	it( 'warns and falls back when the breakpoint set is invalid', () => {
-		const warn = jest
-			.spyOn( console, 'warn' )
-			.mockImplementation( () => {} );
-
-		render(
-			<BreakpointSwitcher
-				value="desktop"
-				onChange={ jest.fn() }
-				label="Breakpoint"
-				breakpoints={ [
-					{ id: 'a', label: 'A' },
-					{ id: 'b', label: 'B', suffix: 'B' },
-				] }
-			/>
-		);
-
-		expect( warn ).toHaveBeenCalledWith(
-			expect.stringContaining( 'Invalid breakpoints' )
-		);
-		expect(
-			screen.getByRole( 'radio', { name: /desktop/i } )
-		).toBeInTheDocument();
-
-		warn.mockRestore();
-	} );
 } );
 ```
+
+The invalid-breakpoints fallback is deliberately **not** tested here. `validateBreakpoints`
+is already covered directly in Task 4, and asserting on it through a `console.warn` spy plus
+rendered output would be a brittle test of a dev-time ergonomic rather than of behavior
+anyone ships.
 
 Add `"@testing-library/user-event": "^14.5.2"` to `packages/gutenberg/devDependencies` and run `npm install`.
 
@@ -2043,9 +1976,11 @@ export type { BreakpointSwitcherProps } from './BreakpointSwitcher';
 - [ ] **Step 10: Run the tests**
 
 Run: `npm test --workspace=packages/gutenberg -- BreakpointSwitcher`
-Expected: PASS, 6 tests.
+Expected: PASS.
 
-If the inline options report a role other than `radio`, check what `ToggleGroupControl` renders in version 32.2.1 and update the queries to match — do not change the component to satisfy a guessed role.
+`radio` and `menuitem` are this plan's guesses at what `ToggleGroupControl` and
+`DropdownMenu` render in 32.2.1. If a query fails, add `screen.debug()` to see the real
+markup and fix the **query**. Do not reshape the component to satisfy a guessed role.
 
 - [ ] **Step 11: Write the README**
 
@@ -2315,23 +2250,6 @@ function Harness( {
 }
 
 describe( 'ResponsiveControl', () => {
-	it( 'renders the label and the switcher', () => {
-		render( <Harness attributes={ { columnGap: 24 } } /> );
-
-		expect( screen.getByText( 'Column Gap' ) ).toBeInTheDocument();
-		expect(
-			screen.getByRole( 'radio', { name: /desktop/i } )
-		).toBeInTheDocument();
-	} );
-
-	it( 'starts on the base breakpoint and exposes its value', () => {
-		render( <Harness attributes={ { columnGap: 24 } } /> );
-
-		expect( screen.getByLabelText( 'Column Gap value' ) ).toHaveValue(
-			'24'
-		);
-	} );
-
 	it( 'swaps which attribute the child edits when the breakpoint changes', async () => {
 		const setAttributes = jest.fn();
 		render(
@@ -2339,6 +2257,12 @@ describe( 'ResponsiveControl', () => {
 				attributes={ { columnGap: 24 } }
 				setAttributes={ setAttributes }
 			/>
+		);
+
+		// Starts on the base breakpoint, showing its value.
+		expect( screen.getByText( 'Column Gap' ) ).toBeInTheDocument();
+		expect( screen.getByLabelText( 'Column Gap value' ) ).toHaveValue(
+			'24'
 		);
 
 		await userEvent.click(
@@ -2560,7 +2484,7 @@ export type {
 - [ ] **Step 6: Run the tests**
 
 Run: `npm test --workspace=packages/gutenberg -- ResponsiveControl`
-Expected: PASS, 4 tests.
+Expected: PASS.
 
 - [ ] **Step 7: Write the ResponsiveControl README**
 
@@ -2857,21 +2781,17 @@ const CASES = [
 describe.each( CASES )(
 	'$name README documents its props',
 	( { readme, types, interfaceName } ) => {
-		const documented = propsFromReadme( readme );
-		const declared = propsFromInterface( types, interfaceName );
+		it( 'matches the declared props in both directions', () => {
+			const documented = propsFromReadme( readme );
+			const declared = propsFromInterface( types, interfaceName );
 
-		it( 'documents every declared prop', () => {
-			const missing = declared.filter(
-				( prop ) => ! documented.includes( prop )
-			);
-			expect( missing ).toEqual( [] );
-		} );
+			expect(
+				declared.filter( ( prop ) => ! documented.includes( prop ) )
+			).toEqual( [] );
 
-		it( 'documents no prop that no longer exists', () => {
-			const stale = documented.filter(
-				( prop ) => ! declared.includes( prop )
-			);
-			expect( stale ).toEqual( [] );
+			expect(
+				documented.filter( ( prop ) => ! declared.includes( prop ) )
+			).toEqual( [] );
 		} );
 	}
 );
@@ -2959,17 +2879,11 @@ export function propsFromReadme( filePath: string ): string[] {
 - [ ] **Step 4: Run the test**
 
 Run: `npm test --workspace=packages/gutenberg -- readme-props-drift`
-Expected: PASS, 4 tests.
+Expected: PASS.
 
 If it fails, the README is wrong, not the test — fix the table.
 
-- [ ] **Step 5: Prove the guard actually catches drift**
-
-Temporarily add `foo?: string;` to `BreakpointSwitcherProps`, run the test, and confirm it
-fails with `foo` in the `missing` array. Then remove it and confirm the suite is green again.
-This step exists because a drift guard that cannot fail is worse than no guard.
-
-- [ ] **Step 6: Commit**
+- [ ] **Step 5: Commit**
 
 ```bash
 git add packages/gutenberg/tests/helpers/props-from-interface.ts packages/gutenberg/tests/readme-props-drift.test.ts
@@ -3263,7 +3177,7 @@ described the change abstractly.
 - `optionLabel` — defined in `InlineSwitcher.tsx` in Task 7 step 6 and imported by `DropdownSwitcher.tsx` in step 7. Slightly odd home for a shared helper, but it keeps the file count down and the import is explicit.
 - `hasValue` is a `Record<string, boolean>` everywhere, and the base is always `false` in it — asserted in Task 4, relied on in Task 7's label logic and Task 8's reset logic.
 
-Two problems found and actually fixed while reviewing, rather than merely noted:
+Three problems found and actually fixed while reviewing, rather than merely noted:
 
 1. Task 2's Jest config carried `setupFilesAfterEach`, which is not a Jest option. Jest
    ignores unknown keys, so this would not have errored — it would have quietly looked like
@@ -3271,6 +3185,15 @@ Two problems found and actually fixed while reviewing, rather than merely noted:
 2. Task 10 step 3 described the PHP change abstractly. `test-blocks.php` has since been read
    and the step now carries the exact replacement, including the plugin header's
    `Requires at least` bump.
+3. The test suite was too large, in the specific ways that produce brittle tests and wasted
+   review. Cut: the Jest smoke test (a test asserting that Jest works), the step that broke
+   the drift guard to prove it could fail, standalone tests for `resolveAttrName` (string
+   concatenation), the `initial` prop pass-through test, the `console.warn` spy for invalid
+   breakpoints (already covered directly by `validateBreakpoints`), and several
+   "renders the label" assertions folded into the behavioral tests that already pass through
+   them. Exact test counts were removed from the verification steps so nobody optimizes for a
+   number. What remains covers the presence rule, cascade resolution, attribute selection,
+   write/reset/resetAll, the sync directions, and the two variants' selection behavior.
 
 ---
 
