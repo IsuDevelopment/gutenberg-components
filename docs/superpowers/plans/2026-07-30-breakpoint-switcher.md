@@ -2442,6 +2442,11 @@ export function ResponsiveControl(
 		breakpoints,
 	} );
 
+	// `hasValue`, not `hasOwnValue`: the base breakpoint's own value is the thing being
+	// overridden rather than an override, so it must not offer a reset, whereas
+	// `hasOwnValue` would be `true` whenever the base has a value at all.
+	const activeHasOverride = responsive.hasValue[ breakpoint ] ?? false;
+
 	return (
 		<div className={ className }>
 			<Flex justify="space-between" align="center" gap={ 2 }>
@@ -2467,7 +2472,7 @@ export function ResponsiveControl(
 
 			{ children( { ...responsive, breakpoint } ) }
 
-			{ showReset && responsive.hasOwnValue && (
+			{ showReset && activeHasOverride && (
 				<Button
 					size="small"
 					variant="tertiary"
