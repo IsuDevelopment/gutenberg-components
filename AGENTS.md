@@ -36,6 +36,13 @@ import { MetaSelectControl } from '@isudev/gutenberg/meta';
 5. **Stable public API.** Public surface is controlled by `exports` in `package.json`.
    Anything under `_internal/` is private and never exported.
 6. **Only `@wordpress/*` at runtime** (peer deps). Nothing else.
+7. **Every component ships a `README.md` in its own folder**, documenting *all* of its
+   features — every prop, variant and behaviour — with runnable usage examples. The docs
+   site and the MCP tool descriptions are **generated from these files**, so an
+   undocumented feature is invisible and a stale README ships as wrong documentation and a
+   wrong tool description. Code, tests and README are one unit of work and land in the same
+   commit. See `.agents/instructions/adding-a-component.md` and
+   `.agents/instructions/changing-a-component.md`.
 
 ## Language & style
 
@@ -58,13 +65,26 @@ import { MetaSelectControl } from '@isudev/gutenberg/meta';
   decisions/             # ADRs — one file per architectural decision
   instructions/          # Task/workflow instructions for agents
   skills/                # Reusable skills / procedures
-src/                     # Library source (see plan for the full tree)
+  specs/                 # Approved designs — YYYY-MM-DD-<topic>-design.md
+  plans/                 # Implementation plans — YYYY-MM-DD-<feature>.md
+packages/gutenberg/src/  # Library source (see plan for the full tree)
 examples/                # Example blocks consuming the library
 ```
 
-**All project knowledge — skills, instructions, decisions — lives under `.agents/`.**
-When you make an architectural decision, record it in `.agents/decisions/`. When you
-define a repeatable procedure, add it to `.agents/skills/`.
+**All project knowledge — skills, instructions, decisions, specs, plans — lives under
+`.agents/`.** When you make an architectural decision, record it in `.agents/decisions/`.
+When you define a repeatable procedure, add it to `.agents/skills/`.
+
+Specs and plans live in `.agents/specs/` and `.agents/plans/` — **not** under `docs/`.
+They are shared working context for everyone on the project, and keeping them beside the
+decisions and instructions means one place to look. This overrides any tool default that
+writes them to `docs/`. `docs/` is reserved for generated, user-facing documentation.
+
+Start here for common work:
+
+- `.agents/instructions/adding-a-component.md` — new component, control, field or hook.
+- `.agents/instructions/changing-a-component.md` — modifying an existing one.
+- `.agents/instructions/local-development.md` — linking the library into a local WP site.
 
 ## Reference material (read-only, do NOT depend on it)
 
@@ -79,17 +99,25 @@ Current prior art:
   subpath `exports` with filesystem-discovered build entries, colocated per-component
   `readme.md`, and mirroring `DependencyExtractionWebpackPlugin`'s bundled-package list.
 
-## Build & tooling (to finalize in Stage 1)
+## Build & tooling
 
-- Bundler: `tsup` (esbuild) with `preserveModules` so `src/` maps 1:1 to subpath
-  `exports`; emits `.d.ts`.
-- JSX runtime: decide `@wordpress/element` vs `react/jsx-runtime` (WP standard is
-  `@wordpress/element`).
-- Tests: Jest + `@testing-library/react`, mocking `@wordpress/data` / `core-data`.
+- Bundler: `tsup` (esbuild), ESM only, emits `.d.ts`. Build **entries are discovered from
+  the filesystem** — every `index.ts` under `src/` becomes one, so `dist/` mirrors `src/`
+  and adding a component folder needs no config change. `_internal/` is skipped.
+- Subpath `exports` in `package.json` are **hand-maintained**, with wildcards for
+  `./components/*`, `./controls/*` and `./fields/*`. A new top-level source directory needs
+  its key added by hand.
+- JSX runtime: automatic, `jsxImportSource: "react"`. `@wordpress/*`, `react`, `react-dom`
+  and `react/jsx-runtime` are external (decision 0002).
+- Tests: Jest + `@swc/jest` + `@testing-library/react` + jsdom.
+- `npm run verify:package` (`build && publint --strict && attw --profile esm-only`) is the
+  packaging gate and must stay clean.
 
 ## Working agreement for agents
 
 - Read `.agents/architecture-plan.md` before writing any code.
 - Follow the staged checklist in the plan; keep changes minimal and reviewable.
+- Adding or changing a component? Follow the matching file in `.agents/instructions/` —
+  including its README requirement.
 - Do not introduce dependencies beyond `@wordpress/*` (peer) without recording a
   decision in `.agents/decisions/`.

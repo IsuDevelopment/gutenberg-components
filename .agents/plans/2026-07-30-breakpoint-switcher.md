@@ -48,7 +48,7 @@ manual editor checks instead. A brittle test is worse than a documented manual c
 
 **Environment note:** esbuild's native binary cannot exec inside the agent sandbox (error -88). Run `npm install`, `npm run build` and `npm run verify:package` in a normal terminal. `npm test` (swc) and `npm run typecheck` are fine in-sandbox.
 
-**Reference:** the approved design is `docs/superpowers/specs/2026-07-30-breakpoint-switcher-design.md`. Read §5–§8 before starting Task 4.
+**Reference:** the approved design is `.agents/specs/2026-07-30-breakpoint-switcher-design.md`. Read §5–§8 before starting Task 4.
 
 ---
 

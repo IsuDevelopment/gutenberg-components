@@ -131,8 +131,16 @@ is not rediscovered from scratch.
 11. **`useValidatedBreakpoints` is public, named as a hook, and calls no hooks.** It is an
     internal guard carrying React's hook-rules expectations for no reason. Renaming or
     unexporting it is a pre-1.0 cleanup.
-12. **`AGENTS.md`'s "Build & tooling (to finalize in Stage 1)" section is stale** — the JSX
-    runtime question it poses was settled by decision 0002, and `tsup` is configured with
-    discovered entries rather than `preserveModules`.
+12. ~~**`AGENTS.md`'s "Build & tooling (to finalize in Stage 1)" section is stale**~~ —
+    fixed 2026-07-30: the section now describes the shipped setup (discovered entries,
+    `jsxImportSource: "react"`, hand-maintained exports, `verify:package` as the gate).
+
+## Documentation gap
+
+`src/fields/SelectField` and `src/fields/RadioField` have **no `README.md`**, and neither do
+the `meta`/`taxonomy` wrappers. They predate the rule in `AGENTS.md` principle 7 and
+`instructions/adding-a-component.md`. Every one of them needs a README before the docs
+generation or the MCP tool descriptions can be built, and each should join `CASES` in
+`tests/readme-props-drift.test.ts` once written.
 
 See `architecture-plan.md` for the full staged checklist.
