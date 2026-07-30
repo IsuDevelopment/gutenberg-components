@@ -47,5 +47,8 @@ should be migrated for consistency. Deferred rather than folded into unrelated w
 
 - Exactly one React / `wp.element` copy at runtime — no hook conflicts.
 - The library never ships React or `@wordpress/*` code.
-- `dist/` structure mirrors `src/` (one entry per subpath export) so `exports` map 1:1.
+- `dist/` structure mirrors `src/` (one entry per subpath export), which is what lets the
+  `exports` map be written as straightforward 1:1 paths. The map itself is hand-maintained in
+  `package.json`, with wildcards only for `./components/*`, `./controls/*` and `./fields/*`;
+  only the tsup entries are discovered from the filesystem.
 - One import source for hooks and React types across the codebase.

@@ -118,6 +118,11 @@ position the whole row.
   is deliberate.
 - Attributes must be declared in `block.json` for every breakpoint you offer —
   `columnGapTablet` and `columnGapMobile` do not spring into existence.
+- `syncFromEditor` without `syncToEditor` makes the switcher read-only in practice. Clicking
+  a breakpoint selects it, then the effect that follows the editor's device preview sees an
+  unchanged device type and reverts the selection — nothing pushed the click outwards for it
+  to agree with. Pass both flags for an interactive switcher tied to the preview, or neither
+  for one that stands alone.
 
 ## Related
 

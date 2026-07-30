@@ -26,6 +26,15 @@ export function propsFromInterface(
 			ts.isInterfaceDeclaration( node ) &&
 			node.name.text === interfaceName
 		) {
+			// Only the interface's own members are walked, so an `extends` clause would
+			// quietly shrink the set being compared and turn the drift guard into false
+			// confidence — a green test documenting one prop out of ten. Fail loudly instead.
+			if ( node.heritageClauses?.length ) {
+				throw new Error(
+					`Interface "${ interfaceName }" in ${ filePath } uses extends; inherited members are not collected. Flatten the interface or handle the inherited props explicitly in the test.`
+				);
+			}
+
 			for ( const member of node.members ) {
 				if ( ts.isPropertySignature( member ) && member.name ) {
 					names.push( member.name.getText( source ) );

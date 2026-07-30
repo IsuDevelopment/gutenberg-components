@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import { BaseControl, Button, Flex, FlexItem } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { BreakpointSwitcher } from '../../components/BreakpointSwitcher';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useResponsiveAttribute } from '../../hooks/useResponsiveAttribute';
@@ -51,6 +51,26 @@ export function ResponsiveControl(
 	// `hasOwnValue` would be `true` whenever the base has a value at all.
 	const activeHasOverride = responsive.hasValue[ breakpoint ] ?? false;
 
+	// `BaseControl.VisualLabel` is not programmatically associated with anything, so the
+	// switcher and the reset button would otherwise be named "Breakpoint" and "Reset" in
+	// every instance. Two ResponsiveControls in one panel then sound identical to a screen
+	// reader, so fold the visible label into both accessible names when there is one.
+	const switcherLabel = label
+		? sprintf(
+				/* translators: %s: the setting's label, e.g. Column Gap. */
+				__( 'Breakpoint for %s' ),
+				label
+		  )
+		: __( 'Breakpoint' );
+
+	const resetLabel = label
+		? sprintf(
+				/* translators: %s: the setting's label, e.g. Column Gap. */
+				__( 'Reset %s' ),
+				label
+		  )
+		: __( 'Reset' );
+
 	return (
 		<div className={ className }>
 			<Flex justify="space-between" align="center" gap={ 2 }>
@@ -68,7 +88,7 @@ export function ResponsiveControl(
 						onChange={ setBreakpoint }
 						breakpoints={ breakpoints }
 						hasValue={ responsive.hasValue }
-						label={ __( 'Breakpoint' ) }
+						label={ switcherLabel }
 						hideLabelFromVision
 					/>
 				</FlexItem>
@@ -80,6 +100,7 @@ export function ResponsiveControl(
 				<Button
 					size="small"
 					variant="tertiary"
+					aria-label={ resetLabel }
 					onClick={ responsive.reset }
 				>
 					{ __( 'Reset' ) }

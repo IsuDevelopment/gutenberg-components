@@ -13,9 +13,9 @@ class MockResizeObserver {
 	MockResizeObserver;
 
 // jsdom does not implement window.matchMedia. @wordpress/components' `Flex` reads it on
-// mount, via `useResponsiveValue`, to resolve its responsive `gap`/`direction` props — so a
-// no-op stand-in is needed for it to mount under jsdom at all, same rationale as the
-// `ResizeObserver` shim above.
+// mount, via `useResponsiveValue`, to resolve its responsive `direction` prop — `gap` is not
+// responsive and goes straight to `space( gap )`. So a no-op stand-in is needed for `Flex`
+// to mount under jsdom at all, same rationale as the `ResizeObserver` shim above.
 if ( ! window.matchMedia ) {
 	window.matchMedia = ( query: string ): MediaQueryList =>
 		( {

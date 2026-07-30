@@ -16,6 +16,16 @@ export function validateBreakpoints( breakpoints: Breakpoint[] ): string[] {
 		);
 	}
 
+	// `resolveCascade` walks from the active breakpoint back to index 0, so a base anywhere
+	// else is unreachable and every non-base breakpoint resolves to `undefined`.
+	const baseIndex = breakpoints.findIndex( ( breakpoint ) => breakpoint.isBase );
+
+	if ( baseIndex > 0 ) {
+		errors.push(
+			`the base breakpoint must be first (found "${ breakpoints[ baseIndex ].id }" at index ${ baseIndex })`
+		);
+	}
+
 	const seenIds = new Set< string >();
 	const seenSuffixes = new Set< string >();
 

@@ -35,5 +35,13 @@ describe( 'validateBreakpoints', () => {
 				{ id: 'c', label: 'C', suffix: 'X' },
 			] )
 		).toContainEqual( expect.stringContaining( 'duplicate suffix' ) );
+
+		expect(
+			validateBreakpoints( [
+				{ id: 'a', label: 'A', suffix: 'A' },
+				{ id: 'b', label: 'B', suffix: 'B' },
+				{ id: 'c', label: 'C', isBase: true },
+			] )
+		).toContainEqual( expect.stringContaining( 'must be first' ) );
 	} );
 } );

@@ -54,12 +54,21 @@ describe( 'BreakpointSwitcher', () => {
 			/>
 		);
 
-		expect(
-			screen.getByRole( 'radio', { name: /tablet \(modified\)/i } )
-		).toBeInTheDocument();
+		const overridden = screen.getByRole( 'radio', {
+			name: /tablet \(modified\)/i,
+		} );
+
+		expect( overridden ).toBeInTheDocument();
 		expect(
 			screen.getByRole( 'radio', { name: /^desktop$/i } )
 		).toBeInTheDocument();
+
+		// The override wrapper must not cost the icon its sizing: `Icon` only applies
+		// width/height to an SVG child, so wrapping it in a <span> silently drops them.
+		expect( overridden.querySelector( 'svg' ) ).toHaveAttribute(
+			'width',
+			'24'
+		);
 	} );
 
 	it( 'opens a menu and selects in the dropdown variant', async () => {

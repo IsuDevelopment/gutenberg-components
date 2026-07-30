@@ -1,12 +1,15 @@
 {
 	"name": "@isudev/gutenberg",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Standalone components, controls, fields and hooks for the WordPress Gutenberg editor.",
 	"license": "MIT",
 	"type": "module",
 	"sideEffects": false,
 	"files": [
-		"dist"
+		"dist",
+		"src/**/README.md",
+		"README.md",
+		"LICENSE"
 	],
 	"exports": {
 		".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
@@ -34,7 +37,6 @@
 	"peerDependencies": {
 		"@wordpress/block-editor": ">=15.0.0",
 		"@wordpress/components": ">=32.0.0",
-		"@wordpress/compose": ">=7.0.0",
 		"@wordpress/core-data": ">=7.0.0",
 		"@wordpress/data": ">=10.0.0",
 		"@wordpress/editor": ">=14.0.0",
@@ -58,7 +60,6 @@
 		"publint": "^0.3.22",
 		"@wordpress/block-editor": "15.13.2",
 		"@wordpress/components": "32.2.1",
-		"@wordpress/compose": "7.40.1",
 		"@wordpress/core-data": "7.40.2",
 		"@wordpress/data": "10.40.1",
 		"@wordpress/editor": "14.40.2",

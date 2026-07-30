@@ -14,14 +14,14 @@ Done:
 - Toolchain targets **WP 7.0**: `@wordpress/*` deps pinned to the 7.0 line, `@wordpress/icons`
   declared as a peer, example plugin's `Requires at least` bumped to 7.0. All blocks
   (`demo`, `responsive-demo`) are `apiVersion: 3` so the post editor can iframe them.
-- Build: `tsup` (ESM + `.d.ts`), with build entries and subpath `exports` **discovered from
-  the filesystem** rather than hand-maintained — adding a new top-level source directory is
-  enough. Wildcard subpath exports (`./components/*`, `./controls/*`, etc.) let consumers
-  import a single component without pulling in the barrel. React + `@wordpress/*` external
-  (decision 0002).
+- Build: `tsup` (ESM + `.d.ts`). Build **entries** are discovered from the filesystem;
+  subpath `exports` in `package.json` are **hand-maintained**. Wildcard exports exist for
+  `./components/*`, `./controls/*` and `./fields/*` only, so a new component folder in one of
+  those categories needs no change, while a new top-level source directory needs its
+  `exports` key added by hand. React + `@wordpress/*` external (decision 0002).
 - Test harness: Jest + `@swc/jest` + `@testing-library/react` + `jest-environment-jsdom`.
   27 tests pass across breakpoint validation/resolution, both hooks, `BreakpointSwitcher`,
-  `ResponsiveControl`, and a README-vs-`.d.ts` prop-table drift guard.
+  `ResponsiveControl`, and a README-vs-`types.ts` prop-table drift guard.
 - Binding engine: `useFieldBinding` → `useOptionsSource` + `useValueBinding`.
   - Options sources: `terms`, `posts`, `users`, `postTypes`, `manual`
     (loading/error via `hasFinishedResolution` / `getResolutionError`).
@@ -44,8 +44,8 @@ Done:
 - **`ResponsiveControl`** (`src/controls/`): wires switcher + hook + a render-prop child
   together; `variant`, `syncToEditor`/`syncFromEditor`, `showReset` all exposed.
 - Each component/control ships a `README.md` with a YAML front-matter + prop table, checked
-  against its `.d.ts` by `tests/readme-props-drift.test.ts` — a drift guard that fails the
-  suite if the docs and the types disagree.
+  against its `types.ts` by `tests/readme-props-drift.test.ts` — a drift guard that reads the
+  interface off the TypeScript AST and fails the suite if the docs and the types disagree.
 - `verify:package` (`npm run build && publint --strict && attw --pack . --profile esm-only`)
   is clean: `publint` reports no issues; `attw`'s `esm-only` profile is green for every
   subpath (wildcard subpaths report as "(wildcard)", which is expected — `attw` cannot

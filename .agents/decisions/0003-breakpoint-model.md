@@ -28,5 +28,8 @@ is present, where present means not `undefined`, not `null` and not `''` — so 
 - Adding a breakpoint is additive: a new suffix, no migration of existing attributes.
 - A `default` option cannot be reintroduced without making two names mean overlapping
   things, which is why it was rejected.
-- Cascade direction is coupled to array order, so a set listed out of order cascades
-  wrongly. `validateBreakpoints` cannot catch that; it is documented in the README instead.
+- Cascade direction is coupled to array order. The one part of that which is mechanical —
+  the base must sit at index 0, since reading walks back to zero and stops there — *is*
+  checked by `validateBreakpoints`. The ordering of the remaining breakpoints carries no
+  such marker, so "widest first, narrowest last" stays a convention documented in the
+  README rather than something the validator can enforce.

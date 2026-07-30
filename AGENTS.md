@@ -10,9 +10,9 @@
 editor: components, controls, fields, hooks and helpers for building blocks and editor
 panels without rewriting the same logic each time.
 
-It ships to **npm** and is consumed **per component** — every entry point (`components`,
-`controls`, `fields`, `meta`, `taxonomy`, `hooks`, `appenders`) is importable on its own
-via subpath `exports`. Keep imports **convenient and minimal**; never require deep
+It ships to **npm** and is consumed **per component** — every entry point (`breakpoints`,
+`components`, `controls`, `fields`, `meta`, `taxonomy`, `hooks`, `appenders`) is importable
+on its own via subpath `exports`. Keep imports **convenient and minimal**; never require deep
 `dist/...` paths.
 
 ```tsx

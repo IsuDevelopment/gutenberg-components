@@ -58,9 +58,11 @@ Gutenberg editor. Add the `Demo` block to a post to exercise the components.
 
 - The library must be built at least once (`npm run build`) before the example build can
   resolve it.
-- Subpath exports are discovered from the filesystem. A new `components/<Name>/index.ts`
-  (or `controls/`, `fields/`) is automatically both a build entry and an importable
-  subpath — there is nothing to register in `tsup.config.ts` or `package.json`.
+- Build entries are discovered from the filesystem; subpath `exports` are not. A new
+  `components/<Name>/index.ts` (or `controls/`, `fields/`) is automatically a build entry and
+  is already covered by the wildcard export for its category, so there is nothing to
+  register. A **new top-level directory** under `src/` becomes a build entry automatically
+  but is not importable until you add its `exports` key to `package.json` by hand.
 - Run `npm run verify:package` before publishing. The workspace symlink resolves the whole
   package directory, so a broken `files` or `exports` field is invisible locally and would
   surface only for the first consumer installing from npm.
