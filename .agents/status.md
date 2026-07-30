@@ -28,8 +28,13 @@ Done:
 - Node 20, npm 10. WP 7.0 on a local site.
 - Symlink: `<your-site>/wp-content/plugins/isudev-test-blocks` → `examples/test-blocks`.
   The real path lives in `WP_PLUGINS_DIR` in the developer's shell, never in the repo.
-- esbuild's native binary cannot exec inside the agent sandbox (error -88): install with
-  `--ignore-scripts`, and run builds outside the sandbox. Normal local terminals are fine.
+- Node: `.nvmrc` pins 20.19.6. A system Node 16 at `/usr/local/bin/node` shadows nvm in
+  non-login shells, so run `nvm use` (or prefix `PATH`) before anything — a stale Node 16
+  breaks Jest, tsup and `@wordpress/scripts` in ways whose error messages do not mention Node.
+- esbuild's native binary was previously noted as unable to exec in the agent sandbox
+  (error -88). Re-checked 2026-07-30 under Node 20: it runs fine (`esbuild --version` →
+  0.27.7). Treat the old note as stale, but if a build fails with a native-binary error,
+  fall back to installing with `--ignore-scripts` and building in a normal terminal.
 - `TMPDIR` was pointed at `./.tmp` to avoid filling the sandbox tmp volume (gitignored).
 - Not committed yet — `git init` done, no commits.
 

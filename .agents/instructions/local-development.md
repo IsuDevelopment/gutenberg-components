@@ -11,6 +11,19 @@ library ships them as externals too (see decision 0002). So there is exactly one
 `wp.element` at runtime — the classic "duplicate React / invalid hook call" problem does
 not occur. npm workspaces then symlink the library into the example plugin.
 
+## Node version
+
+The package requires Node 20 (`engines.node`), and `.nvmrc` pins 20.19.6. On this machine a
+system Node 16 at `/usr/local/bin/node` takes precedence over nvm in a non-login shell, so
+`node --version` can report 16 even with nvm installed — which breaks Jest, tsup and
+`@wordpress/scripts` in confusing ways.
+
+Run `nvm use` first, or prefix commands explicitly:
+
+```bash
+export PATH="$HOME/.nvm/versions/node/v20.19.6/bin:$PATH"
+```
+
 ## One-time setup
 
 ```bash
