@@ -21,6 +21,14 @@ export default defineConfig( {
 	clean: true,
 	sourcemap: true,
 	treeshake: true,
+	/**
+	 * WordPress exposes most @wordpress/* packages as script globals, and
+	 * DependencyExtractionWebpackPlugin maps bare imports onto them. Three packages are
+	 * NOT exposed that way and are meant to be bundled by the consumer's build:
+	 * @wordpress/icons, @wordpress/interface, @wordpress/style-engine. We keep them as
+	 * bare imports too (they are declared peer dependencies), so the consumer bundles a
+	 * single copy rather than us inlining one per entry point.
+	 */
 	external: [ /^@wordpress\//, 'react', 'react-dom', 'react/jsx-runtime' ],
 	esbuildOptions( options ) {
 		options.jsx = 'automatic';
