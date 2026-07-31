@@ -38,6 +38,20 @@ import { MediaToolbarControl } from '@isudev/gutenberg/controls/MediaToolbarCont
 | `toolbarGroupClassName` | `string` | `undefined` | No | Extra class on `ToolbarGroup`. |
 | `pickerProps` | `MediaToolbarPickerProps` | `undefined` | No | Native picker options except controlled props. |
 
+## Nested options
+
+`actions` accepts `false` to hide the complete toolbar fill, or an object whose fields each
+default to `true`:
+
+| Field | Visible state | Description |
+| --- | --- | --- |
+| `select` | No media | Shows the initial picker action. |
+| `replace` | Media selected | Shows the edit/replace action. |
+| `remove` | Media selected | Shows the remove action. |
+
+`pickerProps` accepts `allowedTypes`, `imageSize`, `disabled`, `title`, `modalClass`,
+`onClose` and `fallback` from `MediaPickerControl`.
+
 ## Examples
 
 ### Toolbar media actions

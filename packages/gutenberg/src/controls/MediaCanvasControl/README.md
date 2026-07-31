@@ -41,6 +41,21 @@ import { MediaCanvasControl } from '@isudev/gutenberg/controls/MediaCanvasContro
 | `className` | `string` | `undefined` | No | Canvas/placeholder class name. |
 | `style` | `CSSProperties` | `undefined` | No | Canvas wrapper style after selection. |
 
+## Nested options
+
+`actions` accepts `false` to hide every action, or an object with these independently
+optional switches (each defaults to `true`):
+
+| Field | Visible state | Description |
+| --- | --- | --- |
+| `select` | No media | Shows the initial picker action. |
+| `replace` | Media selected | Shows the edit/replace action. |
+| `remove` | Media selected | Shows the remove action. |
+
+`pickerProps` accepts `allowedTypes`, `imageSize`, `disabled`, `title`, `modalClass`,
+`onClose` and `fallback` from `MediaPickerControl`. `previewProps` accepts every
+`MediaPreview` prop except its controlled `value`.
+
 ## Examples
 
 ### Complete canvas editor

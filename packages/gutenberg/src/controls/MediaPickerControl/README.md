@@ -40,6 +40,38 @@ import { MediaPickerControl } from '@isudev/gutenberg/controls/MediaPickerContro
 | `onClose` | `() => void` | `undefined` | No | Called whenever the media modal closes. |
 | `fallback` | `ReactNode` | `null` | No | Rendered when the user cannot upload media. |
 
+## Render arguments
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `open` | `() => void` | Opens the native media modal; it is a no-op when disabled. |
+| `hasMedia` | `boolean` | True when `value` has an attachment ID or URL. |
+| `disabled` | `boolean` | The resolved disabled state for a custom trigger. |
+| `action` | `'select' \| 'replace'` | State-dependent action derived from `hasMedia`. |
+
+## Normalized media value
+
+`onChange` receives this serializable `MediaValue` as its first argument and the untouched
+WordPress selection as its optional second argument:
+
+| Field | Type | Source |
+| --- | --- | --- |
+| `id` | `number` | Attachment ID. |
+| `url` | `string` | Requested `imageSize`, then `source_url`, then the original URL. |
+| `type` | `string` | Broad media type, inferred from the MIME type when necessary. |
+| `mime` | `string` | Native `mime_type` or `mime`. |
+| `alt` | `string` | Native `alt_text` or `alt`. |
+| `width` | `number` | Requested rendition width, then original width. |
+| `height` | `number` | Requested rendition height, then original height. |
+
+## Exported helpers
+
+| Helper | Signature | Description |
+| --- | --- | --- |
+| `normalizeMediaValue` | `( media: unknown, imageSize?: string ) => MediaValue` | Normalizes a native WordPress selection. |
+| `hasMediaValue` | `( value?: MediaValue ) => boolean` | Checks for an attachment ID or URL. |
+| `resolveMediaActions` | `( actions?: MediaActionsConfig ) => Required<MediaActionVisibility>` | Resolves default-visible action switches. |
+
 ## Examples
 
 ### Custom button
@@ -81,8 +113,8 @@ import { MediaPickerControl } from '@isudev/gutenberg/controls/MediaPickerContro
 - `hasMedia` is true when the controlled value contains an ID or URL.
 - `imageSize` reads the requested rendition from WordPress' selection and falls back to
   `source_url`/`url`.
-- `normalizeMediaValue`, `hasMediaValue` and `resolveMediaActions` are exported with the
-  control for advanced composition.
+- The three normalization/state helpers above are exported from both the direct entry point
+  and the controls barrel.
 
 ## Styling
 

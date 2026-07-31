@@ -42,6 +42,27 @@ import { MediaControl } from '@isudev/gutenberg/controls/MediaControl';
 | `toolbar` | `false \| MediaControlToolbarOptions` | `{}` | No | Configures or disables toolbar editing. |
 | `sidebar` | `false \| MediaControlSidebarOptions` | `{}` | No | Configures or disables inspector editing. |
 
+## Location configuration
+
+Passing `false` removes a location and its WordPress fill completely. An object accepts the
+following options; `value`, change handlers and focal-point state remain owned by
+`MediaControl`:
+
+| Location | Supported option fields |
+| --- | --- |
+| `canvas` | `actions`, `selectLabel`, `replaceLabel`, `removeLabel`, `placeholderLabel`, `placeholderInstructions`, `pickerProps`, `previewProps`, `className`, `style` |
+| `toolbar` | `actions`, `group`, `selectLabel`, `replaceLabel`, `removeLabel`, `toolbarGroupClassName`, `pickerProps` |
+| `sidebar` | `actions`, `preview`, `title`, `initialOpen`, `selectLabel`, `replaceLabel`, `removeLabel`, `pickerProps`, `previewProps`, `focalPointProps`, `className` |
+
+For every location, `actions` is either `false` or an object with optional `select`,
+`replace` and `remove` booleans; every action defaults to visible in the state where it is
+relevant. Sidebar `preview` accepts `'media'`, `'focal-point'` or `false`.
+
+Each location's `pickerProps` can override the common `allowedTypes`, `imageSize` and
+`disabled` values and additionally accepts `title`, `modalClass`, `onClose` and `fallback`.
+The full meaning and defaults of location-specific options are documented in the linked
+submodule READMEs below.
+
 ## Examples
 
 ### Complete image control

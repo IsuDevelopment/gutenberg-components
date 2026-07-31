@@ -39,6 +39,13 @@ import { MediaFocalPointControl } from '@isudev/gutenberg/components/MediaFocalP
 | `resetLabel` | `string` | `'Reset focal point'` | No | Reset button label. |
 | `emptyFallback` | `ReactNode` | `null` | No | Rendered without a supported media URL. |
 
+## Focal-point value
+
+`MediaFocalPoint` contains numeric `x` and `y` coordinates. Both use WordPress' normalized
+`0`–`1` range: `{ x: 0, y: 0 }` is the top-left corner and `{ x: 1, y: 1 }` is the
+bottom-right corner. An `undefined` value represents the default center without persisting
+`{ x: 0.5, y: 0.5 }` to the block.
+
 ## Examples
 
 ### Controlled focal point

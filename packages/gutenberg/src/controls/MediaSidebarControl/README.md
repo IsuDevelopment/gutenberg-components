@@ -45,6 +45,30 @@ import { MediaSidebarControl } from '@isudev/gutenberg/controls/MediaSidebarCont
 | `focalPointProps` | `Omit<MediaFocalPointControlProps, controlled props>` | `undefined` | No | Focal-point display options. |
 | `className` | `string` | `undefined` | No | Additional `PanelBody` class name. |
 
+## Nested options
+
+`actions` accepts `false` to hide every sidebar action, or an object whose fields each
+default to `true`:
+
+| Field | Visible state | Description |
+| --- | --- | --- |
+| `select` | No media | Shows the initial picker button. |
+| `replace` | Media selected | Shows the edit/replace button. |
+| `remove` | Media selected | Shows the remove button. |
+
+The `preview` modes are:
+
+| Value | Result |
+| --- | --- |
+| `'media'` | Static `MediaPreview`; configured through `previewProps`. |
+| `'focal-point'` | Interactive `MediaFocalPointControl`; configured through `focalPointProps`. |
+| `false` | No preview; action buttons remain independent. |
+
+`pickerProps` accepts `allowedTypes`, `imageSize`, `disabled`, `title`, `modalClass`,
+`onClose` and `fallback`. `previewProps` accepts every `MediaPreview` prop except `value`.
+`focalPointProps` accepts `label`, `help`, `hideLabelFromVision`, `autoPlay`, `showReset`,
+`resetLabel` and `emptyFallback`.
+
 ## Examples
 
 ### Static preview and actions

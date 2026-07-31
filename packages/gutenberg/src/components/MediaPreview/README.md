@@ -42,6 +42,23 @@ import { MediaPreview } from '@isudev/gutenberg/components/MediaPreview';
 | `emptyFallback` | `ReactNode` | `null` | No | Rendered without a URL. |
 | `unsupportedFallback` | `ReactNode` | `null` | No | Rendered for non-image/video types. |
 
+## Media value
+
+`value` is intentionally small enough to store directly in a block attribute:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `id` | `number` | No | WordPress attachment ID. |
+| `url` | `string` | No | URL rendered by the preview. |
+| `type` | `string` | No | Broad type; this component supports `image` and `video`. |
+| `mime` | `string` | No | MIME type such as `image/jpeg`. |
+| `alt` | `string` | No | Alternative text used for images. |
+| `width` | `number` | No | Selected rendition width in pixels. |
+| `height` | `number` | No | Selected rendition height in pixels. |
+
+`imageProps` accepts native image attributes except `src` and `alt`, which remain controlled
+by `value`. `videoProps` accepts native video attributes except `src`.
+
 ## Examples
 
 ### Image with focal point
