@@ -10,14 +10,17 @@
 editor: components, controls, fields, hooks and helpers for building blocks and editor
 panels without rewriting the same logic each time.
 
-It ships to **npm** and is consumed **per component** — every entry point (`components`,
-`controls`, `fields`, `meta`, `taxonomy`, `hooks`, `appenders`) is importable on its own
-via subpath `exports`. Keep imports **convenient and minimal**; never require deep
-`dist/...` paths.
+It ships to **npm** and is consumed **per component** — every entry point (`breakpoints`,
+`bindings`, `components`, `controls`, `fields`, `meta`, `taxonomy`, `hooks`, `appenders`) is
+importable on its own via subpath `exports`, and each of the component categories also has a
+wildcard subpath so a single component can be imported without its barrel. Keep imports
+**convenient and minimal**; never require deep `dist/...` paths.
 
 ```tsx
 import { SelectField } from '@isudev/gutenberg/fields';
 import { MetaSelectControl } from '@isudev/gutenberg/meta';
+// or one component at a time, no barrel:
+import { useBreakpoint } from '@isudev/gutenberg/hooks/useBreakpoint';
 ```
 
 ## Core principles (non-negotiable)
@@ -36,6 +39,29 @@ import { MetaSelectControl } from '@isudev/gutenberg/meta';
 5. **Stable public API.** Public surface is controlled by `exports` in `package.json`.
    Anything under `_internal/` is private and never exported.
 6. **Only `@wordpress/*` at runtime** (peer deps). Nothing else.
+7. **One component, one folder.** Every public component, control, field, easy-mode wrapper
+   and hook lives in its own directory — `src/hooks/useBreakpoint/`, not
+   `src/hooks/useBreakpoint.ts`. The folder is what gives it room for its README,
+   screenshots, tests and `types.ts`. Public types belong in `<Folder>/types.ts`; the
+   category barrel re-exports the value **and** its type.
+8. **Every component ships a `README.md` in its own folder**, documenting *all* of its
+   features — every prop, variant and behaviour — with runnable usage examples. The docs
+   site and the MCP tool descriptions are **generated from these files**, so an
+   undocumented feature is invisible and a stale README ships as wrong documentation and a
+   wrong tool description. Code, tests and README are one unit of work and land in the same
+   commit. See `.agents/instructions/adding-a-component.md` and
+   `.agents/instructions/changing-a-component.md`.
+9. **The main package README is the public module catalog.** Every new public component,
+   control, field, easy-mode wrapper or hook must add an entry to
+   `packages/gutenberg/README.md` in the same change. The entry must contain a short
+   description, the narrowest supported import, and a relative link to that module's
+   colocated README. Keep this catalog complete until dedicated GitBook documentation is
+   introduced; GitBook should consume the same colocated documentation rather than create a
+   second source of truth.
+10. **Pre-publication version stays at `0.0.1`.** Until the first npm release is explicitly
+    prepared, keep `packages/gutenberg/package.json` and every module README `since:` value
+    at `0.0.1`. Do not infer or apply version bumps during feature work. Once publishing
+    begins, release versions and `since:` metadata follow the actual published history.
 
 ## Language & style
 
@@ -58,13 +84,54 @@ import { MetaSelectControl } from '@isudev/gutenberg/meta';
   decisions/             # ADRs — one file per architectural decision
   instructions/          # Task/workflow instructions for agents
   skills/                # Reusable skills / procedures
-src/                     # Library source (see plan for the full tree)
-examples/                # Example blocks consuming the library
+  specs/                 # Approved designs — YYYY-MM-DD-<topic>-design.md
+  plans/                 # Implementation plans — YYYY-MM-DD-<feature>.md
+packages/gutenberg/      # The library (see the code map below)
+examples/test-blocks/    # WordPress plugin with example blocks consuming the library
 ```
 
-**All project knowledge — skills, instructions, decisions — lives under `.agents/`.**
-When you make an architectural decision, record it in `.agents/decisions/`. When you
-define a repeatable procedure, add it to `.agents/skills/`.
+### Code map — `packages/gutenberg/`
+
+```
+src/
+  index.ts               # root barrel; prefer the subpath entry points
+  breakpoints/           # kernel: cascade resolution, presence rule, validation. No UI, no stores.
+  bindings/              # the one engine: useFieldBinding → useOptionsSource + useValueBinding
+    options/             #   terms, posts, users, postTypes, manual
+    values/              #   meta, taxonomy, custom
+  components/<Name>/     # pure UI, props-only. BreakpointSwitcher.
+  controls/<Name>/       # Editor UI: ResponsiveControl, LinkPickerControl, BlockLinkControl, LinkText.
+  fields/<Name>/         # advanced mode: compose optionsSource + valueBinding. SelectField, RadioField.
+  meta/<Name>/           # easy mode over a field, meta binding pre-filled
+  taxonomy/<Name>/       # easy mode over a field, taxonomy binding pre-filled
+  hooks/<useName>/       # one folder per hook; hooks/README.md is the index
+  appenders/             # inserter/appender UI (empty, stage 8)
+  types/                 # shared public types: fields, options, bindings
+  utils/                 # tiny shared helpers
+  _internal/             # private. Never exported. Only place allowed to import __experimental*.
+tests/                   # cross-cutting tests + helpers (the README props drift guard)
+tsup.config.ts           # entries discovered from the filesystem — no entry list to maintain
+tsconfig.typecheck.json  # what `npm run typecheck` uses; covers src AND tests
+```
+
+Every directory under `components/`, `controls/`, `fields/`, `meta/`, `taxonomy/` and
+`hooks/` holds one component: its implementation, `types.ts`, `index.ts`, its colocated
+test, and its `README.md`.
+
+**All project knowledge — skills, instructions, decisions, specs, plans — lives under
+`.agents/`.** When you make an architectural decision, record it in `.agents/decisions/`.
+When you define a repeatable procedure, add it to `.agents/skills/`.
+
+Specs and plans live in `.agents/specs/` and `.agents/plans/` — **not** under `docs/`.
+They are shared working context for everyone on the project, and keeping them beside the
+decisions and instructions means one place to look. This overrides any tool default that
+writes them to `docs/`. `docs/` is reserved for generated, user-facing documentation.
+
+Start here for common work:
+
+- `.agents/instructions/adding-a-component.md` — new component, control, field or hook.
+- `.agents/instructions/changing-a-component.md` — modifying an existing one.
+- `.agents/instructions/local-development.md` — linking the library into a local WP site.
 
 ## Reference material (read-only, do NOT depend on it)
 
@@ -79,17 +146,41 @@ Current prior art:
   subpath `exports` with filesystem-discovered build entries, colocated per-component
   `readme.md`, and mirroring `DependencyExtractionWebpackPlugin`'s bundled-package list.
 
-## Build & tooling (to finalize in Stage 1)
+## Build & tooling
 
-- Bundler: `tsup` (esbuild) with `preserveModules` so `src/` maps 1:1 to subpath
-  `exports`; emits `.d.ts`.
-- JSX runtime: decide `@wordpress/element` vs `react/jsx-runtime` (WP standard is
-  `@wordpress/element`).
-- Tests: Jest + `@testing-library/react`, mocking `@wordpress/data` / `core-data`.
+- Bundler: `tsup` (esbuild), ESM only. Build **entries are discovered from
+  the filesystem** — every `index.ts` under `src/` becomes one, so `dist/` mirrors `src/`
+  and adding a component folder needs no config change. `_internal/` is skipped.
+- **Declarations come from `tsc -p tsconfig.build.json`**, not tsup — tsup builds one program
+  per entry and ran out of heap once every component folder became an entry (decision 0006).
+- **Relative imports must carry an explicit `.js` extension**: `'./types.js'`,
+  `'../../breakpoints/index.js'`. Without it the emitted `.d.ts` files do not resolve under
+  Node's ESM rules. TypeScript, Jest and the WordPress webpack build all accept it, so only
+  `verify:package` catches a violation — which is why that gate matters.
+- Subpath `exports` in `package.json` are **hand-maintained**, with wildcards for
+  `./components/*`, `./controls/*`, `./fields/*`, `./meta/*`, `./taxonomy/*` and `./hooks/*`.
+  A new top-level source directory needs its key added by hand.
+- JSX runtime: automatic, `jsxImportSource: "react"`. `@wordpress/*`, `react`, `react-dom`
+  and `react/jsx-runtime` are external (decision 0002).
+- Tests: Jest + `@swc/jest` + `@testing-library/react` + jsdom.
+- `npm run verify:package` (`build && publint --strict && attw --profile esm-only`) is the
+  packaging gate and must stay clean.
 
 ## Working agreement for agents
 
 - Read `.agents/architecture-plan.md` before writing any code.
 - Follow the staged checklist in the plan; keep changes minimal and reviewable.
+- Adding or changing a component? Follow the matching file in `.agents/instructions/` —
+  including its README requirement.
+- Keep the public module catalog in `packages/gutenberg/README.md` synchronized: every
+  public module needs a short description, its narrowest import and a link to its own
+  README.
 - Do not introduce dependencies beyond `@wordpress/*` (peer) without recording a
   decision in `.agents/decisions/`.
+
+## WordPress-Specific Hooks
+
+- Post-related hooks should work with the global post context
+- Term-related hooks should handle taxonomies correctly
+- Block-related hooks should follow WordPress Block Editor patterns
+- Consider editor-specific vs. frontend usage when appropriate

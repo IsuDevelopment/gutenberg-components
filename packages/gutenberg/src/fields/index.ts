@@ -1,2 +1,2 @@
-export { SelectField } from './SelectField';
-export { RadioField } from './RadioField';
+export { SelectField } from './SelectField/index.js';
+export { RadioField } from './RadioField/index.js';

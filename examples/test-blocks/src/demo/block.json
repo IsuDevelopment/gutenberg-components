@@ -8,7 +8,8 @@
 	"description": "Demo block exercising the @isudev/gutenberg field components.",
 	"attributes": {
 		"layout": { "type": "string", "default": "grid" },
-		"postType": { "type": "string", "default": "" }
+		"postType": { "type": "string", "default": "" },
+		"taxonomySelected": { "type": "string", "default": "" }
 	},
 	"supports": {
 		"html": false

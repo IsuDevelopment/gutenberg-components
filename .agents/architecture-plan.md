@@ -91,6 +91,8 @@ Rekomendowane publiczne importy:
 ```txt
 @isudev/gutenberg
 @isudev/gutenberg/appenders
+@isudev/gutenberg/bindings
+@isudev/gutenberg/breakpoints
 @isudev/gutenberg/components
 @isudev/gutenberg/controls
 @isudev/gutenberg/fields
@@ -99,12 +101,29 @@ Rekomendowane publiczne importy:
 @isudev/gutenberg/hooks
 ```
 
+Dodatkowo każda kategoria komponentów ma wildcard subpath, więc pojedynczy komponent można
+zaimportować bez barrela — bez zmian w `package.json`:
+
+```txt
+@isudev/gutenberg/components/*
+@isudev/gutenberg/controls/*
+@isudev/gutenberg/fields/*
+@isudev/gutenberg/meta/*
+@isudev/gutenberg/taxonomy/*
+@isudev/gutenberg/hooks/*
+```
+
+```tsx
+import { BreakpointSwitcher } from '@isudev/gutenberg/components/BreakpointSwitcher';
+import { useBreakpoint } from '@isudev/gutenberg/hooks/useBreakpoint';
+```
+
 Przykłady:
 
 ```tsx
 import { AppenderButton } from '@isudev/gutenberg/appenders';
-import { ColorPopup, IconSelect } from '@isudev/gutenberg/components';
-import { MediaControl, LinkControl } from '@isudev/gutenberg/controls';
+import { ColorPopup, Icon, IconPicker, IconSelect } from '@isudev/gutenberg/components';
+import { LinkPickerControl, LinkText, MediaControl } from '@isudev/gutenberg/controls';
 import { SelectField, RadioField } from '@isudev/gutenberg/fields';
 import { MetaSelectControl } from '@isudev/gutenberg/meta';
 import { TaxonomySelectControl } from '@isudev/gutenberg/taxonomy';
@@ -122,6 +141,12 @@ Publiczne API powinno być stabilne i kontrolowane przez `exports` w `package.js
 
 ## Rekomendowana struktura repo
 
+**Zasada nadrzędna: jeden komponent = jeden folder.** Każdy publiczny komponent, control,
+field i hook ma własny folder, a w nim `README.md` — folder daje miejsce na dokumentację,
+zrzuty ekranu i pliki pomocnicze. Z tych README generowane są docsy i opisy narzędzi MCP,
+więc komponent bez README jest niekompletny. Szczegóły:
+`instructions/adding-a-component.md`.
+
 ```txt
 isudev-gutenberg/
 ├─ package.json
@@ -135,13 +160,25 @@ isudev-gutenberg/
 │  │  ├─ index.ts
 │  │  ├─ AppenderButton/
 │  │  │  ├─ AppenderButton.tsx
+│  │  │  ├─ AppenderButton.test.tsx
 │  │  │  ├─ types.ts
-│  │  │  └─ index.ts
+│  │  │  ├─ index.ts
+│  │  │  └─ README.md
 │  │  └─ AppenderGrid/
+│  │
+│  ├─ breakpoints/            # kernel: bez UI, bez store'ów
+│  │  ├─ index.ts
+│  │  ├─ types.ts
+│  │  ├─ defaults.ts
+│  │  ├─ resolve.ts
+│  │  └─ validate.ts
 │  │
 │  ├─ components/
 │  │  ├─ index.ts
+│  │  ├─ BreakpointSwitcher/
 │  │  ├─ ColorPopup/
+│  │  ├─ Icon/
+│  │  ├─ IconPicker/
 │  │  ├─ IconSelect/
 │  │  ├─ SearchableSelect/
 │  │  ├─ Skeleton/
@@ -150,8 +187,11 @@ isudev-gutenberg/
 │  │
 │  ├─ controls/
 │  │  ├─ index.ts
+│  │  ├─ ResponsiveControl/
 │  │  ├─ MediaControl/
-│  │  ├─ LinkControl/
+│  │  ├─ LinkPickerControl/
+│  │  ├─ BlockLinkControl/
+│  │  ├─ LinkText/
 │  │  ├─ PostTypeControl/
 │  │  ├─ UrlPicker/
 │  │  └─ InlineUrlPicker/
@@ -160,30 +200,30 @@ isudev-gutenberg/
 │  │  ├─ index.ts
 │  │  ├─ SelectField/
 │  │  │  ├─ SelectField.tsx
-│  │  │  ├─ types.ts
-│  │  │  └─ index.ts
+│  │  │  ├─ index.ts
+│  │  │  └─ README.md
 │  │  ├─ RadioField/
 │  │  ├─ CheckboxField/
 │  │  ├─ TextField/
-│  │  ├─ ToggleField/
-│  │  ├─ MetaSelectField/
-│  │  ├─ MetaRadioField/
-│  │  ├─ TaxonomySelectField/
-│  │  └─ TaxonomyRadioField/
+│  │  └─ ToggleField/
 │  │
 │  ├─ meta/
 │  │  ├─ index.ts
-│  │  ├─ MetaSelectControl.tsx
-│  │  ├─ MetaRadioControl.tsx
-│  │  ├─ MetaTextControl.tsx
-│  │  ├─ MetaToggleControl.tsx
-│  │  └─ MetaMediaControl.tsx
+│  │  ├─ MetaSelectControl/
+│  │  │  ├─ MetaSelectControl.tsx
+│  │  │  ├─ types.ts
+│  │  │  ├─ index.ts
+│  │  │  └─ README.md
+│  │  ├─ MetaRadioControl/
+│  │  ├─ MetaTextControl/
+│  │  ├─ MetaToggleControl/
+│  │  └─ MetaMediaControl/
 │  │
 │  ├─ taxonomy/
 │  │  ├─ index.ts
-│  │  ├─ TaxonomySelectControl.tsx
-│  │  ├─ TaxonomyRadioControl.tsx
-│  │  └─ TaxonomyCheckboxControl.tsx
+│  │  ├─ TaxonomySelectControl/
+│  │  ├─ TaxonomyRadioControl/
+│  │  └─ TaxonomyCheckboxControl/
 │  │
 │  ├─ bindings/
 │  │  ├─ useFieldBinding.ts
@@ -204,14 +244,20 @@ isudev-gutenberg/
 │  │     ├─ useAttributeBinding.ts
 │  │     └─ useCustomBinding.ts
 │  │
-│  ├─ hooks/
+│  ├─ hooks/                  # też folder per hook — README, testy, types.ts
 │  │  ├─ index.ts
-│  │  ├─ useMeta.ts
-│  │  ├─ useTaxonomy.ts
-│  │  ├─ useCurrentPostType.ts
-│  │  ├─ useCurrentPostId.ts
-│  │  ├─ useDebouncedValue.ts
-│  │  └─ usePrevious.ts
+│  │  ├─ README.md            # indeks folderu, nie dokumentacja hooka
+│  │  ├─ useBreakpoint/
+│  │  │  ├─ useBreakpoint.ts
+│  │  │  ├─ useBreakpoint.test.ts
+│  │  │  ├─ types.ts
+│  │  │  ├─ index.ts
+│  │  │  └─ README.md
+│  │  ├─ useResponsiveAttribute/
+│  │  ├─ useCurrentPostType/
+│  │  ├─ useCurrentPostId/
+│  │  ├─ useDebouncedValue/
+│  │  └─ usePrevious/
 │  │
 │  ├─ utils/
 │  │  ├─ index.ts
@@ -276,7 +322,9 @@ Przykłady:
 
 ```txt
 MediaControl
-LinkControl
+LinkPickerControl
+BlockLinkControl
+LinkText
 PostTypeControl
 UrlPicker
 InlineUrlPicker
@@ -288,9 +336,9 @@ Zasada:
 controls = Gutenberg/editor controls, often using @wordpress/components or @wordpress/block-editor
 ```
 
-> **Kolizja nazw:** `LinkControl` istnieje już w `@wordpress/block-editor`. Zmień nazwę
-> (np. `LinkPickerControl`) albo jawnie udokumentuj, że opakowuje natywny — inaczej
-> import będzie mylący.
+> **Rozstrzygnięte (decision 0007):** publiczna nazwa to `LinkPickerControl`, ponieważ
+> `LinkControl` istnieje już w `@wordpress/block-editor`. Gotowa kompozycja RichText nazywa
+> się `LinkText`, a `BlockLinkControl` dodaje gotowe akcje do `BlockControls`.
 
 ---
 
@@ -371,13 +419,15 @@ Centralna logika rozwiązywania opcji i wartości.
 
 To jest najważniejsza warstwa biblioteki.
 
-Nie musi być publiczna na starcie. Może pozostać wewnętrzna.
-
 Zasada:
 
 ```txt
 bindings = engine behind Field components
 ```
+
+Stan: publiczna od 2026-07-30 przez `@isudev/gutenberg/bindings` — wcześniej budowała się do
+`dist/`, ale bez klucza w `exports`, więc trafiała do paczki jako sierota. To warstwa flat
+(nie folder-per-komponent): dokumentowana w README tych komponentów, które z niej korzystają.
 
 ---
 
@@ -385,14 +435,18 @@ bindings = engine behind Field components
 
 Publiczne, przydatne hooki dla zaawansowanych userów.
 
-Przykłady:
+**Folder per hook** — każdy ma własny katalog z `types.ts`, testem i `README.md`; plik luzem
+w `hooks/` jest błędem. `hooks/README.md` to indeks folderu, nie dokumentacja hooka.
+
+Stan:
 
 ```txt
-useMeta
-useTaxonomy
+useBreakpoint             # wybrany breakpoint + opcjonalny sync z device preview edytora
+useResponsiveAttribute    # jedno ustawienie w całym zestawie breakpointów
 useCurrentPostType
 useCurrentPostId
 useDebouncedValue
+usePrevious
 ```
 
 ---
@@ -1731,16 +1785,18 @@ ale nie jest to konieczne na start.
 
 > **Standalone:** komponenty poniżej piszemy **od nowa**, bez importów z jakiegokolwiek
 > projektu hostującego i bez globalnej konfiguracji. Ikony i konfig wstrzykiwane
-> propsami. `LinkControl` → rozważyć rename (kolizja z `@wordpress/block-editor`).
+> propsami. `getLocalizedIcons()` is an explicit adapter that turns a localized global into
+> props; components never read it directly (decision 0008). Link picker ships as
+> `LinkPickerControl` to avoid the WordPress name collision (decision 0007).
 
 - [ ] Napisać komponenty do `components/` (od zera, konfiguracja przez propsy):
-  - [ ] `ColorPopup`
-  - [ ] `IconSelect`
+  - [x] `ColorPopup`
+  - [x] `Icon` + `IconPicker` + `IconSelect` (decision 0008)
   - [ ] `SearchableSelect`
   - [ ] preloadery jako `Skeleton`, `LoadingOverlay` albo `EmptyState`
 - [ ] Napisać kontrolki do `controls/` (od zera, konfiguracja przez propsy):
   - [ ] `MediaControl`
-  - [ ] `LinkControl` (rozważyć rename, np. `LinkPickerControl`)
+  - [x] `LinkPickerControl` + `BlockLinkControl` + `LinkText` (decision 0007)
   - [ ] `PostTypeControl`
   - [ ] `InlineUrlPicker`
 

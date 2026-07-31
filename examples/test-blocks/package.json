@@ -11,6 +11,6 @@
 		"@isudev/gutenberg": "*"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^30.0.0"
+		"@wordpress/scripts": "31.5.1"
 	}
 }

@@ -1,0 +1,1 @@
+Use './AGENTS.md' for the full context of this snippet.

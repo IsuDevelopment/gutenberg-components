@@ -1,4 +1,4 @@
-import type { FieldOption } from '../../types/options';
+import type { FieldOption } from '../../types/options.js';
 
 /**
  * Coerces a REST record into a `FieldOption` using the given label/value fields.

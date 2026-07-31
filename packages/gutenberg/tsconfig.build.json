@@ -1,0 +1,24 @@
+{
+	/**
+	 * Declaration output only. `tsup` emits the JavaScript; `tsc` emits the `.d.ts` files.
+	 *
+	 * tsup's own `dts` option builds one rollup program per entry point, and with an entry per
+	 * component folder that grew past a 4 GB heap and started failing with
+	 * ERR_WORKER_OUT_OF_MEMORY — a ceiling every new component would push against. `tsc` types
+	 * the package once for all entries instead, so the cost stops scaling with entry count.
+	 *
+	 * Because `dist/` mirrors `src/` exactly, the emitted layout lines up 1:1 with the subpath
+	 * `exports` in package.json without any post-processing.
+	 *
+	 * No `declarationMap`: the package does not publish `src/`, so declaration maps would point
+	 * at files the consumer never receives.
+	 */
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"declarationMap": false
+	},
+	"include": [ "src" ],
+	"exclude": [ "src/**/*.test.ts", "src/**/*.test.tsx" ]
+}

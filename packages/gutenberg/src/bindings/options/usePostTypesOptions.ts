@@ -1,6 +1,6 @@
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
-import type { OptionsResult, OptionsSource } from '../../types/options';
+import type { OptionsResult, OptionsSource } from '../../types/options.js';
 
 type PostTypesSource = Extract< OptionsSource, { type: 'postTypes' } >;
 

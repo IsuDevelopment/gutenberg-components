@@ -1,3 +1,3 @@
-export type { FieldOption, OptionsSource, OptionsResult } from './options';
-export type { ValueBinding, ValueResult } from './bindings';
-export type { FieldBindingProps, FieldBindingResult } from './fields';
+export type { FieldOption, OptionsSource, OptionsResult } from './options.js';
+export type { ValueBinding, ValueResult } from './bindings.js';
+export type { FieldBindingProps, FieldBindingResult } from './fields.js';

@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "isudev/responsive-demo",
+	"title": "ISUdev Responsive Demo",
+	"category": "widgets",
+	"icon": "smartphone",
+	"description": "Exercises ResponsiveControl in both switcher variants.",
+	"textdomain": "isudev-test-blocks",
+	"attributes": {
+		"columnGap": { "type": "number" },
+		"columnGapTablet": { "type": "number" },
+		"columnGapMobile": { "type": "number" },
+		"layout": { "type": "string" },
+		"layoutTablet": { "type": "string" },
+		"layoutMobile": { "type": "string" }
+	},
+	"editorScript": "file:./index.js"
+}
