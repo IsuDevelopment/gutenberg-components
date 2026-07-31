@@ -3,7 +3,7 @@ name: useResponsiveAttribute
 entrypoint: "@isudev/gutenberg/hooks"
 kind: hook
 status: stable
-since: 0.2.0
+since: 0.0.1
 ---
 
 ## Summary

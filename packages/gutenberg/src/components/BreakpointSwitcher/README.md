@@ -3,7 +3,7 @@ name: BreakpointSwitcher
 entrypoint: "@isudev/gutenberg/components"
 kind: component
 status: stable
-since: 0.2.0
+since: 0.0.1
 ---
 
 ## Summary

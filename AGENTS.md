@@ -51,6 +51,17 @@ import { useBreakpoint } from '@isudev/gutenberg/hooks/useBreakpoint';
    wrong tool description. Code, tests and README are one unit of work and land in the same
    commit. See `.agents/instructions/adding-a-component.md` and
    `.agents/instructions/changing-a-component.md`.
+9. **The main package README is the public module catalog.** Every new public component,
+   control, field, easy-mode wrapper or hook must add an entry to
+   `packages/gutenberg/README.md` in the same change. The entry must contain a short
+   description, the narrowest supported import, and a relative link to that module's
+   colocated README. Keep this catalog complete until dedicated GitBook documentation is
+   introduced; GitBook should consume the same colocated documentation rather than create a
+   second source of truth.
+10. **Pre-publication version stays at `0.0.1`.** Until the first npm release is explicitly
+    prepared, keep `packages/gutenberg/package.json` and every module README `since:` value
+    at `0.0.1`. Do not infer or apply version bumps during feature work. Once publishing
+    begins, release versions and `since:` metadata follow the actual published history.
 
 ## Language & style
 
@@ -161,5 +172,15 @@ Current prior art:
 - Follow the staged checklist in the plan; keep changes minimal and reviewable.
 - Adding or changing a component? Follow the matching file in `.agents/instructions/` —
   including its README requirement.
+- Keep the public module catalog in `packages/gutenberg/README.md` synchronized: every
+  public module needs a short description, its narrowest import and a link to its own
+  README.
 - Do not introduce dependencies beyond `@wordpress/*` (peer) without recording a
   decision in `.agents/decisions/`.
+
+## WordPress-Specific Hooks
+
+- Post-related hooks should work with the global post context
+- Term-related hooks should handle taxonomies correctly
+- Block-related hooks should follow WordPress Block Editor patterns
+- Consider editor-specific vs. frontend usage when appropriate

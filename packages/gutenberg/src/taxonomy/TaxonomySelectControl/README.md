@@ -3,7 +3,7 @@ name: TaxonomySelectControl
 entrypoint: "@isudev/gutenberg/taxonomy"
 kind: control
 status: stable
-since: 0.1.0
+since: 0.0.1
 ---
 
 ## Summary

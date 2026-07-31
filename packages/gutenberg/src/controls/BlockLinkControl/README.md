@@ -3,7 +3,7 @@ name: BlockLinkControl
 entrypoint: "@isudev/gutenberg/controls"
 kind: control
 status: stable
-since: 0.3.0
+since: 0.0.1
 ---
 
 ## Summary
@@ -112,7 +112,9 @@ The native Text field writes to `value.title` and is included in the object rece
   control from the block's `edit` function.
 - With no URL it displays the add action. With a URL it displays the edit action. Set
   `showUnlinkButton` to `true` to add a separate unlink action.
-- The link button anchors the popover and receives active state while the picker is open.
+- The link button anchors the popover. It uses WordPress' pressed/active toolbar state while
+  a URL exists, and also while the picker is open for a new link. This keeps an existing link
+  visible in the toolbar even after the picker closes.
 - Opening from the toolbar focuses the picker, matching Gutenberg's toolbar-triggered link
   workflow.
 - WordPress' native Text field is enabled by default and persists its value as

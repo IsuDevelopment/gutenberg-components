@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-07-30
+Last updated: 2026-07-31
 
 ## Layout convention (2026-07-30)
 
@@ -21,6 +21,10 @@ responsive-value stack described below; only the plan's manual in-editor checks 
 step 4) remain undone — see "Next steps".
 
 Done:
+- Pre-publication package version is frozen at `0.0.1`. The main package README now serves
+  as the complete public module catalog, with a short purpose, narrowest import and link to
+  each colocated README. Agent instructions and a drift test enforce the catalog until the
+  planned GitBook is introduced.
 - Monorepo (npm workspaces): `packages/gutenberg` (library) + `examples/test-blocks` (WP plugin).
 - Toolchain targets **WP 7.0**: `@wordpress/*` deps pinned to the 7.0 line, `@wordpress/icons`
   declared as a peer, example plugin's `Requires at least` bumped to 7.0. All blocks
@@ -31,7 +35,8 @@ Done:
   those categories needs no change, while a new top-level source directory needs its
   `exports` key added by hand. React + `@wordpress/*` external (decision 0002).
 - Test harness: Jest + `@swc/jest` + `@testing-library/react` + `jest-environment-jsdom`.
-  57 tests pass across breakpoint validation/resolution, hooks, controls, link normalization,
+  71 tests pass across breakpoint validation/resolution, hooks, components, controls,
+  icon/link normalization,
   and the README-vs-`types.ts` prop-table drift guard.
 - Binding engine: `useFieldBinding` → `useOptionsSource` + `useValueBinding`.
   - Options sources: `terms`, `posts`, `users`, `postTypes`, `manual`
@@ -57,6 +62,12 @@ Done:
   `{ color, name, slug, alpha? }` object, not a bare hex string. Pure UI — no
   `useSettings`/`useSelect` inside; a caller wires in the theme palette. Optional alpha
   slider (`RangeControl`) and clear button. No CSS shipped.
+- **Icon components** (`src/components/`): `Icon` renders a stored name, `IconPicker`
+  provides the searchable grid, and `IconSelect` composes the selected preview and WordPress
+  dropdown. All use injected `IconDefinition` collections. `getLocalizedIcons()` is the
+  explicit, validated adapter for `wp_localize_script` data; serialized SVG is encoded as an
+  image rather than injected as raw DOM (decision 0008). The `isudev/icon-demo` block covers
+  an inline SVG, an asset URL, a name-only subset and both picker surfaces.
 - **`ResponsiveControl`** (`src/controls/`): wires switcher + hook + a render-prop child
   together; `variant`, `syncToEditor`/`syncFromEditor`, `showReset` all exposed.
 - **Link controls** (`src/controls/`): `LinkPickerControl` anchors WordPress' stable link
@@ -81,7 +92,7 @@ Done:
   variants: an inline `RangeControl` with no editor sync, and a dropdown `SelectControl`
   with `syncToEditor`/`syncFromEditor` enabled, printing the resolved value per breakpoint
   as visible text.
-- `tsc` typecheck clean (library + `tests/`); library and all three example blocks build;
+- `tsc` typecheck clean (library + `tests/`); library and all four example blocks build;
   `@isudev/gutenberg` bundles into each block while `wp-*` + `react-jsx-runtime` stay
   external. `examples/test-blocks/test-blocks.php` registers every directory under
   `build/` via `glob()`, so another example block needs no PHP change.

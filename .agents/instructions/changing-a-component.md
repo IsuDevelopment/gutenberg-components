@@ -51,15 +51,18 @@ leaving it is not an option. Examples are what consumers copy.
 3. Update any *sibling* README that cross-references the changed behaviour — the *Related*
    links tell you which ones. `ResponsiveControl`, `BreakpointSwitcher` and the hooks
    README describe each other.
-4. From `packages/gutenberg`: `npm test`, `npm run typecheck`, and `npm run verify:package`
+4. If the module's purpose, public name or recommended import changed, update its catalog
+   entry in `packages/gutenberg/README.md`. Every catalog entry must retain a short
+   description, the narrowest supported import and a link to the colocated README.
+5. From `packages/gutenberg`: `npm test`, `npm run typecheck`, and `npm run verify:package`
    if anything about exports, entry points or dependencies moved.
-5. Re-check it in the editor via `examples/test-blocks` if rendering or markup changed.
+6. Re-check it in the editor via `examples/test-blocks` if rendering or markup changed.
    Tests pin structure, not appearance.
-6. Architectural change? ADR in `../decisions/`, or a dated amendment to the existing one
+7. Architectural change? ADR in `../decisions/`, or a dated amendment to the existing one
    rather than a rewrite. Behavioural change to something a spec in `../specs/` describes?
    Amend the spec with a dated note.
-7. Update `../status.md` if the change moves the project's state.
-8. Commit code, tests and README together.
+8. Update `../status.md` if the change moves the project's state.
+9. Commit code, tests and README together.
 
 ## Do not
 

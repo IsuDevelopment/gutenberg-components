@@ -122,7 +122,7 @@ Przykłady:
 
 ```tsx
 import { AppenderButton } from '@isudev/gutenberg/appenders';
-import { ColorPopup, IconSelect } from '@isudev/gutenberg/components';
+import { ColorPopup, Icon, IconPicker, IconSelect } from '@isudev/gutenberg/components';
 import { LinkPickerControl, LinkText, MediaControl } from '@isudev/gutenberg/controls';
 import { SelectField, RadioField } from '@isudev/gutenberg/fields';
 import { MetaSelectControl } from '@isudev/gutenberg/meta';
@@ -177,6 +177,8 @@ isudev-gutenberg/
 │  │  ├─ index.ts
 │  │  ├─ BreakpointSwitcher/
 │  │  ├─ ColorPopup/
+│  │  ├─ Icon/
+│  │  ├─ IconPicker/
 │  │  ├─ IconSelect/
 │  │  ├─ SearchableSelect/
 │  │  ├─ Skeleton/
@@ -1783,12 +1785,13 @@ ale nie jest to konieczne na start.
 
 > **Standalone:** komponenty poniżej piszemy **od nowa**, bez importów z jakiegokolwiek
 > projektu hostującego i bez globalnej konfiguracji. Ikony i konfig wstrzykiwane
-> propsami. Link picker ships as `LinkPickerControl` to avoid the WordPress name collision
-> (decision 0007).
+> propsami. `getLocalizedIcons()` is an explicit adapter that turns a localized global into
+> props; components never read it directly (decision 0008). Link picker ships as
+> `LinkPickerControl` to avoid the WordPress name collision (decision 0007).
 
 - [ ] Napisać komponenty do `components/` (od zera, konfiguracja przez propsy):
-  - [ ] `ColorPopup`
-  - [ ] `IconSelect`
+  - [x] `ColorPopup`
+  - [x] `Icon` + `IconPicker` + `IconSelect` (decision 0008)
   - [ ] `SearchableSelect`
   - [ ] preloadery jako `Skeleton`, `LoadingOverlay` albo `EmptyState`
 - [ ] Napisać kontrolki do `controls/` (od zera, konfiguracja przez propsy):

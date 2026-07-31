@@ -23,12 +23,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Register example blocks from their compiled metadata.
  *
- * Every directory under build/ is registered, so adding an example block is a matter of
- * adding a src/ directory — there is nothing to list here.
+ * Every directory under build/ is registered automatically. Per-block integration data,
+ * such as the icon demo's localized registry, is attached after metadata registration.
  */
 function register_blocks(): void {
 	foreach ( glob( __DIR__ . '/build/*', GLOB_ONLYDIR ) as $block_dir ) {
-		register_block_type( $block_dir );
+		$block_type = register_block_type( $block_dir );
+
+		if ( $block_type && 'isudev/icon-demo' === $block_type->name ) {
+			$alert_svg = file_get_contents( __DIR__ . '/assets/alert.svg' );
+
+			wp_localize_script(
+				generate_block_asset_handle( $block_type->name, 'editorScript' ),
+				'isudevIcons',
+				[
+					[
+						'name'     => 'alert',
+						'label'    => __( 'Alert', 'isudev-test-blocks' ),
+						'keywords' => [ 'warning', 'notice' ],
+						'icon'     => is_string( $alert_svg ) ? $alert_svg : '',
+					],
+					[
+						'name'  => 'arrow-right',
+						'label' => __( 'Arrow right', 'isudev-test-blocks' ),
+						'icon'  => plugins_url( 'assets/arrow-right.svg', __FILE__ ),
+					],
+				]
+			);
+		}
 	}
 }
 

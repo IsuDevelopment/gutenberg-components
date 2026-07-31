@@ -48,6 +48,11 @@ export type { MyThingProps } from './types';
 Then re-export from the category barrel (`src/components/index.ts`), **value and type
 both**, so the deep subpath and the category import stay equivalent.
 
+Also add the module to the public catalog in `packages/gutenberg/README.md`. Its row must
+include all three of the following: a short description, the narrowest supported subpath
+import, and a relative link to the module's colocated README. This catalog is the public
+documentation index until GitBook is introduced.
+
 A hook folder is the same shape, named after the hook:
 
 ```
@@ -112,7 +117,7 @@ name: MyThing
 entrypoint: "@isudev/gutenberg/components"
 kind: component        # component | control | field | hook
 status: stable         # stable | experimental
-since: 0.3.0           # version that first shipped it
+since: 0.0.1           # keep 0.0.1 before publication; afterwards use its first release
 ---
 
 ## Summary
@@ -197,6 +202,8 @@ check it in the editor. A component that has never been rendered in WordPress is
 - Architectural choice made along the way? ADR in `../decisions/`.
 - Update `../status.md` (what shipped, what is left).
 - New top-level entry point? Add it to the entry-point list in `AGENTS.md`.
+- Add every new public module to `packages/gutenberg/README.md` with a short description,
+  its narrowest import, and a link to its colocated README.
 - Commit source, tests and README **together**. Never commit a component whose README
   lands in a follow-up.
 - Never commit absolute local paths.

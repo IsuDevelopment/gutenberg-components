@@ -38,7 +38,7 @@ export function BlockLinkControl( {
 							ref={ anchorRef }
 							icon={ linkIcon }
 							title={ hasLink ? editLabel : addLabel }
-							isActive={ isOpen }
+							isActive={ hasLink || isOpen }
 							disabled={ disabled }
 							aria-haspopup="dialog"
 							aria-expanded={ isOpen }

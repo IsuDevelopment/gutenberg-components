@@ -53,6 +53,7 @@ jest.mock( '@wordpress/components', () => ( {
 					ref={ ref }
 					type="button"
 					aria-label={ props.title as string }
+					aria-pressed={ props.isActive as boolean }
 					disabled={ props.disabled as boolean }
 					onClick={ props.onClick as React.MouseEventHandler< HTMLButtonElement > }
 				>
@@ -87,8 +88,20 @@ describe( 'BlockLinkControl', () => {
 		expect(
 			screen.queryByRole( 'button', { name: 'Unlink' } )
 		).not.toBeInTheDocument();
+		expect(
+			screen.getByRole( 'button', {
+				name: 'Add link',
+				pressed: false,
+			} )
+		).toBeInTheDocument();
 
 		await user.click( screen.getByRole( 'button', { name: 'Add link' } ) );
+		expect(
+			screen.getByRole( 'button', {
+				name: 'Add link',
+				pressed: true,
+			} )
+		).toBeInTheDocument();
 		expect( screen.getByTestId( 'popover' ) ).toBeInTheDocument();
 		expect( screen.getByTestId( 'wordpress-link-control' ) ).toHaveAttribute(
 			'data-text-control',
@@ -114,7 +127,10 @@ describe( 'BlockLinkControl', () => {
 		);
 
 		expect(
-			screen.getByRole( 'button', { name: 'Edit link' } )
+			screen.getByRole( 'button', {
+				name: 'Edit link',
+				pressed: true,
+			} )
 		).toBeInTheDocument();
 		expect(
 			screen.queryByRole( 'button', { name: 'Unlink' } )

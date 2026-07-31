@@ -3,7 +3,7 @@ name: LinkText
 entrypoint: "@isudev/gutenberg/controls"
 kind: control
 status: stable
-since: 0.3.0
+since: 0.0.1
 ---
 
 ## Summary

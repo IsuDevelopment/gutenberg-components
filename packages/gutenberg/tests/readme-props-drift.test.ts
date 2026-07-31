@@ -1,7 +1,17 @@
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { propsFromInterface, propsFromReadme } from './helpers/props-from-interface';
 
 const SRC = path.resolve( __dirname, '..', 'src' );
+const PACKAGE_README = path.resolve( __dirname, '..', 'README.md' );
+const PUBLIC_MODULE_CATEGORIES = [
+	'components',
+	'controls',
+	'fields',
+	'meta',
+	'taxonomy',
+	'hooks',
+] as const;
 
 /**
  * Every component, control, field and hook whose README has a `## Props` table describing a
@@ -25,6 +35,24 @@ const CASES = [
 		readme: path.join( SRC, 'components/ColorPopup/README.md' ),
 		types: path.join( SRC, 'components/ColorPopup/types.ts' ),
 		interfaceName: 'ColorPopupProps',
+	},
+	{
+		name: 'Icon',
+		readme: path.join( SRC, 'components/Icon/README.md' ),
+		types: path.join( SRC, 'components/Icon/types.ts' ),
+		interfaceName: 'IconProps',
+	},
+	{
+		name: 'IconPicker',
+		readme: path.join( SRC, 'components/IconPicker/README.md' ),
+		types: path.join( SRC, 'components/IconPicker/types.ts' ),
+		interfaceName: 'IconPickerProps',
+	},
+	{
+		name: 'IconSelect',
+		readme: path.join( SRC, 'components/IconSelect/README.md' ),
+		types: path.join( SRC, 'components/IconSelect/types.ts' ),
+		interfaceName: 'IconSelectProps',
 	},
 	{
 		name: 'ResponsiveControl',
@@ -111,3 +139,30 @@ describe.each( CASES )(
 		} );
 	}
 );
+
+describe( 'main package README module catalog', () => {
+	const packageReadme = readFileSync( PACKAGE_README, 'utf8' );
+	const publicModules = PUBLIC_MODULE_CATEGORIES.flatMap( ( category ) =>
+		readdirSync( path.join( SRC, category ), { withFileTypes: true } )
+			.filter(
+				( entry ) =>
+					entry.isDirectory() &&
+					existsSync(
+						path.join( SRC, category, entry.name, 'README.md' )
+					)
+			)
+			.map( ( entry ) => ( { category, name: entry.name } ) )
+	);
+
+	it.each( publicModules )(
+		'lists $category/$name with docs and its narrowest import',
+		( { category, name } ) => {
+			expect( packageReadme ).toContain(
+				`./src/${ category }/${ name }/README.md`
+			);
+			expect( packageReadme ).toContain(
+				`from '@isudev/gutenberg/${ category }/${ name }'`
+			);
+		}
+	);
+} );

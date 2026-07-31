@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "isudev/icon-demo",
+	"title": "ISUdev Icon Demo",
+	"category": "widgets",
+	"icon": "star-filled",
+	"description": "Demonstrates localized icon rendering, grid picking and dropdown selection.",
+	"attributes": {
+		"iconName": { "type": "string", "default": "" }
+	},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "isudev-test-blocks",
+	"editorScript": "file:./index.js"
+}

@@ -3,7 +3,7 @@ name: ResponsiveControl
 entrypoint: "@isudev/gutenberg/controls"
 kind: control
 status: stable
-since: 0.2.0
+since: 0.0.1
 ---
 
 ## Summary
