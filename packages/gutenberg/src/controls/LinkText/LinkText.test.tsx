@@ -99,11 +99,26 @@ jest.mock( '@wordpress/components', () => ( {
 	ToolbarButton: ( {
 		title,
 		onClick,
+		icon,
+		isActive,
 	}: {
 		title: string;
 		onClick: () => void;
+		icon: unknown;
+		isActive: boolean;
 	} ) => (
-		<button type="button" onClick={ onClick }>
+		<button
+			type="button"
+			onClick={ onClick }
+			aria-pressed={ isActive }
+			data-icon={
+				typeof icon === 'string'
+					? icon
+					: typeof icon === 'function'
+						? icon.name
+						: 'element'
+			}
+		>
 			{ title }
 		</button>
 	),
@@ -141,7 +156,15 @@ describe( 'LinkText', () => {
 		await user.click( screen.getByRole( 'button', { name: 'Edit text' } ) );
 		expect( onTextChange ).toHaveBeenCalledWith( 'Edited' );
 
-		await user.click( screen.getByRole( 'button', { name: 'Link' } ) );
+		const toolbarButton = screen.getByRole( 'button', {
+			name: 'Link',
+			pressed: false,
+		} );
+		expect( toolbarButton ).toHaveAttribute( 'data-icon', 'link' );
+		await user.click( toolbarButton );
+		expect(
+			screen.getByRole( 'button', { name: 'Link', pressed: true } )
+		).toHaveAttribute( 'data-icon', 'link' );
 		expect( screen.getByTestId( 'popover' ) ).toHaveAttribute(
 			'data-focus-on-mount',
 			'firstElement'
@@ -233,9 +256,15 @@ describe( 'LinkText', () => {
 		expect( link ).toHaveAttribute( 'target', '_blank' );
 		expect( link ).toHaveAttribute( 'rel', 'noopener noreferrer' );
 		expect( screen.queryByTestId( 'warning-icon' ) ).not.toBeInTheDocument();
+		expect(
+			screen.getByRole( 'button', { name: 'Link', pressed: false } )
+		).toHaveAttribute( 'data-icon', 'EditLinkIcon' );
 
 		await user.click( link );
 		expect( link ).toHaveFocus();
+		expect(
+			screen.getByRole( 'button', { name: 'Link', pressed: true } )
+		).toHaveAttribute( 'data-icon', 'EditLinkIcon' );
 		expect( screen.getByTestId( 'popover' ) ).toHaveAttribute(
 			'data-focus-on-mount',
 			'false'

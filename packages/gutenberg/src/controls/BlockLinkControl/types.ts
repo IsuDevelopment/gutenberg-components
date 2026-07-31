@@ -44,8 +44,11 @@ export interface BlockLinkControlProps {
 	/** Accessible label for the unlink action. */
 	unlinkLabel?: string;
 
-	/** Icon used by the add/edit action. */
+	/** Icon used by the action while no link exists. */
 	linkIcon?: IconType;
+
+	/** Icon used by the action while a link exists. Defaults to a link with a pencil. */
+	editIcon?: IconType;
 
 	/** Icon used by the unlink action. */
 	unlinkIcon?: IconType;

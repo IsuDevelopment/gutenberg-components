@@ -47,7 +47,8 @@ import { BlockLinkControl } from '@isudev/gutenberg/controls/BlockLinkControl';
 | `addLabel` | `string` | `'Add link'` | No | Accessible label used while no link exists. |
 | `editLabel` | `string` | `'Edit link'` | No | Accessible label used while a link exists. |
 | `unlinkLabel` | `string` | `'Unlink'` | No | Accessible label for the unlink action. |
-| `linkIcon` | `IconType` | WordPress `link` icon | No | Icon for the add/edit action. |
+| `linkIcon` | `IconType` | WordPress `link` icon | No | Icon used while no link exists. |
+| `editIcon` | `IconType` | Link-with-pencil icon | No | Icon used while a link exists. |
 | `unlinkIcon` | `IconType` | WordPress `linkOff` icon | No | Icon for the unlink action. |
 | `toolbarGroupClassName` | `string` | `undefined` | No | Extra class name on the generated `ToolbarGroup`. |
 | `pickerProps` | `BlockLinkControlPickerProps` | `undefined` | No | Additional picker and popover options except controlled link props. The native text field is enabled by default. |
@@ -110,11 +111,11 @@ The native Text field writes to `value.title` and is included in the object rece
 
 - The component owns the `BlockControls` and `ToolbarGroup`; consumers only render one
   control from the block's `edit` function.
-- With no URL it displays the add action. With a URL it displays the edit action. Set
+- With no URL it displays the add action and WordPress' link icon. With a URL it displays the
+  edit action and a link-with-pencil icon. Both icons can be replaced independently. Set
   `showUnlinkButton` to `true` to add a separate unlink action.
-- The link button anchors the popover. It uses WordPress' pressed/active toolbar state while
-  a URL exists, and also while the picker is open for a new link. This keeps an existing link
-  visible in the toolbar even after the picker closes.
+- The link button anchors the popover. Its pressed/active toolbar state reflects only whether
+  that popover is open; a stored URL changes the icon and label, not the active state.
 - Opening from the toolbar focuses the picker, matching Gutenberg's toolbar-triggered link
   workflow.
 - WordPress' native Text field is enabled by default and persists its value as

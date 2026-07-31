@@ -1,3 +1,4 @@
+import type { IconType } from '@wordpress/components';
 import type { ReactNode } from 'react';
 import type {
 	LinkPickerControlProps,
@@ -60,4 +61,10 @@ export interface LinkTextProps {
 
 	/** Accessible title for the toolbar link action. */
 	toolbarLabel?: string;
+
+	/** Toolbar icon used while no link exists. */
+	toolbarIcon?: IconType;
+
+	/** Toolbar icon used while a link exists. Defaults to a link with a pencil. */
+	toolbarEditIcon?: IconType;
 }

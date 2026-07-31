@@ -37,7 +37,7 @@ Done:
   new top-level source directory needs its `exports` key added by hand. React +
   `@wordpress/*` external (decision 0002).
 - Test harness: Jest + `@swc/jest` + `@testing-library/react` + `jest-environment-jsdom`.
-  124 tests pass across breakpoint validation/resolution, hooks, components, controls,
+  125 tests pass across breakpoint validation/resolution, hooks, components, controls,
   icon/link/media normalization, and the README-vs-`types.ts` prop-table drift guard.
 - Binding engine: `useFieldBinding` → `useOptionsSource` + `useValueBinding`.
   - Options sources: `terms`, `posts`, `users`, `postTypes`, `manual`
@@ -80,7 +80,9 @@ Done:
   `isudev/link-demo` example exercises an arbitrary card, its block-toolbar actions and the
   ready-made text link.
   Empty values use WordPress' native picker mode; `LinkText` separates toolbar autofocus from
-  existing-link click behavior so its RichText caret is never stolen.
+  existing-link click behavior so its RichText caret is never stolen. Toolbar actions use a
+  regular link icon before selection and a link-with-pencil icon afterward; their active
+  state reflects only an open picker.
 - **Media controls** (decision 0009): `MediaPickerControl` normalizes native single-media
   selections, `MediaCanvasControl`, `MediaToolbarControl` and `MediaSidebarControl` own
   independent editor locations, and `MediaControl` composes them. `MediaPreview` remains a

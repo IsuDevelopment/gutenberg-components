@@ -4,6 +4,7 @@ import { BlockControls } from '@wordpress/block-editor';
 import { ToolbarButton, ToolbarGroup } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { link, linkOff } from '@wordpress/icons';
+import { EditLinkIcon } from '../../_internal/EditLinkIcon.js';
 import { LinkPickerControl } from '../LinkPickerControl/index.js';
 import type { BlockLinkControlProps } from './types.js';
 
@@ -19,6 +20,7 @@ export function BlockLinkControl( {
 	editLabel = __( 'Edit link' ),
 	unlinkLabel = __( 'Unlink' ),
 	linkIcon = link,
+	editIcon = EditLinkIcon,
 	unlinkIcon = linkOff,
 	toolbarGroupClassName,
 	pickerProps,
@@ -36,9 +38,9 @@ export function BlockLinkControl( {
 					<ToolbarGroup className={ toolbarGroupClassName }>
 						<ToolbarButton
 							ref={ anchorRef }
-							icon={ linkIcon }
+							icon={ hasLink ? editIcon : linkIcon }
 							title={ hasLink ? editLabel : addLabel }
-							isActive={ hasLink || isOpen }
+							isActive={ isOpen }
 							disabled={ disabled }
 							aria-haspopup="dialog"
 							aria-expanded={ isOpen }

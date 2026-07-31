@@ -72,3 +72,15 @@ The control now follows the two upstream flows deliberately:
 
 Native popover defaults (`animate={ false }`, `shift`, constrained tabbing and rich previews)
 are now explicit so refactors cannot silently revert the interaction.
+
+## Amendment — toolbar icon and active-state semantics (2026-07-31)
+
+Toolbar state separates stored data from transient editor UI:
+
+- an empty link uses the regular link icon;
+- an existing link uses a link-with-pencil edit icon;
+- the toolbar button is active only while its picker popover is open, never merely because
+  a URL is stored.
+
+`BlockLinkControl` and `LinkText` follow the same rule. Both expose separate add and edit
+icon props so consumers can replace the visuals without changing the state semantics.
