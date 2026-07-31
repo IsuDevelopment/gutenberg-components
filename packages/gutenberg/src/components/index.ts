@@ -22,3 +22,7 @@ export { IconPicker } from './IconPicker/index.js';
 export type { IconPickerProps } from './IconPicker/index.js';
 export { IconSelect } from './IconSelect/index.js';
 export type { IconSelectProps } from './IconSelect/index.js';
+export { MediaPreview, getMediaObjectPosition } from './MediaPreview/index.js';
+export type { MediaPreviewProps } from './MediaPreview/index.js';
+export { MediaFocalPointControl } from './MediaFocalPointControl/index.js';
+export type { MediaFocalPointControlProps } from './MediaFocalPointControl/index.js';

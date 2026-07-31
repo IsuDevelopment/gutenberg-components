@@ -55,6 +55,18 @@ const CASES = [
 		interfaceName: 'IconSelectProps',
 	},
 	{
+		name: 'MediaPreview',
+		readme: path.join( SRC, 'components/MediaPreview/README.md' ),
+		types: path.join( SRC, 'components/MediaPreview/types.ts' ),
+		interfaceName: 'MediaPreviewProps',
+	},
+	{
+		name: 'MediaFocalPointControl',
+		readme: path.join( SRC, 'components/MediaFocalPointControl/README.md' ),
+		types: path.join( SRC, 'components/MediaFocalPointControl/types.ts' ),
+		interfaceName: 'MediaFocalPointControlProps',
+	},
+	{
 		name: 'ResponsiveControl',
 		readme: path.join( SRC, 'controls/ResponsiveControl/README.md' ),
 		types: path.join( SRC, 'controls/ResponsiveControl/types.ts' ),
@@ -77,6 +89,36 @@ const CASES = [
 		readme: path.join( SRC, 'controls/BlockLinkControl/README.md' ),
 		types: path.join( SRC, 'controls/BlockLinkControl/types.ts' ),
 		interfaceName: 'BlockLinkControlProps',
+	},
+	{
+		name: 'MediaPickerControl',
+		readme: path.join( SRC, 'controls/MediaPickerControl/README.md' ),
+		types: path.join( SRC, 'controls/MediaPickerControl/types.ts' ),
+		interfaceName: 'MediaPickerControlProps',
+	},
+	{
+		name: 'MediaCanvasControl',
+		readme: path.join( SRC, 'controls/MediaCanvasControl/README.md' ),
+		types: path.join( SRC, 'controls/MediaCanvasControl/types.ts' ),
+		interfaceName: 'MediaCanvasControlProps',
+	},
+	{
+		name: 'MediaToolbarControl',
+		readme: path.join( SRC, 'controls/MediaToolbarControl/README.md' ),
+		types: path.join( SRC, 'controls/MediaToolbarControl/types.ts' ),
+		interfaceName: 'MediaToolbarControlProps',
+	},
+	{
+		name: 'MediaSidebarControl',
+		readme: path.join( SRC, 'controls/MediaSidebarControl/README.md' ),
+		types: path.join( SRC, 'controls/MediaSidebarControl/types.ts' ),
+		interfaceName: 'MediaSidebarControlProps',
+	},
+	{
+		name: 'MediaControl',
+		readme: path.join( SRC, 'controls/MediaControl/README.md' ),
+		types: path.join( SRC, 'controls/MediaControl/types.ts' ),
+		interfaceName: 'MediaControlProps',
 	},
 	{
 		name: 'MetaSelectControl',

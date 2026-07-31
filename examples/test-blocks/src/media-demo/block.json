@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "isudev/media-demo",
+	"title": "ISUdev Media Demo",
+	"category": "widgets",
+	"icon": "format-image",
+	"description": "Exercises the complete media control and every independently importable media submodule.",
+	"attributes": {
+		"media": { "type": "object", "default": {} },
+		"focalPoint": { "type": "object" },
+		"standaloneMedia": { "type": "object", "default": {} },
+		"standaloneFocalPoint": { "type": "object" }
+	},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "isudev-test-blocks",
+	"editorScript": "file:./index.js"
+}

@@ -69,9 +69,9 @@ the category barrel entirely.
 | --- | --- |
 | `@isudev/gutenberg` | Everything, re-exported. |
 | `@isudev/gutenberg/breakpoints` | `DEFAULT_BREAKPOINTS`, `resolveCascade`, `isPresent`, `validateBreakpoints` and the `Breakpoint` type. |
-| `@isudev/gutenberg/components` | All components — responsive switching, colors, icon rendering and icon selection. |
+| `@isudev/gutenberg/components` | Pure components — responsive switching, colors, icons and media/focal previews. |
 | `@isudev/gutenberg/components/*` | One component, e.g. `.../components/BreakpointSwitcher`. |
-| `@isudev/gutenberg/controls` | All controls — `ResponsiveControl`, `LinkPickerControl`, `BlockLinkControl`, `LinkText` and link helpers. |
+| `@isudev/gutenberg/controls` | Editor controls — responsive, link and modular media editing surfaces. |
 | `@isudev/gutenberg/controls/*` | One control, e.g. `.../controls/LinkPickerControl`. |
 | `@isudev/gutenberg/fields` | All fields — `SelectField`, `RadioField`. |
 | `@isudev/gutenberg/fields/*` | One field. |
@@ -101,6 +101,8 @@ shown below are the narrowest supported entry points.
 | [`Icon`](./src/components/Icon/README.md) | Renders a named icon from an injected collection and exports the icon collection helpers. | `import { Icon } from '@isudev/gutenberg/components/Icon';` |
 | [`IconPicker`](./src/components/IconPicker/README.md) | Displays a searchable, accessible grid for choosing or clearing an icon. | `import { IconPicker } from '@isudev/gutenberg/components/IconPicker';` |
 | [`IconSelect`](./src/components/IconSelect/README.md) | Opens `IconPicker` from a compact select-style button with the current icon preview. | `import { IconSelect } from '@isudev/gutenberg/components/IconSelect';` |
+| [`MediaPreview`](./src/components/MediaPreview/README.md) | Renders a serializable image/video value with optional focal positioning. | `import { MediaPreview } from '@isudev/gutenberg/components/MediaPreview';` |
+| [`MediaFocalPointControl`](./src/components/MediaFocalPointControl/README.md) | Provides standalone WordPress focal-point editing for an image or video. | `import { MediaFocalPointControl } from '@isudev/gutenberg/components/MediaFocalPointControl';` |
 
 ### Controls
 
@@ -110,6 +112,11 @@ shown below are the narrowest supported entry points.
 | [`LinkPickerControl`](./src/controls/LinkPickerControl/README.md) | Attaches WordPress' native link picker to a consumer-rendered trigger through a render prop. | `import { LinkPickerControl } from '@isudev/gutenberg/controls/LinkPickerControl';` |
 | [`BlockLinkControl`](./src/controls/BlockLinkControl/README.md) | Adds an add/edit link action for a whole block or non-text element to `BlockControls`. | `import { BlockLinkControl } from '@isudev/gutenberg/controls/BlockLinkControl';` |
 | [`LinkText`](./src/controls/LinkText/README.md) | Combines editable `RichText`, anchor rendering and a native-style toolbar link action. | `import { LinkText } from '@isudev/gutenberg/controls/LinkText';` |
+| [`MediaPickerControl`](./src/controls/MediaPickerControl/README.md) | Attaches the native media modal to any consumer-rendered trigger and normalizes its value. | `import { MediaPickerControl } from '@isudev/gutenberg/controls/MediaPickerControl';` |
+| [`MediaCanvasControl`](./src/controls/MediaCanvasControl/README.md) | Renders a media placeholder/preview with configurable on-canvas actions. | `import { MediaCanvasControl } from '@isudev/gutenberg/controls/MediaCanvasControl';` |
+| [`MediaToolbarControl`](./src/controls/MediaToolbarControl/README.md) | Adds configurable select, replace and remove actions to `BlockControls`. | `import { MediaToolbarControl } from '@isudev/gutenberg/controls/MediaToolbarControl';` |
+| [`MediaSidebarControl`](./src/controls/MediaSidebarControl/README.md) | Adds inspector actions with a static, focal-point or disabled preview. | `import { MediaSidebarControl } from '@isudev/gutenberg/controls/MediaSidebarControl';` |
+| [`MediaControl`](./src/controls/MediaControl/README.md) | Composes canvas, toolbar and sidebar media editing with per-location feature switches. | `import { MediaControl } from '@isudev/gutenberg/controls/MediaControl';` |
 
 ### Fields
 
