@@ -4,15 +4,16 @@ import type {
 	MediaActionsConfig,
 	MediaChangeHandler,
 	MediaFocalPoint,
+	MediaSourcesConfig,
 	MediaValue,
 } from '../../types/index.js';
-import type { MediaPickerControlProps } from '../MediaPickerControl/index.js';
+import type { MediaSourceControlProps } from '../MediaSourceControl/index.js';
 
 export type MediaSidebarPreview = false | 'media' | 'focal-point';
 
 export type MediaSidebarPickerProps = Omit<
-	MediaPickerControlProps,
-	'value' | 'onChange' | 'children'
+	MediaSourceControlProps,
+	'value' | 'onChange' | 'onRemove' | 'sources' | 'variant' | 'children'
 >;
 
 export interface MediaSidebarControlProps {
@@ -27,6 +28,9 @@ export interface MediaSidebarControlProps {
 
 	/** Select, replace and remove action visibility. All are enabled by default. */
 	actions?: MediaActionsConfig;
+
+	/** Media-library, upload, URL, featured-image and drop-zone visibility. */
+	sources?: MediaSourcesConfig;
 
 	/** Sidebar preview mode. Defaults to `media`; false hides it entirely. */
 	preview?: MediaSidebarPreview;

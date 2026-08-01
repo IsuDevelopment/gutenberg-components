@@ -3,13 +3,14 @@ import type { MediaPreviewProps } from '../../components/MediaPreview/index.js';
 import type {
 	MediaActionsConfig,
 	MediaChangeHandler,
+	MediaSourcesConfig,
 	MediaValue,
 } from '../../types/index.js';
-import type { MediaPickerControlProps } from '../MediaPickerControl/index.js';
+import type { MediaSourceControlProps } from '../MediaSourceControl/index.js';
 
 export type MediaCanvasPickerProps = Omit<
-	MediaPickerControlProps,
-	'value' | 'onChange' | 'children'
+	MediaSourceControlProps,
+	'value' | 'onChange' | 'onRemove' | 'sources' | 'variant' | 'children'
 >;
 
 export interface MediaCanvasControlProps {
@@ -25,6 +26,12 @@ export interface MediaCanvasControlProps {
 	/** Select, replace and remove action visibility. All are enabled by default. */
 	actions?: MediaActionsConfig;
 
+	/** Media-library, upload, URL, featured-image and drop-zone visibility. */
+	sources?: MediaSourcesConfig;
+
+	/** Render the native-style empty placeholder. Defaults to true. */
+	placeholder?: boolean;
+
 	/** Label for selecting initial media. Defaults to `Select media`. */
 	selectLabel?: string;
 
@@ -34,13 +41,13 @@ export interface MediaCanvasControlProps {
 	/** Label for clearing existing media. Defaults to `Remove media`. */
 	removeLabel?: string;
 
-	/** Placeholder heading. Defaults to `Media`. */
+	/** Placeholder heading. Defaults to `Image`. */
 	placeholderLabel?: string;
 
 	/** Placeholder guidance. */
 	placeholderInstructions?: string;
 
-	/** Additional native picker options. */
+	/** Additional media source and native picker options. */
 	pickerProps?: MediaCanvasPickerProps;
 
 	/** Additional preview options except the controlled media value. */

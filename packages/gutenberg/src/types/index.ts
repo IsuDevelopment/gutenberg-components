@@ -6,5 +6,8 @@ export type {
 	MediaActionVisibility,
 	MediaChangeHandler,
 	MediaFocalPoint,
+	MediaSource,
+	MediaSourcesConfig,
+	MediaSourceVisibility,
 	MediaValue,
 } from './media.js';

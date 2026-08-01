@@ -31,10 +31,12 @@ import { MediaCanvasControl } from '@isudev/gutenberg/controls/MediaCanvasContro
 | `onChange` | `MediaChangeHandler` | — | Yes | Receives normalized media selections. |
 | `onRemove` | `() => void` | `onChange( {} )` | No | Custom clearing behavior. |
 | `actions` | `MediaActionsConfig` | all enabled | No | Independently controls select, replace and remove. |
+| `sources` | `MediaSourcesConfig` | all enabled | No | Independently controls library, upload, URL, featured image and drop zone. |
+| `placeholder` | `boolean` | `true` | No | Renders the native-style empty canvas surface. |
 | `selectLabel` | `string` | `'Select media'` | No | Initial selection label. |
 | `replaceLabel` | `string` | `'Replace media'` | No | Existing-media action label. |
 | `removeLabel` | `string` | `'Remove media'` | No | Clear action label. |
-| `placeholderLabel` | `string` | `'Media'` | No | Placeholder heading. |
+| `placeholderLabel` | `string` | `'Image'` | No | Placeholder heading. |
 | `placeholderInstructions` | `string` | selection guidance | No | Placeholder help text. |
 | `pickerProps` | `MediaCanvasPickerProps` | `undefined` | No | Native picker options except controlled props. |
 | `previewProps` | `Omit<MediaPreviewProps, 'value'>` | `undefined` | No | Media preview configuration. |
@@ -52,8 +54,10 @@ optional switches (each defaults to `true`):
 | `replace` | Media selected | Shows the edit/replace action. |
 | `remove` | Media selected | Shows the remove action. |
 
-`pickerProps` accepts `allowedTypes`, `imageSize`, `disabled`, `title`, `modalClass`,
-`onClose` and `fallback` from `MediaPickerControl`. `previewProps` accepts every
+`sources` is `false` or an object with `library`, `upload`, `url`, `featured` and `dropZone`
+booleans. Every source defaults to enabled. `pickerProps` accepts `allowedTypes`, `accept`,
+`imageSize`, `disabled`, `featuredMedia`, `onFilesUpload`, `onError`, `title`, `modalClass`,
+`onClose`, `fallback` and `labels` from `MediaSourceControl`. `previewProps` accepts every
 `MediaPreview` prop except its controlled `value`.
 
 ## Examples
@@ -66,6 +70,20 @@ optional switches (each defaults to `true`):
 	onChange={ ( media ) => setAttributes( { media } ) }
 />
 ```
+
+### No empty canvas surface
+
+```jsx
+<MediaCanvasControl
+	value={ attributes.media }
+	onChange={ ( media ) => setAttributes( { media } ) }
+	placeholder={ false }
+	sources={ { upload: false, featured: false } }
+/>
+```
+
+With no selected media this renders nothing; toolbar or sidebar controls can still provide
+selection. Once media exists, the preview and configured actions render normally.
 
 ### Preview without overlay removal
 
@@ -81,7 +99,10 @@ optional switches (each defaults to `true`):
 
 ## Behavior
 
-- Select is relevant only without media; replace and remove only with media.
+- Without media, the default placeholder exposes upload, media library, URL, featured-image
+  and drag/drop sources. `placeholder={false}` suppresses the complete empty surface.
+- With media, replace opens the source dropdown. Reset lives in that menu when replace and
+  remove are enabled; remove stays standalone when replace is disabled.
 - `actions={ false }` leaves the placeholder/preview intact and removes every action.
 - The selected preview comes from the pure `MediaPreview` component.
 
@@ -92,10 +113,11 @@ layout styles; `className`, `style` and `previewProps` provide block-specific co
 
 ## Gotchas
 
-`style` applies after selection. WordPress' `Placeholder` owns the empty-state layout.
+`style` applies after selection. `dropZone` applies only to the empty placeholder.
 
 ## Related
 
 - [`MediaPreview`](../../components/MediaPreview/README.md)
 - [`MediaPickerControl`](../MediaPickerControl/README.md)
+- [`MediaSourceControl`](../MediaSourceControl/README.md)
 - [`MediaControl`](../MediaControl/README.md)

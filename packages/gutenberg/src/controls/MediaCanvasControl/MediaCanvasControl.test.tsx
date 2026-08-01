@@ -11,6 +11,25 @@ jest.mock( '@wordpress/block-editor', () => ( {
 	} ) => render( { open: jest.fn() } ),
 } ) );
 
+jest.mock( '../MediaSourceControl/index.js', () => ( {
+	MediaSourceControl: ( {
+		variant,
+		children,
+	}: {
+		variant: 'buttons' | 'dropdown';
+		children?: ( args: Record< string, unknown > ) => React.ReactNode;
+	} ) =>
+		variant === 'buttons' ? (
+			<button>Select media</button>
+		) : (
+			children?.( {
+				toggle: jest.fn(),
+				disabled: false,
+				isOpen: false,
+			} )
+		),
+} ) );
+
 describe( 'MediaCanvasControl', () => {
 	it( 'renders a selectable placeholder without media', () => {
 		render( <MediaCanvasControl value={ {} } onChange={ jest.fn() } /> );
@@ -18,7 +37,19 @@ describe( 'MediaCanvasControl', () => {
 		expect(
 			screen.getByRole( 'button', { name: 'Select media' } )
 		).toBeInTheDocument();
-		expect( screen.getByText( 'Media' ) ).toBeInTheDocument();
+		expect( screen.getByText( 'Image' ) ).toBeInTheDocument();
+	} );
+
+	it( 'can disable only the empty canvas placeholder', () => {
+		const { container } = render(
+			<MediaCanvasControl
+				value={ {} }
+				onChange={ jest.fn() }
+				placeholder={ false }
+			/>
+		);
+
+		expect( container ).toBeEmptyDOMElement();
 	} );
 
 	it( 'shows preview actions and supports independent action visibility', async () => {

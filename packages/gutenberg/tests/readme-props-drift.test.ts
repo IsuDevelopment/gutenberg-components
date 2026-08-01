@@ -97,6 +97,12 @@ const CASES = [
 		interfaceName: 'MediaPickerControlProps',
 	},
 	{
+		name: 'MediaSourceControl',
+		readme: path.join( SRC, 'controls/MediaSourceControl/README.md' ),
+		types: path.join( SRC, 'controls/MediaSourceControl/types.ts' ),
+		interfaceName: 'MediaSourceControlProps',
+	},
+	{
 		name: 'MediaCanvasControl',
 		readme: path.join( SRC, 'controls/MediaCanvasControl/README.md' ),
 		types: path.join( SRC, 'controls/MediaCanvasControl/types.ts' ),

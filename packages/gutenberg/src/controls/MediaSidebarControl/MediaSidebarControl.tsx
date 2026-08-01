@@ -6,10 +6,8 @@ import { __ } from '@wordpress/i18n';
 import { replace, trash } from '@wordpress/icons';
 import { MediaFocalPointControl } from '../../components/MediaFocalPointControl/index.js';
 import { MediaPreview } from '../../components/MediaPreview/index.js';
-import {
-	MediaPickerControl,
-	resolveMediaActions,
-} from '../MediaPickerControl/index.js';
+import { hasMediaValue, resolveMediaActions } from '../MediaPickerControl/index.js';
+import { MediaSourceControl } from '../MediaSourceControl/index.js';
 import type { MediaSidebarControlProps } from './types.js';
 
 /** Inspector media panel with optional preview, focal point and actions. */
@@ -18,6 +16,7 @@ export function MediaSidebarControl( {
 	onChange,
 	onRemove,
 	actions,
+	sources,
 	preview = 'media',
 	focalPoint,
 	onFocalPointChange,
@@ -33,6 +32,11 @@ export function MediaSidebarControl( {
 }: MediaSidebarControlProps ): ReactElement {
 	const visibleActions = resolveMediaActions( actions );
 	const remove = () => ( onRemove ? onRemove() : onChange( {} ) );
+	const hasMedia = hasMediaValue( value );
+	const showPicker = hasMedia
+		? visibleActions.replace
+		: visibleActions.select;
+	const showRemove = hasMedia && visibleActions.remove;
 
 	if (
 		process.env.NODE_ENV !== 'production' &&
@@ -70,50 +74,51 @@ export function MediaSidebarControl( {
 					</div>
 				) }
 
-				<MediaPickerControl
-					{ ...pickerProps }
-					value={ value }
-					onChange={ onChange }
-				>
-					{ ( { open, hasMedia, disabled } ) => {
-						const showPicker = hasMedia
-							? visibleActions.replace
-							: visibleActions.select;
-						const showRemove = hasMedia && visibleActions.remove;
-
-						if ( ! showPicker && ! showRemove ) {
-							return null;
-						}
-
-						return (
-							<div style={ { display: 'grid', gap: 8 } }>
-								{ showPicker && (
+				{ ( showPicker || showRemove ) && (
+					<div style={ { display: 'grid', gap: 8 } }>
+						{ showPicker && (
+							<MediaSourceControl
+								{ ...pickerProps }
+								value={ value }
+								onChange={ onChange }
+								onRemove={ showRemove ? remove : undefined }
+								sources={ sources }
+								variant="dropdown"
+								labels={ {
+									...pickerProps?.labels,
+									select: selectLabel,
+									replace: replaceLabel,
+									remove: removeLabel,
+								} }
+							>
+								{ ( { toggle, disabled, isOpen } ) => (
 									<Button
 										icon={ hasMedia ? replace : undefined }
 										variant="secondary"
 										disabled={ disabled }
-										onClick={ open }
+										isPressed={ isOpen }
+										onClick={ toggle }
 										style={ { justifyContent: 'center', width: '100%' } }
 									>
 										{ hasMedia ? replaceLabel : selectLabel }
 									</Button>
 								) }
-								{ showRemove && (
-									<Button
-										icon={ trash }
-										variant="secondary"
-										isDestructive
-										disabled={ disabled }
-										onClick={ remove }
-										style={ { justifyContent: 'center', width: '100%' } }
-									>
-										{ removeLabel }
-									</Button>
-								) }
-							</div>
-						);
-					} }
-				</MediaPickerControl>
+							</MediaSourceControl>
+						) }
+						{ showRemove && ! showPicker && (
+							<Button
+								icon={ trash }
+								variant="secondary"
+								isDestructive
+								disabled={ pickerProps?.disabled }
+								onClick={ remove }
+								style={ { justifyContent: 'center', width: '100%' } }
+							>
+								{ removeLabel }
+							</Button>
+						) }
+					</div>
+				) }
 			</PanelBody>
 		</InspectorControls>
 	);

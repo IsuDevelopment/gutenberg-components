@@ -40,6 +40,25 @@ jest.mock( '@wordpress/icons', () => ( {
 	trash: 'trash',
 } ) );
 
+jest.mock( '../MediaSourceControl/index.js', () => ( {
+	MediaSourceControl: ( {
+		children,
+		onRemove,
+	}: {
+		children: ( args: Record< string, unknown > ) => React.ReactNode;
+		onRemove?: () => void;
+	} ) => (
+		<>
+			{ children( {
+				toggle: jest.fn(),
+				disabled: false,
+				isOpen: false,
+			} ) }
+			{ onRemove && <button onClick={ onRemove }>Remove media</button> }
+		</>
+	),
+} ) );
+
 describe( 'MediaToolbarControl', () => {
 	it( 'switches select to replace and can hide remove independently', () => {
 		const { rerender } = render(

@@ -36,6 +36,17 @@ export type {
 	MediaPickerControlProps,
 	MediaPickerRenderArgs,
 } from './MediaPickerControl/index.js';
+export {
+	getMediaAccept,
+	MediaSourceControl,
+	resolveMediaSources,
+} from './MediaSourceControl/index.js';
+export type {
+	MediaSourceControlProps,
+	MediaSourceControlVariant,
+	MediaSourceLabels,
+	MediaSourceToggleArgs,
+} from './MediaSourceControl/index.js';
 export { MediaCanvasControl } from './MediaCanvasControl/index.js';
 export type {
 	MediaCanvasControlProps,

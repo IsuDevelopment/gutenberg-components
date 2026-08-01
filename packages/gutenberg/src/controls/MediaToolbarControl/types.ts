@@ -1,14 +1,15 @@
 import type {
 	MediaActionsConfig,
 	MediaChangeHandler,
+	MediaSourcesConfig,
 	MediaValue,
 } from '../../types/index.js';
 import type { BlockControlsGroup } from '../BlockLinkControl/index.js';
-import type { MediaPickerControlProps } from '../MediaPickerControl/index.js';
+import type { MediaSourceControlProps } from '../MediaSourceControl/index.js';
 
 export type MediaToolbarPickerProps = Omit<
-	MediaPickerControlProps,
-	'value' | 'onChange' | 'children'
+	MediaSourceControlProps,
+	'value' | 'onChange' | 'onRemove' | 'sources' | 'variant' | 'children'
 >;
 
 export interface MediaToolbarControlProps {
@@ -23,6 +24,9 @@ export interface MediaToolbarControlProps {
 
 	/** Select, replace and remove action visibility. All are enabled by default. */
 	actions?: MediaActionsConfig;
+
+	/** Media-library, upload, URL, featured-image and drop-zone visibility. */
+	sources?: MediaSourcesConfig;
 
 	/** Block toolbar group receiving the actions. Defaults to `other`. */
 	group?: BlockControlsGroup;

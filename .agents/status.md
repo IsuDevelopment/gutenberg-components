@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-07-31
+Last updated: 2026-08-01
 
 ## Layout convention (2026-07-30)
 
@@ -37,7 +37,7 @@ Done:
   new top-level source directory needs its `exports` key added by hand. React +
   `@wordpress/*` external (decision 0002).
 - Test harness: Jest + `@swc/jest` + `@testing-library/react` + `jest-environment-jsdom`.
-  125 tests pass across breakpoint validation/resolution, hooks, components, controls,
+  134 tests pass across breakpoint validation/resolution, hooks, components, controls,
   icon/link/media normalization, and the README-vs-`types.ts` prop-table drift guard.
 - Binding engine: `useFieldBinding` → `useOptionsSource` + `useValueBinding`.
   - Options sources: `terms`, `posts`, `users`, `postTypes`, `manual`
@@ -90,6 +90,13 @@ Done:
   Every location exposes independent select/replace/remove visibility; sidebar preview is
   static media, focal point, or disabled. The `isudev/media-demo` block exercises the full
   composition and every submodule directly.
+- **Native-style media sources** (decision 0010): `MediaSourceControl` adds independently
+  switchable media library, upload, direct URL, current-post featured image and drag/drop
+  sources in button and dropdown variants. Canvas, toolbar, sidebar and the composite now
+  share that source contract without conflating it with select/replace/remove actions.
+  `MediaCanvasControl.placeholder` can remove only the empty canvas surface and defaults to
+  enabled. `MediaValue.source` preserves attachment/URL/featured identity so featured values
+  can follow later post featured-image changes.
 - Each component/control ships a `README.md` with a YAML front-matter + prop table, checked
   against its `types.ts` by `tests/readme-props-drift.test.ts` — a drift guard that reads the
   interface off the TypeScript AST and fails the suite if the docs and the types disagree.

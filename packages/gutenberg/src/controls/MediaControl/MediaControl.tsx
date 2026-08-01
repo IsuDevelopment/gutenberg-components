@@ -14,6 +14,7 @@ export function MediaControl( {
 	allowedTypes = [ 'image' ],
 	imageSize,
 	disabled = false,
+	sources,
 	resetFocalPointOnChange = false,
 	canvas = {},
 	toolbar = {},
@@ -54,6 +55,7 @@ export function MediaControl( {
 					value={ value }
 					onChange={ changeMedia }
 					onRemove={ removeMedia }
+					sources={ toolbar.sources ?? sources }
 					pickerProps={ {
 						...commonPickerProps,
 						...toolbar.pickerProps,
@@ -68,6 +70,7 @@ export function MediaControl( {
 					onRemove={ removeMedia }
 					focalPoint={ focalPoint }
 					onFocalPointChange={ onFocalPointChange }
+					sources={ sidebar.sources ?? sources }
 					pickerProps={ {
 						...commonPickerProps,
 						...sidebar.pickerProps,
@@ -80,6 +83,7 @@ export function MediaControl( {
 					value={ value }
 					onChange={ changeMedia }
 					onRemove={ removeMedia }
+					sources={ canvas.sources ?? sources }
 					pickerProps={ {
 						...commonPickerProps,
 						...canvas.pickerProps,

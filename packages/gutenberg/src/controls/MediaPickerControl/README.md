@@ -56,6 +56,7 @@ WordPress selection as its optional second argument:
 
 | Field | Type | Source |
 | --- | --- | --- |
+| `source` | `'attachment'` | Native media-library selection. |
 | `id` | `number` | Attachment ID. |
 | `url` | `string` | Requested `imageSize`, then `source_url`, then the original URL. |
 | `type` | `string` | Broad media type, inferred from the MIME type when necessary. |
@@ -113,6 +114,8 @@ WordPress selection as its optional second argument:
 - `hasMedia` is true when the controlled value contains an ID or URL.
 - `imageSize` reads the requested rendition from WordPress' selection and falls back to
   `source_url`/`url`.
+- Normalized native selections include `source: 'attachment'`; `MediaSourceControl` adds URL
+  and featured-image source values.
 - The three normalization/state helpers above are exported from both the direct entry point
   and the controls barrel.
 
@@ -129,6 +132,7 @@ module.
 ## Related
 
 - [`MediaCanvasControl`](../MediaCanvasControl/README.md)
+- [`MediaSourceControl`](../MediaSourceControl/README.md)
 - [`MediaToolbarControl`](../MediaToolbarControl/README.md)
 - [`MediaSidebarControl`](../MediaSidebarControl/README.md)
 - [`MediaControl`](../MediaControl/README.md)

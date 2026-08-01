@@ -37,6 +37,19 @@ jest.mock( '@wordpress/components', () => ( {
 
 jest.mock( '@wordpress/icons', () => ( { replace: 'replace', trash: 'trash' } ) );
 
+jest.mock( '../MediaSourceControl/index.js', () => ( {
+	MediaSourceControl: ( {
+		children,
+	}: {
+		children: ( args: Record< string, unknown > ) => React.ReactNode;
+	} ) =>
+		children( {
+			toggle: jest.fn(),
+			disabled: false,
+			isOpen: false,
+		} ),
+} ) );
+
 jest.mock( '../../components/MediaFocalPointControl/index.js', () => ( {
 	MediaFocalPointControl: () => <div data-testid="focal-point-control" />,
 } ) );

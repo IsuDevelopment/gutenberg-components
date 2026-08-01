@@ -1,6 +1,7 @@
 import type {
 	MediaChangeHandler,
 	MediaFocalPoint,
+	MediaSourcesConfig,
 	MediaValue,
 } from '../../types/index.js';
 import type { MediaCanvasControlProps } from '../MediaCanvasControl/index.js';
@@ -50,6 +51,9 @@ export interface MediaControlProps {
 
 	/** Disable media selection and actions in every enabled location. Defaults to false. */
 	disabled?: boolean;
+
+	/** Default media-source visibility for every enabled location. */
+	sources?: MediaSourcesConfig;
 
 	/** Reset focal point when media identity changes or is removed. Defaults to false. */
 	resetFocalPointOnChange?: boolean;

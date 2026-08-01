@@ -50,6 +50,7 @@ export function normalizeMediaValue(
 	);
 
 	return {
+		source: 'attachment',
 		id: numberValue( media.id ),
 		url:
 			stringValue( rendition?.url ) ??

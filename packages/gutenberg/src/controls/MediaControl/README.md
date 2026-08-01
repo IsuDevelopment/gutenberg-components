@@ -37,6 +37,7 @@ import { MediaControl } from '@isudev/gutenberg/controls/MediaControl';
 | `allowedTypes` | `string[]` | `['image']` | No | Default allowed types for every location. |
 | `imageSize` | `string` | `undefined` | No | Default image rendition for every location. |
 | `disabled` | `boolean` | `false` | No | Disables actions in every location. |
+| `sources` | `MediaSourcesConfig` | all enabled | No | Default media-source visibility for every location. |
 | `resetFocalPointOnChange` | `boolean` | `false` | No | Resets focal point after replace/remove. |
 | `canvas` | `false \| MediaControlCanvasOptions` | `{}` | No | Configures or disables inline editing. |
 | `toolbar` | `false \| MediaControlToolbarOptions` | `{}` | No | Configures or disables toolbar editing. |
@@ -50,13 +51,19 @@ following options; `value`, change handlers and focal-point state remain owned b
 
 | Location | Supported option fields |
 | --- | --- |
-| `canvas` | `actions`, `selectLabel`, `replaceLabel`, `removeLabel`, `placeholderLabel`, `placeholderInstructions`, `pickerProps`, `previewProps`, `className`, `style` |
-| `toolbar` | `actions`, `group`, `selectLabel`, `replaceLabel`, `removeLabel`, `toolbarGroupClassName`, `pickerProps` |
-| `sidebar` | `actions`, `preview`, `title`, `initialOpen`, `selectLabel`, `replaceLabel`, `removeLabel`, `pickerProps`, `previewProps`, `focalPointProps`, `className` |
+| `canvas` | `actions`, `sources`, `placeholder`, `selectLabel`, `replaceLabel`, `removeLabel`, `placeholderLabel`, `placeholderInstructions`, `pickerProps`, `previewProps`, `className`, `style` |
+| `toolbar` | `actions`, `sources`, `group`, `selectLabel`, `replaceLabel`, `removeLabel`, `toolbarGroupClassName`, `pickerProps` |
+| `sidebar` | `actions`, `sources`, `preview`, `title`, `initialOpen`, `selectLabel`, `replaceLabel`, `removeLabel`, `pickerProps`, `previewProps`, `focalPointProps`, `className` |
 
 For every location, `actions` is either `false` or an object with optional `select`,
 `replace` and `remove` booleans; every action defaults to visible in the state where it is
 relevant. Sidebar `preview` accepts `'media'`, `'focal-point'` or `false`.
+
+At the composite or location level, `sources` is either `false` or an object with optional
+`library`, `upload`, `url`, `featured` and `dropZone` booleans. Every source defaults to
+enabled. A location's `sources` overrides the composite default. `dropZone` applies only to
+the empty canvas placeholder. Canvas `placeholder={false}` removes that empty surface while
+leaving toolbar/sidebar selection available.
 
 Each location's `pickerProps` can override the common `allowedTypes`, `imageSize` and
 `disabled` values and additionally accepts `title`, `modalClass`, `onClose` and `fallback`.
@@ -85,6 +92,7 @@ submodule READMEs below.
 	value={ attributes.media }
 	onChange={ ( media ) => setAttributes( { media } ) }
 	allowedTypes={ ['image', 'video'] }
+	sources={ { featured: false } }
 	canvas={ { actions: { remove: false } } }
 	toolbar={ { actions: { select: false, remove: true } } }
 	sidebar={ false }
@@ -108,6 +116,8 @@ Each location can be removed completely:
 - Canvas, toolbar and sidebar are enabled by default.
 - Common picker settings are inherited by every location; location `pickerProps` override
   common values.
+- Common media-source switches are inherited by every location; location `sources` override
+  the composite value.
 - All locations share one change/remove pipeline.
 - Optional focal reset runs only when media identity changes or media is removed.
 
@@ -117,8 +127,9 @@ Ships no stylesheet. Each submodule uses WordPress UI plus minimal inline layout
 
 ## Gotchas
 
-- This component intentionally handles one attachment, not galleries, captions, featured
-  image state or arbitrary embeds.
+- This component intentionally handles one media value, not galleries, captions or embeds.
+- Direct URLs have no attachment ID. Featured-image values stay synchronized only while
+  their stored `source` remains `'featured'`.
 - If only one surface is required, import that surface directly for the narrowest bundle.
 - Store the normalized media object, not only its ID, so pure previews work after reload.
 
@@ -128,3 +139,4 @@ Ships no stylesheet. Each submodule uses WordPress UI plus minimal inline layout
 - [`MediaToolbarControl`](../MediaToolbarControl/README.md)
 - [`MediaSidebarControl`](../MediaSidebarControl/README.md)
 - [`MediaPickerControl`](../MediaPickerControl/README.md)
+- [`MediaSourceControl`](../MediaSourceControl/README.md)

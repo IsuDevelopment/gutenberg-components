@@ -12,6 +12,7 @@ import {
 	MediaControl,
 	MediaPickerControl,
 	MediaSidebarControl,
+	MediaSourceControl,
 	MediaToolbarControl,
 } from '@isudev/gutenberg/controls';
 
@@ -82,6 +83,29 @@ registerBlockType( metadata.name, {
 					) }
 				</MediaPickerControl>
 
+				<div style={ { marginTop: 16 } }>
+					<MediaSourceControl
+						value={ standaloneMedia }
+						onChange={ ( nextMedia ) =>
+							setAttributes( { standaloneMedia: nextMedia } )
+						}
+						onRemove={ () => setAttributes( { standaloneMedia: {} } ) }
+						allowedTypes={ ALLOWED_TYPES }
+						sources={ { dropZone: false } }
+					>
+						{ ( { toggle, isOpen, disabled, label } ) => (
+							<Button
+								variant="secondary"
+								onClick={ toggle }
+								isPressed={ isOpen }
+								disabled={ disabled }
+							>
+								{ `${ __( 'Direct source control', 'isudev-test-blocks' ) }: ${ label }` }
+							</Button>
+						) }
+					</MediaSourceControl>
+				</div>
+
 				<div style={ { marginTop: 16, maxWidth: 640 } }>
 					<MediaPreview
 						value={ standaloneMedia }
@@ -108,6 +132,12 @@ registerBlockType( metadata.name, {
 					actions={ { remove: false } }
 					pickerProps={ { allowedTypes: ALLOWED_TYPES } }
 					placeholderLabel={ __( 'Standalone canvas', 'isudev-test-blocks' ) }
+				/>
+
+				<MediaCanvasControl
+					value={ {} }
+					onChange={ () => undefined }
+					placeholder={ false }
 				/>
 
 				<MediaToolbarControl

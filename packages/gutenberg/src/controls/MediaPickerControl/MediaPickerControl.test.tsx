@@ -51,6 +51,7 @@ describe( 'MediaPickerControl', () => {
 		await user.click( screen.getByRole( 'button', { name: 'select' } ) );
 		expect( onChange ).toHaveBeenCalledWith(
 			{
+				source: 'attachment',
 				id: 42,
 				url: '/medium.jpg',
 				type: 'image',

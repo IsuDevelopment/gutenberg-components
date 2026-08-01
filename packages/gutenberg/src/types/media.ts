@@ -1,5 +1,11 @@
+/** Origin of a selected media value. */
+export type MediaSource = 'attachment' | 'url' | 'featured';
+
 /** Serializable media data suitable for a block attribute. */
 export interface MediaValue {
+	/** How the media was selected. */
+	source?: MediaSource;
+
 	/** WordPress attachment ID. */
 	id?: number;
 
@@ -42,6 +48,27 @@ export interface MediaActionVisibility {
 
 /** `false` hides every action; an object overrides individual default-visible actions. */
 export type MediaActionsConfig = false | MediaActionVisibility;
+
+/** Visibility of media selection sources. */
+export interface MediaSourceVisibility {
+	/** Show the WordPress media library. Defaults to true. */
+	library?: boolean;
+
+	/** Show direct file upload. Defaults to true. */
+	upload?: boolean;
+
+	/** Show direct URL input. Defaults to true. */
+	url?: boolean;
+
+	/** Show the current post's featured image when one exists. Defaults to true. */
+	featured?: boolean;
+
+	/** Accept drag-and-drop uploads in the button/placeholder variant. Defaults to true. */
+	dropZone?: boolean;
+}
+
+/** `false` hides every source; an object overrides individual default-visible sources. */
+export type MediaSourcesConfig = false | MediaSourceVisibility;
 
 /** Receives normalized media and the untouched WordPress selection object. */
 export type MediaChangeHandler = (

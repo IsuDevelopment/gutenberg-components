@@ -32,6 +32,7 @@ import { MediaSidebarControl } from '@isudev/gutenberg/controls/MediaSidebarCont
 | `onChange` | `MediaChangeHandler` | — | Yes | Receives normalized selections. |
 | `onRemove` | `() => void` | `onChange( {} )` | No | Custom clearing behavior. |
 | `actions` | `MediaActionsConfig` | all enabled | No | Independently controls select, replace and remove. |
+| `sources` | `MediaSourcesConfig` | all enabled | No | Independently controls library, upload, URL, featured image and drop zone. |
 | `preview` | `false \| 'media' \| 'focal-point'` | `'media'` | No | Selects or disables sidebar preview UI. |
 | `focalPoint` | `MediaFocalPoint` | `undefined` | No | Controlled focal point. |
 | `onFocalPointChange` | `( value: MediaFocalPoint \| undefined ) => void` | `undefined` | No | Enables focal-point editing and receives changes. |
@@ -64,8 +65,11 @@ The `preview` modes are:
 | `'focal-point'` | Interactive `MediaFocalPointControl`; configured through `focalPointProps`. |
 | `false` | No preview; action buttons remain independent. |
 
-`pickerProps` accepts `allowedTypes`, `imageSize`, `disabled`, `title`, `modalClass`,
-`onClose` and `fallback`. `previewProps` accepts every `MediaPreview` prop except `value`.
+`sources` is `false` or an object with `library`, `upload`, `url`, `featured` and `dropZone`
+booleans. `dropZone` has no effect in the sidebar dropdown. `pickerProps` accepts
+`allowedTypes`, `accept`, `imageSize`, `disabled`, `featuredMedia`, `onFilesUpload`,
+`onError`, `title`, `modalClass`, `onClose`, `fallback` and `labels`. `previewProps` accepts
+every `MediaPreview` prop except `value`.
 `focalPointProps` accepts `label`, `help`, `hideLabelFromVision`, `autoPlay`, `showReset`,
 `resetLabel` and `emptyFallback`.
 
@@ -102,6 +106,8 @@ Disable only the preview while retaining buttons with `preview={ false }`.
 - `preview="focal-point"` requires `onFocalPointChange`; development builds warn and fall
   back to the static preview when it is missing.
 - Preview visibility and action visibility are independent.
+- Select/replace opens the same source dropdown as the toolbar. Reset is inside that menu
+  when replace and remove are enabled.
 
 ## Styling
 
@@ -117,4 +123,5 @@ The component owns `InspectorControls` and `PanelBody`; render it directly from 
 - [`MediaPreview`](../../components/MediaPreview/README.md)
 - [`MediaFocalPointControl`](../../components/MediaFocalPointControl/README.md)
 - [`MediaToolbarControl`](../MediaToolbarControl/README.md)
+- [`MediaSourceControl`](../MediaSourceControl/README.md)
 - [`MediaControl`](../MediaControl/README.md)
