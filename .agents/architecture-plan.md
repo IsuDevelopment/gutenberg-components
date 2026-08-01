@@ -192,6 +192,7 @@ isudev-gutenberg/
 │  │  ├─ ResponsiveControl/
 │  │  ├─ MediaControl/
 │  │  ├─ MediaPickerControl/
+│  │  ├─ MediaSourceControl/
 │  │  ├─ MediaCanvasControl/
 │  │  ├─ MediaToolbarControl/
 │  │  ├─ MediaSidebarControl/
@@ -1795,7 +1796,8 @@ ale nie jest to konieczne na start.
 > props; components never read it directly (decision 0008). Link picker ships as
 > `LinkPickerControl` to avoid the WordPress name collision (decision 0007).
 > The single-media API is split into pure preview/focal components, a render-prop picker,
-> three location controls and the `MediaControl` composition (decision 0009).
+> a configurable source selector, three location controls and the `MediaControl`
+> composition (decisions 0009 and 0010).
 
 - [ ] Napisać komponenty do `components/` (od zera, konfiguracja przez propsy):
   - [x] `ColorPopup`
@@ -1804,8 +1806,9 @@ ale nie jest to konieczne na start.
   - [ ] `SearchableSelect`
   - [ ] preloadery jako `Skeleton`, `LoadingOverlay` albo `EmptyState`
 - [ ] Napisać kontrolki do `controls/` (od zera, konfiguracja przez propsy):
-  - [x] `MediaPickerControl` + `MediaCanvasControl` + `MediaToolbarControl` +
-    `MediaSidebarControl` + `MediaControl` (decision 0009)
+  - [x] `MediaPickerControl` + `MediaSourceControl` + `MediaCanvasControl` +
+    `MediaToolbarControl` + `MediaSidebarControl` + `MediaControl`
+    (decisions 0009 and 0010)
   - [x] `LinkPickerControl` + `BlockLinkControl` + `LinkText` (decision 0007)
   - [ ] `PostTypeControl`
   - [ ] `InlineUrlPicker`

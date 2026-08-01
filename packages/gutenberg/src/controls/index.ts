@@ -1,5 +1,5 @@
 // Editor/Gutenberg controls, not necessarily bound to meta/taxonomy.
-// TODO(stage 7): MediaControl, PostTypeControl, UrlPicker, InlineUrlPicker.
+// TODO(stage 7): PostTypeControl, UrlPicker, InlineUrlPicker.
 export { ResponsiveControl } from './ResponsiveControl/index.js';
 export type {
 	ResponsiveControlProps,
