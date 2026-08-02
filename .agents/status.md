@@ -127,8 +127,8 @@ Done:
   0.27.7). Treat the old note as stale, but if a build fails with a native-binary error,
   fall back to installing with `--ignore-scripts` and building in a normal terminal.
 - `TMPDIR` was pointed at `./.tmp` to avoid filling the sandbox tmp volume (gitignored).
-- Current feature work is on `feat/media-picker`; the completed link/icon work is merged to
-  `master`.
+- The default branch is `main`. The media picker and the documentation pipeline are merged
+  into it; `feat/media-picker` and `feat/breakpoint-switcher` are spent and can be deleted.
 
 ## Next steps
 

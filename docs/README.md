@@ -31,7 +31,7 @@ generated pages.
 ## Deploying
 
 Cloudflare Workers static assets, from `.github/workflows/docs.yml` on every push to
-`master` that touches the docs or the READMEs they are built from. `wrangler.jsonc` holds
+`main` that touches the docs or the READMEs they are built from. `wrangler.jsonc` holds
 the Worker name and points at `dist/`; nothing runs server-side.
 
 One-time setup outside the repository:
