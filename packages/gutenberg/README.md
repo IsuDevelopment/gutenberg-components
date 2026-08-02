@@ -18,8 +18,24 @@ semantic version increments will start with the first npm release.
 npm install @isudev/gutenberg
 ```
 
-Requires Node 20 to build, and a block build that externalizes WordPress packages —
-`@wordpress/scripts` does this out of the box.
+Requires a block build that externalizes WordPress packages — `@wordpress/scripts` does this
+out of the box. Building the library itself requires Node 22.
+
+### Using an AI coding agent?
+
+```bash
+npx @isudev/gutenberg init
+```
+
+This writes the module catalog to `.agents/vendor/isudev-gutenberg.md` in your project and
+adds a pointer to your `AGENTS.md` — plus your Cursor rules and Copilot instructions if you
+use them — so your agent finds the documentation on its own. Agents do not index
+`node_modules`, which is why the copy shipped in the tarball is not enough by itself. Re-run
+it after upgrading; `npx @isudev/gutenberg init --check` fails a CI build when the vendored
+copy has fallen behind.
+
+The same content is in [`AGENTS.md`](./AGENTS.md) beside this file, with the machine-readable
+version in [`catalog.json`](./catalog.json).
 
 ## Importing modules
 

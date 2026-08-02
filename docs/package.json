@@ -1,0 +1,21 @@
+{
+	"name": "docs",
+	"private": true,
+	"type": "module",
+	"description": "Documentation site for @isudev/gutenberg, generated from the colocated component READMEs.",
+	"scripts": {
+		"sync": "node scripts/sync-content.mjs",
+		"dev": "npm run sync && astro dev",
+		"build": "npm run sync && astro build",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"@astrojs/starlight": "^0.41.6",
+		"astro": "^7.1.6",
+		"starlight-llms-txt": "^0.11.0"
+	},
+	"devDependencies": {
+		"cookie": "^2.0.1"
+	}
+}

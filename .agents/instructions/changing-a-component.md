@@ -8,9 +8,10 @@ For any change to an existing component, control, field or hook. See
 **A change to a component's behaviour or API is not finished until its `README.md`
 matches it, in the same commit.**
 
-The docs site and the MCP tool descriptions are generated from these READMEs. A stale
-README is not a cosmetic problem: it ships as documentation and as a tool description that
-tells an agent to call the component the old way. Code and README are one unit of work.
+The docs site, `catalog.json` and the `AGENTS.md` shipped in the tarball are all generated
+from these READMEs. A stale README is not a cosmetic problem: it ships as documentation and
+as an agent guide that tells an agent to call the component the old way, in every one of
+those places at once. Code and README are one unit of work.
 
 The props-table drift guard (`tests/readme-props-drift.test.ts`) catches added and removed
 props. It cannot catch a changed default, a changed behaviour, a new variant, or an example
@@ -54,8 +55,9 @@ leaving it is not an option. Examples are what consumers copy.
 4. If the module's purpose, public name or recommended import changed, update its catalog
    entry in `packages/gutenberg/README.md`. Every catalog entry must retain a short
    description, the narrowest supported import and a link to the colocated README.
-5. From `packages/gutenberg`: `npm test`, `npm run typecheck`, and `npm run verify:package`
-   if anything about exports, entry points or dependencies moved.
+5. From `packages/gutenberg`: `npm run catalog` (commit the regenerated `AGENTS.md` and
+   `catalog.json`), `npm test`, `npm run typecheck`, and `npm run verify:package` if
+   anything about exports, entry points or dependencies moved.
 6. Re-check it in the editor via `examples/test-blocks` if rendering or markup changed.
    Tests pin structure, not appearance.
 7. Architectural change? ADR in `../decisions/`, or a dated amendment to the existing one

@@ -185,10 +185,15 @@ interface inherits members, either flatten it or resolve inheritance in
 Run from `packages/gutenberg` (with the Node version from `.nvmrc`):
 
 ```bash
+npm run catalog
 npm test
 npm run typecheck
 npm run verify:package
 ```
+
+`npm run catalog` regenerates `AGENTS.md` and `catalog.json` from the READMEs — commit what
+it writes. It fails outright if the new README has no frontmatter `name` or no `## Summary`,
+and `tests/catalog.test.ts` fails if you skip it.
 
 `verify:package` must be clean: `publint --strict` reports nothing and `attw`'s
 `esm-only` profile is green for every subpath. Wildcard subpaths reporting as

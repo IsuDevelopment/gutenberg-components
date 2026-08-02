@@ -239,12 +239,36 @@ is not rediscovered from scratch.
     fixed 2026-07-30: the section now describes the shipped setup (discovered entries,
     `jsxImportSource: "react"`, hand-maintained exports, `verify:package` as the gate).
 
-## Documentation gap
+## Documentation delivery — shipped 2026-08-02
 
-`src/fields/SelectField` and `src/fields/RadioField` have **no `README.md`**, and neither do
-the `meta`/`taxonomy` wrappers. They predate the rule in `AGENTS.md` principle 7 and
-`instructions/adding-a-component.md`. Every one of them needs a README before the docs
-generation or the MCP tool descriptions can be built, and each should join `CASES` in
-`tests/readme-props-drift.test.ts` once written.
+~~`src/fields/SelectField` and `src/fields/RadioField` have no `README.md`, and neither do the
+`meta`/`taxonomy` wrappers~~ — all 28 public modules now carry one, and all of them are in
+`CASES` in `tests/readme-props-drift.test.ts`.
+
+The pipeline those READMEs were always meant to feed is in place (decision 0011):
+
+- `scripts/catalog.ts` generates `packages/gutenberg/AGENTS.md` and `catalog.json`, both
+  committed and shipped in the tarball. `npm run catalog:check` and `tests/catalog.test.ts`
+  guard them against drift.
+- `bin/isudev-gutenberg.mjs` — `npx @isudev/gutenberg init` vendors the guide into a consumer
+  project and points its `AGENTS.md`, Cursor rules and Copilot instructions at it.
+- `context7.json` makes the library indexable by Context7.
+- `docs/` is a Starlight site projected from the same READMEs, publishing `llms.txt`,
+  `llms-full.txt` and `llms-small.txt`.
+
+Repository baseline moved to **Node 22** for Astro 7.
+
+Open follow-ups:
+
+- No deploy target for the docs site yet. `DOCS_SITE` must be set in any published build or
+  `llms.txt` embeds `http://localhost:4321`.
+- No CI workflow runs `catalog:check` or `docs:build` — both gates exist but nothing calls
+  them automatically.
+- The hand-written catalog in `packages/gutenberg/README.md` now duplicates the generated
+  one. It stays for readers arriving from npm; it is the last place the same facts are
+  written twice.
+- No MCP server. The layered path — shipped catalog, `init`, Context7, `llms.txt` — covers
+  the discovery problem without one; revisit only if something concrete needs tool calls
+  rather than documents.
 
 See `architecture-plan.md` for the full staged checklist.

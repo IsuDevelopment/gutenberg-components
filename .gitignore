@@ -7,6 +7,12 @@ build/
 .superpowers/
 .tmp/
 .turbo/
+.astro/
+# Projected into the docs site from packages/gutenberg by `npm run docs:build`. The READMEs
+# it is generated from are the committed source; these copies are not.
+docs/src/content/docs/reference/
+docs/src/content/docs/agents.md
+docs/public/catalog.json
 *.log
 .DS_Store
 .env

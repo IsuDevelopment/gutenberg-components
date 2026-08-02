@@ -1,20 +1,26 @@
 {
 	"name": "isudev-gutenberg-monorepo",
 	"private": true,
-	"description": "Monorepo for @isudev/gutenberg and its example blocks.",
+	"description": "Monorepo for @isudev/gutenberg, its example blocks and its documentation site.",
 	"engines": {
-		"node": "20",
+		"node": "22",
 		"npm": ">=10"
 	},
 	"workspaces": [
 		"packages/*",
-		"examples/*"
+		"examples/*",
+		"docs"
 	],
 	"scripts": {
 		"dev": "npm run dev --workspace=packages/gutenberg",
 		"build": "npm run build --workspace=packages/gutenberg",
 		"build:example": "npm run build --workspace=examples/test-blocks",
 		"start:example": "npm run start --workspace=examples/test-blocks",
-		"test": "npm run test --workspace=packages/gutenberg"
+		"test": "npm run test --workspace=packages/gutenberg",
+		"catalog": "npm run catalog --workspace=packages/gutenberg",
+		"catalog:check": "npm run catalog:check --workspace=packages/gutenberg",
+		"docs:dev": "npm run dev --workspace=docs",
+		"docs:build": "npm run build --workspace=docs",
+		"docs:preview": "npm run preview --workspace=docs"
 	}
 }

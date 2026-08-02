@@ -1,0 +1,25 @@
+{
+	"$schema": "https://context7.com/schema/context7.json",
+	"projectTitle": "@isudev/gutenberg",
+	"description": "Standalone components, controls, fields and hooks for the WordPress Gutenberg editor, consumed per component via subpath exports.",
+	"folders": [ "packages/gutenberg" ],
+	"excludeFolders": [
+		"packages/gutenberg/dist",
+		"packages/gutenberg/node_modules",
+		"packages/gutenberg/scripts",
+		"packages/gutenberg/tests",
+		".agents",
+		"docs",
+		"examples"
+	],
+	"excludeFiles": [ "CHANGELOG.md" ],
+	"rules": [
+		"Import from the narrowest public subpath, e.g. `import { MediaControl } from '@isudev/gutenberg/controls/MediaControl'`. Category barrels such as `@isudev/gutenberg/controls` are supported; importing from `dist/` or `_internal/` is not.",
+		"Nothing is read from a global registry. Icons, option lists and configuration are passed in as props — there is no place to register icons globally.",
+		"Where a field reads its options (`optionsSource`) is independent of where it reads and writes its value (`valueBinding`). Do not assume one implies the other.",
+		"Prefer easy mode (`MetaSelectControl`, `TaxonomySelectControl`) over advanced mode (`SelectField`, `RadioField`); advanced mode is for cases easy mode cannot express.",
+		"`@wordpress/*` and React are peer dependencies and stay external — the consumer's build resolves them to the WordPress-provided globals. `@wordpress/scripts` handles this by default.",
+		"Blocks consuming this library should declare `\"apiVersion\": 3` in block.json; WordPress 7.1 iframes the post editor unconditionally and apiVersion 2 blocks stop working there.",
+		"`AGENTS.md` in the package root is the module catalog: it lists every public module, its narrowest import and the path to that module's full README."
+	]
+}

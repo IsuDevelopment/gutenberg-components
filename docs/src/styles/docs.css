@@ -1,0 +1,14 @@
+/*
+ * The prop tables in the generated reference pages are five columns wide and carry inline
+ * code in most cells, so they overflow on anything narrower than a laptop. Let them scroll
+ * inside their own container rather than pushing the page sideways.
+ */
+.sl-markdown-content table {
+	display: block;
+	overflow-x: auto;
+	max-width: 100%;
+}
+
+.sl-markdown-content table code {
+	white-space: nowrap;
+}
