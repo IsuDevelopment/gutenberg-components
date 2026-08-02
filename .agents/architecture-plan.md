@@ -180,6 +180,8 @@ isudev-gutenberg/
 │  │  ├─ Icon/
 │  │  ├─ IconPicker/
 │  │  ├─ IconSelect/
+│  │  ├─ MediaPreview/
+│  │  ├─ MediaFocalPointControl/
 │  │  ├─ SearchableSelect/
 │  │  ├─ Skeleton/
 │  │  ├─ EmptyState/
@@ -189,6 +191,11 @@ isudev-gutenberg/
 │  │  ├─ index.ts
 │  │  ├─ ResponsiveControl/
 │  │  ├─ MediaControl/
+│  │  ├─ MediaPickerControl/
+│  │  ├─ MediaSourceControl/
+│  │  ├─ MediaCanvasControl/
+│  │  ├─ MediaToolbarControl/
+│  │  ├─ MediaSidebarControl/
 │  │  ├─ LinkPickerControl/
 │  │  ├─ BlockLinkControl/
 │  │  ├─ LinkText/
@@ -1788,14 +1795,20 @@ ale nie jest to konieczne na start.
 > propsami. `getLocalizedIcons()` is an explicit adapter that turns a localized global into
 > props; components never read it directly (decision 0008). Link picker ships as
 > `LinkPickerControl` to avoid the WordPress name collision (decision 0007).
+> The single-media API is split into pure preview/focal components, a render-prop picker,
+> a configurable source selector, three location controls and the `MediaControl`
+> composition (decisions 0009 and 0010).
 
 - [ ] Napisać komponenty do `components/` (od zera, konfiguracja przez propsy):
   - [x] `ColorPopup`
   - [x] `Icon` + `IconPicker` + `IconSelect` (decision 0008)
+  - [x] `MediaPreview` + `MediaFocalPointControl` (decision 0009)
   - [ ] `SearchableSelect`
   - [ ] preloadery jako `Skeleton`, `LoadingOverlay` albo `EmptyState`
 - [ ] Napisać kontrolki do `controls/` (od zera, konfiguracja przez propsy):
-  - [ ] `MediaControl`
+  - [x] `MediaPickerControl` + `MediaSourceControl` + `MediaCanvasControl` +
+    `MediaToolbarControl` + `MediaSidebarControl` + `MediaControl`
+    (decisions 0009 and 0010)
   - [x] `LinkPickerControl` + `BlockLinkControl` + `LinkText` (decision 0007)
   - [ ] `PostTypeControl`
   - [ ] `InlineUrlPicker`

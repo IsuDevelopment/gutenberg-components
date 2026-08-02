@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-07-31
+Last updated: 2026-08-01
 
 ## Layout convention (2026-07-30)
 
@@ -28,16 +28,17 @@ Done:
 - Monorepo (npm workspaces): `packages/gutenberg` (library) + `examples/test-blocks` (WP plugin).
 - Toolchain targets **WP 7.0**: `@wordpress/*` deps pinned to the 7.0 line, `@wordpress/icons`
   declared as a peer, example plugin's `Requires at least` bumped to 7.0. All blocks
-  (`demo`, `responsive-demo`, `link-demo`) are `apiVersion: 3` so the post editor can iframe them.
+  (`demo`, `responsive-demo`, `link-demo`, `icon-demo`, `media-demo`) are `apiVersion: 3`
+  so the post editor can iframe them.
 - Build: `tsup` (ESM) + `tsc` for `.d.ts` (decision 0006). Build **entries** are discovered from the filesystem;
   subpath `exports` in `package.json` are **hand-maintained**. Wildcard exports exist for
-  `./components/*`, `./controls/*` and `./fields/*` only, so a new component folder in one of
-  those categories needs no change, while a new top-level source directory needs its
-  `exports` key added by hand. React + `@wordpress/*` external (decision 0002).
+  `./components/*`, `./controls/*`, `./fields/*`, `./meta/*`, `./taxonomy/*` and
+  `./hooks/*`, so a new module folder in one of those categories needs no change, while a
+  new top-level source directory needs its `exports` key added by hand. React +
+  `@wordpress/*` external (decision 0002).
 - Test harness: Jest + `@swc/jest` + `@testing-library/react` + `jest-environment-jsdom`.
-  71 tests pass across breakpoint validation/resolution, hooks, components, controls,
-  icon/link normalization,
-  and the README-vs-`types.ts` prop-table drift guard.
+  134 tests pass across breakpoint validation/resolution, hooks, components, controls,
+  icon/link/media normalization, and the README-vs-`types.ts` prop-table drift guard.
 - Binding engine: `useFieldBinding` → `useOptionsSource` + `useValueBinding`.
   - Options sources: `terms`, `posts`, `users`, `postTypes`, `manual`
     (loading/error via `hasFinishedResolution` / `getResolutionError`).
@@ -79,7 +80,23 @@ Done:
   `isudev/link-demo` example exercises an arbitrary card, its block-toolbar actions and the
   ready-made text link.
   Empty values use WordPress' native picker mode; `LinkText` separates toolbar autofocus from
-  existing-link click behavior so its RichText caret is never stolen.
+  existing-link click behavior so its RichText caret is never stolen. Toolbar actions use a
+  regular link icon before selection and a link-with-pencil icon afterward; their active
+  state reflects only an open picker.
+- **Media controls** (decision 0009): `MediaPickerControl` normalizes native single-media
+  selections, `MediaCanvasControl`, `MediaToolbarControl` and `MediaSidebarControl` own
+  independent editor locations, and `MediaControl` composes them. `MediaPreview` remains a
+  props-only image/video renderer while `MediaFocalPointControl` can be imported separately.
+  Every location exposes independent select/replace/remove visibility; sidebar preview is
+  static media, focal point, or disabled. The `isudev/media-demo` block exercises the full
+  composition and every submodule directly.
+- **Native-style media sources** (decision 0010): `MediaSourceControl` adds independently
+  switchable media library, upload, direct URL, current-post featured image and drag/drop
+  sources in button and dropdown variants. Canvas, toolbar, sidebar and the composite now
+  share that source contract without conflating it with select/replace/remove actions.
+  `MediaCanvasControl.placeholder` can remove only the empty canvas surface and defaults to
+  enabled. `MediaValue.source` preserves attachment/URL/featured identity so featured values
+  can follow later post featured-image changes.
 - Each component/control ships a `README.md` with a YAML front-matter + prop table, checked
   against its `types.ts` by `tests/readme-props-drift.test.ts` — a drift guard that reads the
   interface off the TypeScript AST and fails the suite if the docs and the types disagree.
@@ -92,7 +109,7 @@ Done:
   variants: an inline `RangeControl` with no editor sync, and a dropdown `SelectControl`
   with `syncToEditor`/`syncFromEditor` enabled, printing the resolved value per breakpoint
   as visible text.
-- `tsc` typecheck clean (library + `tests/`); library and all four example blocks build;
+- `tsc` typecheck clean (library + `tests/`); library and all five example blocks build;
   `@isudev/gutenberg` bundles into each block while `wp-*` + `react-jsx-runtime` stay
   external. `examples/test-blocks/test-blocks.php` registers every directory under
   `build/` via `glob()`, so another example block needs no PHP change.
@@ -110,7 +127,8 @@ Done:
   0.27.7). Treat the old note as stale, but if a build fails with a native-binary error,
   fall back to installing with `--ignore-scripts` and building in a normal terminal.
 - `TMPDIR` was pointed at `./.tmp` to avoid filling the sandbox tmp volume (gitignored).
-- Committed on `feat/breakpoint-switcher`, off `master`; not yet merged.
+- Current feature work is on `feat/media-picker`; the completed link/icon work is merged to
+  `master`.
 
 ## Next steps
 
@@ -139,10 +157,13 @@ Done:
    `MetaTextControl`, `MetaToggleControl`, `TaxonomyRadioControl`, `TaxonomyCheckboxControl`.
 3. Manually verify `isudev/link-demo` in the WP 7.0 iframe editor: card/text picker anchoring,
    entity-title fill, new-tab/nofollow settings, unlink, save/reload and frontend attributes.
-4. Implement the other stage 7 components/controls beyond `BreakpointSwitcher`,
-   `ResponsiveControl`, `LinkPickerControl`, `BlockLinkControl` and `LinkText`.
-5. Consider `searchable` mode for `posts`/`users` sources (avoid `per_page: -1`).
-6. Decide the CSS strategy once a component actually needs a stylesheet — `sideEffects`
+4. Manually verify `isudev/media-demo`: image/video selection, requested rendition,
+   canvas/toolbar/sidebar action switches, static/disabled/focal sidebar previews,
+   focal-point reset on replacement, save/reload and frontend object-position.
+5. Implement the other stage 7 components/controls beyond the responsive, link, icon and
+   media suites.
+6. Consider `searchable` mode for `posts`/`users` sources (avoid `per_page: -1`).
+7. Decide the CSS strategy once a component actually needs a stylesheet — `sideEffects`
    stays `false` until then; see the BreakpointSwitcher README and decision 0001 for what
    must change when one ships.
 

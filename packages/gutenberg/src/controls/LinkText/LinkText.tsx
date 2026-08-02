@@ -9,6 +9,7 @@ import { BlockControls, RichText } from '@wordpress/block-editor';
 import { Icon, ToolbarButton, ToolbarGroup, Tooltip } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { caution, link as linkIcon } from '@wordpress/icons';
+import { EditLinkIcon } from '../../_internal/EditLinkIcon.js';
 import {
 	getLinkAttributes,
 	LinkPickerControl,
@@ -35,6 +36,8 @@ export function LinkText( {
 	richTextProps,
 	showToolbarButton = true,
 	toolbarLabel = __( 'Link' ),
+	toolbarIcon = linkIcon,
+	toolbarEditIcon = EditLinkIcon,
 }: LinkTextProps ): ReactElement {
 	const [ focusPickerOnOpen, setFocusPickerOnOpen ] = useState<
 		'firstElement' | false
@@ -74,9 +77,9 @@ export function LinkText( {
 						<BlockControls group="inline">
 							<ToolbarGroup>
 								<ToolbarButton
-									icon={ linkIcon }
+									icon={ attributes.href ? toolbarEditIcon : toolbarIcon }
 									title={ toolbarLabel }
-									isActive={ Boolean( attributes.href ) || isOpen }
+									isActive={ isOpen }
 									aria-haspopup="dialog"
 									aria-expanded={ isOpen }
 									onClick={ () => {

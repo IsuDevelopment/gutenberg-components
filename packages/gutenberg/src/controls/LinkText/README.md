@@ -55,6 +55,8 @@ import { LinkText } from '@isudev/gutenberg/controls/LinkText';
 | `richTextProps` | `Record<string, unknown>` | `undefined` | No | Additional RichText props; LinkText's controlled props take precedence. |
 | `showToolbarButton` | `boolean` | `true` | No | Adds the native-style link action to `BlockControls`. |
 | `toolbarLabel` | `string` | `'Link'` | No | Accessible title for the toolbar action. |
+| `toolbarIcon` | `IconType` | WordPress `link` icon | No | Toolbar icon used while no link exists. |
+| `toolbarEditIcon` | `IconType` | Link-with-pencil icon | No | Toolbar icon used while a link exists. |
 
 ## Examples
 
@@ -116,6 +118,8 @@ Serialize a static block:
 - Opening from the toolbar autofocuses WordPress' search field, forces its new-link mode and
   shows initial suggestions. Gutenberg only displays the `BlockControls` fill for the active
   block.
+- The toolbar uses the regular link icon without a destination and the link-with-pencil icon
+  with a destination. Its active state reflects only an open picker, never the stored URL.
 - Clicking text that already has an `href` opens WordPress' link preview but passes
   `focusOnMount={ false }`, exactly like the native RichText link flow, so the popup does not
   steal the caret.

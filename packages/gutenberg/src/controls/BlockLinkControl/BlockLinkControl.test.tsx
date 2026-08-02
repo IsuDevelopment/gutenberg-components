@@ -48,12 +48,20 @@ jest.mock( '@wordpress/components', () => ( {
 	} ) => <div className={ className }>{ children }</div>,
 	ToolbarButton: forwardRef< HTMLButtonElement, Record< string, unknown > >(
 		function MockToolbarButton( props, ref ) {
+			const iconName =
+				typeof props.icon === 'string'
+					? props.icon
+					: typeof props.icon === 'function'
+						? props.icon.name
+						: 'element';
+
 			return (
 				<button
 					ref={ ref }
 					type="button"
 					aria-label={ props.title as string }
 					aria-pressed={ props.isActive as boolean }
+					data-icon={ iconName }
 					disabled={ props.disabled as boolean }
 					onClick={ props.onClick as React.MouseEventHandler< HTMLButtonElement > }
 				>
@@ -88,12 +96,11 @@ describe( 'BlockLinkControl', () => {
 		expect(
 			screen.queryByRole( 'button', { name: 'Unlink' } )
 		).not.toBeInTheDocument();
-		expect(
-			screen.getByRole( 'button', {
+		const addButton = screen.getByRole( 'button', {
 				name: 'Add link',
 				pressed: false,
-			} )
-		).toBeInTheDocument();
+			} );
+		expect( addButton ).toHaveAttribute( 'data-icon', 'link' );
 
 		await user.click( screen.getByRole( 'button', { name: 'Add link' } ) );
 		expect(
@@ -126,15 +133,40 @@ describe( 'BlockLinkControl', () => {
 			/>
 		);
 
+		const editButton = screen.getByRole( 'button', {
+				name: 'Edit link',
+				pressed: false,
+			} );
+		expect( editButton ).toHaveAttribute( 'data-icon', 'EditLinkIcon' );
+		expect(
+			screen.queryByRole( 'button', { name: 'Unlink' } )
+		).not.toBeInTheDocument();
+	} );
+
+	it( 'marks an existing-link action active only while its picker is open', async () => {
+		const user = userEvent.setup();
+
+		render(
+			<BlockLinkControl
+				value={ { url: 'https://example.com' } }
+				onChange={ jest.fn() }
+			/>
+		);
+
+		await user.click(
+			screen.getByRole( 'button', {
+				name: 'Edit link',
+				pressed: false,
+			} )
+		);
+
 		expect(
 			screen.getByRole( 'button', {
 				name: 'Edit link',
 				pressed: true,
 			} )
-		).toBeInTheDocument();
-		expect(
-			screen.queryByRole( 'button', { name: 'Unlink' } )
-		).not.toBeInTheDocument();
+		).toHaveAttribute( 'data-icon', 'EditLinkIcon' );
+		expect( screen.getByTestId( 'popover' ) ).toBeInTheDocument();
 	} );
 
 	it( 'shows the unlink action when explicitly enabled', async () => {

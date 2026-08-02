@@ -99,8 +99,8 @@ src/
   bindings/              # the one engine: useFieldBinding → useOptionsSource + useValueBinding
     options/             #   terms, posts, users, postTypes, manual
     values/              #   meta, taxonomy, custom
-  components/<Name>/     # pure UI, props-only. BreakpointSwitcher.
-  controls/<Name>/       # Editor UI: ResponsiveControl, LinkPickerControl, BlockLinkControl, LinkText.
+  components/<Name>/     # pure UI, props-only. Breakpoints, icons, media preview/focal point.
+  controls/<Name>/       # Editor UI: responsive, link and modular media editing surfaces.
   fields/<Name>/         # advanced mode: compose optionsSource + valueBinding. SelectField, RadioField.
   meta/<Name>/           # easy mode over a field, meta binding pre-filled
   taxonomy/<Name>/       # easy mode over a field, taxonomy binding pre-filled
