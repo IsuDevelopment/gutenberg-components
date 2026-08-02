@@ -76,7 +76,12 @@ Node 20 to Node 22 (`.nvmrc`, root `engines`). Nothing in the library itself nee
   hoists the CommonJS `cookie@0.7.2` from `@wordpress/scripts` to the repository root, where
   Astro's emitted prerender chunk resolves it and fails. Documented in `docs/README.md`.
 - `llms.txt` embeds absolute URLs, so the docs site needs `DOCS_SITE` set in any published
-  build. There is no deploy target yet; the default is `http://localhost:4321`.
+  build; the local default is `http://localhost:4321` and the deploy workflow refuses to run
+  without the real origin. The reference pages link to each other absolutely, which commits
+  the site to the root of its origin — deployed to Cloudflare Workers static assets, chosen
+  over Pages because Cloudflare has recommended Workers for new static projects since it
+  reached parity in March 2026, and over Vercel because Vercel's free Hobby plan is
+  non-commercial only.
 - The package README's hand-maintained catalog is now redundant with `AGENTS.md`. It stays
   for human readers and keeps its own drift test, but it is the one place where the same
   facts are still written twice.

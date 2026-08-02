@@ -258,12 +258,19 @@ The pipeline those READMEs were always meant to feed is in place (decision 0011)
 
 Repository baseline moved to **Node 22** for Astro 7.
 
+Deployment: Cloudflare Workers static assets via `.github/workflows/docs.yml`, with
+`.github/workflows/ci.yml` running `catalog:check`, tests, typecheck, `verify:package` and a
+docs build on every push and pull request.
+
 Open follow-ups:
 
-- No deploy target for the docs site yet. `DOCS_SITE` must be set in any published build or
-  `llms.txt` embeds `http://localhost:4321`.
-- No CI workflow runs `catalog:check` or `docs:build` — both gates exist but nothing calls
-  them automatically.
+- The deploy needs three things set on the GitHub repository before it can run:
+  `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as secrets, `DOCS_SITE` as a variable.
+  The workflow fails fast on a missing `DOCS_SITE` rather than publishing `llms.txt` full of
+  `http://localhost:4321` links. See `docs/README.md`.
+- The reference pages use absolute links, so the site has to live at the root of its origin.
+  Fine on Workers and on a custom domain; it rules out a GitHub Pages project site without
+  teaching `sync-content.mjs` about a base path.
 - The hand-written catalog in `packages/gutenberg/README.md` now duplicates the generated
   one. It stays for readers arriving from npm; it is the last place the same facts are
   written twice.

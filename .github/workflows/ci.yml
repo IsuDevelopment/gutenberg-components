@@ -1,0 +1,41 @@
+name: ci
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # Fails when a colocated README changed without `npm run catalog` being run, which
+      # would ship a module catalog and an agent guide that disagree with the source.
+      - name: Generated catalog is in sync
+        run: npm run catalog:check
+
+      - run: npm test
+
+      - name: Typecheck
+        run: npm run typecheck --workspace=packages/gutenberg
+
+      - name: Packaging gate
+        run: npm run verify:package --workspace=packages/gutenberg
+
+      # Catches a README that breaks the docs projection — a bad relative link or missing
+      # frontmatter — before it reaches a deploy.
+      - name: Documentation site builds
+        run: npm run docs:build

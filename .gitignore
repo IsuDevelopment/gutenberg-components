@@ -8,6 +8,7 @@ build/
 .tmp/
 .turbo/
 .astro/
+.wrangler/
 # Projected into the docs site from packages/gutenberg by `npm run docs:build`. The READMEs
 # it is generated from are the committed source; these copies are not.
 docs/src/content/docs/reference/

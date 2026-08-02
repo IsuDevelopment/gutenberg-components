@@ -30,15 +30,34 @@ generated pages.
 
 ## Deploying
 
-`llms.txt` embeds absolute URLs, so set `DOCS_SITE` to the real origin in the deploy
-environment:
+Cloudflare Workers static assets, from `.github/workflows/docs.yml` on every push to
+`master` that touches the docs or the READMEs they are built from. `wrangler.jsonc` holds
+the Worker name and points at `dist/`; nothing runs server-side.
+
+One-time setup outside the repository:
+
+1. **Cloudflare API token** — My Profile → API Tokens → Create Token, template *Edit
+   Cloudflare Workers*, scoped to this account. Store it as the GitHub Actions secret
+   `CLOUDFLARE_API_TOKEN`.
+2. **Account ID** — from any Cloudflare dashboard URL, or `npx wrangler whoami`. Store it as
+   the secret `CLOUDFLARE_ACCOUNT_ID`.
+3. **Public origin** — store it as the GitHub Actions *variable* `DOCS_SITE`. The workflow
+   fails fast when it is missing, because `llms.txt` and the sitemap embed absolute URLs and
+   a deploy without it would publish links to `http://localhost:4321`. The first deploy
+   creates the Worker and prints its `*.workers.dev` hostname; set `DOCS_SITE` to that, or to
+   a custom domain attached in the Worker's Settings → Domains & Routes.
+
+Locally:
 
 ```bash
 DOCS_SITE=https://example.com npm run docs:build
+npm run deploy:dry-run --workspace=docs   # validates wrangler.jsonc without deploying
 ```
 
-Without it the build falls back to `http://localhost:4321`, which is fine locally and wrong
-in anything published.
+**The site must be served from the root of its origin.** The reference pages link to each
+other with absolute paths (`/reference/controls/media-control/`), which a deploy under a
+subpath — a GitHub Pages project site, say — would break. Both Workers and a custom domain
+serve from the root, so this only becomes a constraint if the hosting changes.
 
 ## The `cookie` devDependency
 

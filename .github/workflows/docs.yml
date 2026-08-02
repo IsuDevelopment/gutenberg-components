@@ -1,0 +1,51 @@
+name: docs
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'docs/**'
+      - 'packages/gutenberg/src/**/README.md'
+      - 'packages/gutenberg/AGENTS.md'
+      - 'packages/gutenberg/catalog.json'
+      - 'packages/gutenberg/scripts/**'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: docs-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # llms.txt and the sitemap embed absolute URLs. Without the real origin the deploy
+      # would silently publish links to http://localhost:4321, so stop here instead.
+      - name: Require the public origin
+        run: |
+          if [ -z "${{ vars.DOCS_SITE }}" ]; then
+            echo "::error::Repository variable DOCS_SITE is not set. Set it to the public origin of the docs site (Settings → Secrets and variables → Actions → Variables)."
+            exit 1
+          fi
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run docs:build
+        env:
+          DOCS_SITE: ${{ vars.DOCS_SITE }}
+
+      - uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: docs
+          command: deploy

@@ -1,0 +1,14 @@
+{
+	// Deployed as a Workers static-assets project rather than Cloudflare Pages: since
+	// March 2026 Workers has feature parity for static sites and is what Cloudflare
+	// recommends for new projects, while every new platform feature ships there first.
+	// Nothing here runs server-side — `dist/` is served directly.
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "isudev-gutenberg-docs",
+	"compatibility_date": "2026-08-02",
+	"assets": {
+		"directory": "./dist",
+		// Starlight emits a styled 404.html; serve it instead of Cloudflare's default.
+		"not_found_handling": "404-page"
+	}
+}
