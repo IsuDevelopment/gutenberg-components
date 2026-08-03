@@ -38,6 +38,12 @@ jobs:
 
       - run: npm ci
 
+      # This workflow runs independently of `ci` — nothing makes a deploy wait for it — so
+      # it repeats the drift gate. A README edited without `npm run catalog` would otherwise
+      # publish a stale agent guide while ci sat red beside it.
+      - name: Generated catalog is in sync
+        run: npm run catalog:check
+
       - name: Build
         run: npm run docs:build
         env:
