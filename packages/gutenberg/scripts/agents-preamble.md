@@ -63,5 +63,11 @@ external — the consumer's build resolves them to the WordPress-provided global
 exactly one copy at runtime. `@wordpress/scripts` does this out of the box; a custom build
 needs `DependencyExtractionWebpackPlugin` or an equivalent externals configuration.
 
+The package is **ESM only** and its public surface is `exports` alone — no `main`, no
+CommonJS build. If you are writing or fixing a consumer's `tsconfig.json`, it needs
+`"moduleResolution": "bundler"` (or `"node16"`/`"nodenext"`); the legacy `"node"` strategy
+reads only `main` and will silently resolve no types at all. From CommonJS, use
+`await import( … )` rather than `require()`.
+
 Blocks using this library should be `"apiVersion": 3` in `block.json`. WordPress 7.1 iframes
 the post editor unconditionally, and `apiVersion 2` blocks stop working there.

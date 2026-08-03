@@ -77,6 +77,32 @@ one copy at runtime. Install whichever peers you actually use:
 react                    ^18 || ^19
 ```
 
+## ESM only, and what your build needs to know
+
+The package ships **ESM exclusively**, and its public surface is defined entirely by
+`exports` — there is no `main`, no CommonJS build, and no `dist/` path you are meant to reach
+into. Two practical consequences:
+
+**TypeScript consumers need a modern `moduleResolution`.** The legacy `"node"` strategy
+(TypeScript also calls it `"node10"`) predates `exports` and reads only `main`, so it finds
+nothing here and you get no types — regardless of which Node version you run. Use one of:
+
+```jsonc
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler"  // webpack, vite, esbuild — including @wordpress/scripts
+    // or "node16" / "nodenext" when the consumer really is Node resolving the package
+  }
+}
+```
+
+**CommonJS consumers need a dynamic import.** `require( '@isudev/gutenberg/…' )` will not
+work; use `await import( … )`. This rarely comes up in block code, which is ESM and bundled.
+
+Neither is an oversight — `npm run verify:package` asserts exactly this shape with
+`attw --profile esm-only`, so the legacy rows it reports are expected rather than broken.
+`@wordpress/scripts` needs no configuration for any of it.
+
 ## Entry points
 
 Import from the narrowest subpath that has what you need — the per-component subpaths skip

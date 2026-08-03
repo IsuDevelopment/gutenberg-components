@@ -30,6 +30,14 @@ import { BlockLinkControl, LinkText } from '@isudev/gutenberg/controls';
 
 Never import from `dist/` — only the documented subpaths are public API.
 
+## ESM only
+
+The package ships ESM exclusively and defines its public surface with `exports` alone, so a
+TypeScript consumer needs `"moduleResolution": "bundler"` (or `"node16"`/`"nodenext"`) to see
+its types — the legacy `"node"` strategy reads only `main` and finds nothing. From CommonJS,
+use `await import( … )` instead of `require()`. `@wordpress/scripts` needs no configuration
+for either.
+
 ## Where to start
 
 - **[Reference](/reference/controls/)** — every public component, control, field and hook,
