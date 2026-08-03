@@ -55,9 +55,9 @@ leaving it is not an option. Examples are what consumers copy.
 4. If the module's purpose, public name or recommended import changed, update its catalog
    entry in `packages/gutenberg/README.md`. Every catalog entry must retain a short
    description, the narrowest supported import and a link to the colocated README.
-5. From `packages/gutenberg`: `npm run catalog` (commit the regenerated `AGENTS.md` and
-   `catalog.json`), `npm test`, `npm run typecheck`, and `npm run verify:package` if
-   anything about exports, entry points or dependencies moved.
+5. From `packages/gutenberg`: `npm test`, `npm run typecheck`, and `npm run verify:package`
+   if anything about exports, entry points or dependencies moved. The catalog and the agent
+   guide regenerate themselves at pack and docs-build time — nothing to run or commit.
 6. Re-check it in the editor via `examples/test-blocks` if rendering or markup changed.
    Tests pin structure, not appearance.
 7. Architectural change? ADR in `../decisions/`, or a dated amendment to the existing one

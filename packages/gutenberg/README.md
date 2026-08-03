@@ -34,8 +34,9 @@ use them — so your agent finds the documentation on its own. Agents do not ind
 it after upgrading; `npx @isudev/gutenberg init --check` fails a CI build when the vendored
 copy has fallen behind.
 
-The same content is in [`AGENTS.md`](./AGENTS.md) beside this file, with the machine-readable
-version in [`catalog.json`](./catalog.json).
+The same content is in `AGENTS.md` beside this file, with the machine-readable version in
+`catalog.json`. Both are generated when the package is built or packed, so they are present
+in the installed package but not in the repository.
 
 ## Importing modules
 

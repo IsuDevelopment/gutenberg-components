@@ -18,7 +18,6 @@
 		"start:example": "npm run start --workspace=examples/test-blocks",
 		"test": "npm run test --workspace=packages/gutenberg",
 		"catalog": "npm run catalog --workspace=packages/gutenberg",
-		"catalog:check": "npm run catalog:check --workspace=packages/gutenberg",
 		"docs:dev": "npm run dev --workspace=docs",
 		"docs:build": "npm run build --workspace=docs",
 		"docs:preview": "npm run preview --workspace=docs"

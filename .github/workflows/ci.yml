@@ -22,11 +22,6 @@ jobs:
 
       - run: npm ci
 
-      # Fails when a colocated README changed without `npm run catalog` being run, which
-      # would ship a module catalog and an agent guide that disagree with the source.
-      - name: Generated catalog is in sync
-        run: npm run catalog:check
-
       - run: npm test
 
       - name: Typecheck

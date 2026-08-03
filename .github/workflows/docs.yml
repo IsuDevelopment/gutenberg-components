@@ -6,8 +6,6 @@ on:
     paths:
       - 'docs/**'
       - 'packages/gutenberg/src/**/README.md'
-      - 'packages/gutenberg/AGENTS.md'
-      - 'packages/gutenberg/catalog.json'
       - 'packages/gutenberg/scripts/**'
       - '.github/workflows/docs.yml'
   workflow_dispatch:
@@ -38,12 +36,9 @@ jobs:
 
       - run: npm ci
 
-      # This workflow runs independently of `ci` — nothing makes a deploy wait for it — so
-      # it repeats the drift gate. A README edited without `npm run catalog` would otherwise
-      # publish a stale agent guide while ci sat red beside it.
-      - name: Generated catalog is in sync
-        run: npm run catalog:check
-
+      # `docs:build` regenerates the catalog from the READMEs before projecting the site,
+      # so the deploy always reflects what is in the commit. There is nothing to keep in
+      # sync and nothing to check.
       - name: Build
         run: npm run docs:build
         env:

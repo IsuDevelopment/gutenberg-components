@@ -20,6 +20,6 @@
 		"Prefer easy mode (`MetaSelectControl`, `TaxonomySelectControl`) over advanced mode (`SelectField`, `RadioField`); advanced mode is for cases easy mode cannot express.",
 		"`@wordpress/*` and React are peer dependencies and stay external — the consumer's build resolves them to the WordPress-provided globals. `@wordpress/scripts` handles this by default.",
 		"Blocks consuming this library should declare `\"apiVersion\": 3` in block.json; WordPress 7.1 iframes the post editor unconditionally and apiVersion 2 blocks stop working there.",
-		"`AGENTS.md` in the package root is the module catalog: it lists every public module, its narrowest import and the path to that module's full README."
+		"Every public module has a README beside its source documenting all of its props, behaviour and examples; those files are the authoritative documentation and ship inside the package."
 	]
 }

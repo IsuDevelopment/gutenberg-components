@@ -38,7 +38,7 @@
 	},
 	"scripts": {
 		"catalog": "node scripts/catalog.ts",
-		"catalog:check": "node scripts/catalog.ts --check",
+		"prepack": "npm run catalog",
 		"build": "npm run catalog && tsup && tsc -p tsconfig.build.json",
 		"dev": "tsup --watch",
 		"clean": "rm -rf dist .turbo node_modules",

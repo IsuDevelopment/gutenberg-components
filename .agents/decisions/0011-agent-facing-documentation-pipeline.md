@@ -27,9 +27,8 @@ One generator, four consumers, no second source of truth.
 `packages/gutenberg/scripts/catalog.ts` reads the colocated READMEs — frontmatter, the
 `## Summary` paragraph and the `## Props` table — and is the only thing that parses them. It
 runs on plain `node`: Node 22 strips the type annotations, so the generator needs no build
-step and no dependency. It emits two artifacts, both committed so they are readable on GitHub
-and inside the tarball without a build, and both guarded against drift by
-`tests/catalog.test.ts` and `npm run catalog:check`:
+step and no dependency. It emits two artifacts (see the 2026-08-03
+amendment below for how they reach their consumers):
 
 - `catalog.json` — the machine-readable module surface, also exported as
   `@isudev/gutenberg/catalog.json` and served from the docs site.
@@ -63,9 +62,8 @@ Node 20 to Node 22 (`.nvmrc`, root `engines`). Nothing in the library itself nee
 
 ## Consequences
 
-- Publishing now depends on generated files being committed. `npm run build` regenerates them
-  first, and `catalog:check` fails a build where they drifted, but the artifacts do appear in
-  diffs for every documentation change.
+- Superseded by the 2026-08-03 amendment: the generated files are no longer committed, so
+  they no longer appear in diffs and cannot drift.
 - A README that omits `## Summary` or the frontmatter `name` now fails the generator rather
   than producing a silently incomplete catalog. `.agents/instructions/adding-a-component.md`
   carries that requirement.
@@ -85,3 +83,32 @@ Node 20 to Node 22 (`.nvmrc`, root `engines`). Nothing in the library itself nee
 - The package README's hand-maintained catalog is now redundant with `AGENTS.md`. It stays
   for human readers and keeps its own drift test, but it is the one place where the same
   facts are still written twice.
+
+## Amendment 2026-08-03 — generate on demand, do not commit
+
+`catalog.json` and `packages/gutenberg/AGENTS.md` were committed so they would be readable on
+GitHub and inside the tarball without a build. The cost was a required second command: edit a
+README, then remember `npm run catalog`, or `catalog:check` fails CI and blocks the deploy.
+That is the wrong trade for a working loop that should be "edit a README, push, done".
+
+Both files are now **gitignored and generated where they are consumed**:
+
+- `prepack` runs the generator, so `npm pack` and `npm publish` always carry current copies —
+  this is what makes the tarball correct, and it means a release must go through npm's own
+  packing rather than a hand-assembled directory.
+- `docs:build` runs it before projecting the site, so a deploy always reflects the commit.
+- `npm run build` still runs it, which is why `verify:package` exercises the whole path.
+
+`catalog:check` and the generator's `--check` mode are gone; there is no longer anything that
+could be stale. `tests/catalog.test.ts` keeps the part that still matters — that the generator
+sees every module and parses the prop tables — and drops the file comparisons.
+
+What was given up: the two files can no longer be read on GitHub, and Context7 indexes the 28
+colocated READMEs and the package README instead of the generated index. That is a modest loss;
+the READMEs were always the better content, and the generated index exists for agents holding
+an installed copy, which `init` and the tarball both provide.
+
+The alternative considered and rejected was having CI regenerate and commit back to `main`. It
+keeps the committed copies, but two workflows then race over the same generated files, the
+bot's push re-triggers the deploy, and the whole arrangement breaks the moment branch
+protection lands on `main`.

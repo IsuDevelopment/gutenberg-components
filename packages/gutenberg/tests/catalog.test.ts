@@ -1,8 +1,6 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import {
-	AGENTS_PATH,
-	CATALOG_PATH,
 	CATEGORIES,
 	SRC,
 	readCatalog,
@@ -12,24 +10,11 @@ import {
 const catalog = readCatalog();
 
 /**
- * `catalog.json` and `AGENTS.md` are generated but committed — they have to be readable on
- * GitHub and inside the tarball without running a build. That makes them driftable, and a
- * stale agent guide is worse than none: it ships confidently wrong imports.
+ * `catalog.json` and `AGENTS.md` are generated on demand rather than committed, so there is
+ * no drift to guard against. What is still worth pinning is that the generator sees every
+ * module: one silently missing from the catalog is invisible to every agent that reads it,
+ * and nothing else in the suite would notice.
  */
-describe( 'generated catalog artifacts', () => {
-	it( 'catalog.json matches the colocated READMEs', () => {
-		expect( readFileSync( CATALOG_PATH, 'utf8' ) ).toBe(
-			`${ JSON.stringify( catalog, null, '\t' ) }\n`
-		);
-	} );
-
-	it( 'AGENTS.md matches the colocated READMEs', () => {
-		expect( readFileSync( AGENTS_PATH, 'utf8' ) ).toBe(
-			renderAgentsMarkdown( catalog )
-		);
-	} );
-} );
-
 describe( 'catalog coverage', () => {
 	const publicModules = CATEGORIES.flatMap( ( category ) =>
 		readdirSync( path.join( SRC, category ), { withFileTypes: true } )
@@ -55,6 +40,15 @@ describe( 'catalog coverage', () => {
 			expect( entry?.summary ).not.toBe( '' );
 		}
 	);
+
+	it( 'projects every catalogued module into the agent guide', () => {
+		const guide = renderAgentsMarkdown( catalog );
+
+		for ( const module of catalog.modules ) {
+			expect( guide ).toContain( module.import );
+			expect( guide ).toContain( module.readme );
+		}
+	} );
 } );
 
 /**

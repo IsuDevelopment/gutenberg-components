@@ -247,9 +247,10 @@ is not rediscovered from scratch.
 
 The pipeline those READMEs were always meant to feed is in place (decision 0011):
 
-- `scripts/catalog.ts` generates `packages/gutenberg/AGENTS.md` and `catalog.json`, both
-  committed and shipped in the tarball. `npm run catalog:check` and `tests/catalog.test.ts`
-  guard them against drift.
+- `scripts/catalog.ts` generates `packages/gutenberg/AGENTS.md` and `catalog.json`. Neither
+  is committed (amendment 2026-08-03): `prepack` produces them for the tarball, `docs:build`
+  for the site. A README edit therefore needs no follow-up command and nothing can go stale.
+  `tests/catalog.test.ts` pins that the generator sees every module.
 - `bin/isudev-gutenberg.mjs` — `npx @isudev/gutenberg init` vendors the guide into a consumer
   project and points its `AGENTS.md`, Cursor rules and Copilot instructions at it.
 - `context7.json` makes the library indexable by Context7.
@@ -258,16 +259,20 @@ The pipeline those READMEs were always meant to feed is in place (decision 0011)
 
 Repository baseline moved to **Node 22** for Astro 7.
 
-Deployment: Cloudflare Workers static assets via `.github/workflows/docs.yml`, with
-`.github/workflows/ci.yml` running `catalog:check`, tests, typecheck, `verify:package` and a
-docs build on every push and pull request.
+Deployment: Cloudflare Workers static assets via `.github/workflows/docs.yml` on every push
+to `main` touching the docs or the READMEs, with `.github/workflows/ci.yml` running tests,
+typecheck, `verify:package` and a docs build on every push and pull request. The working loop
+is: edit a README, push to `main`, site redeploys — no local commands.
 
 Open follow-ups:
 
-- The deploy needs three things set on the GitHub repository before it can run:
-  `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as secrets, `DOCS_SITE` as a variable.
-  The workflow fails fast on a missing `DOCS_SITE` rather than publishing `llms.txt` full of
-  `http://localhost:4321` links. See `docs/README.md`.
+- Deployed and verified 2026-08-03 at `https://isudev-gutenberg-docs.isuke-priv.workers.dev`.
+  `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` (secrets) and `DOCS_SITE` (variable) are set.
+  The `DOCS_SITE` gate only checks the variable is non-empty, not that it resolves — the first
+  deploy shipped an `llms.txt` full of links to a guessed hostname before it was corrected.
+- The package is **not published to npm yet**; version is held at `0.0.1`. There is no release
+  workflow. `prepack` is what makes the generated artifacts land in the tarball, so publishing
+  must go through `npm publish`/`npm pack` rather than uploading a hand-assembled directory.
 - The reference pages use absolute links, so the site has to live at the root of its origin.
   Fine on Workers and on a custom domain; it rules out a GitHub Pages project site without
   teaching `sync-content.mjs` about a base path.

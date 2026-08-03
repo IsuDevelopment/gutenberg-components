@@ -342,51 +342,10 @@ function write(): void {
 	);
 }
 
-/**
- * CI gate. The generated artifacts are committed so they are readable on GitHub and inside
- * the tarball without a build, which means they can drift; this fails the build when they do.
- */
-function check(): void {
-	const catalog = readCatalog();
-	const stale: string[] = [];
-
-	const expectedCatalog = `${ JSON.stringify( catalog, null, '\t' ) }\n`;
-	const expectedAgents = renderAgentsMarkdown( catalog );
-
-	if (
-		! existsSync( CATALOG_PATH ) ||
-		readFileSync( CATALOG_PATH, 'utf8' ) !== expectedCatalog
-	) {
-		stale.push( 'catalog.json' );
-	}
-
-	if (
-		! existsSync( AGENTS_PATH ) ||
-		readFileSync( AGENTS_PATH, 'utf8' ) !== expectedAgents
-	) {
-		stale.push( 'AGENTS.md' );
-	}
-
-	if ( stale.length > 0 ) {
-		process.stderr.write(
-			`Stale generated documentation: ${ stale.join(
-				', '
-			) }. Run \`npm run catalog\` and commit the result.\n`
-		);
-		process.exit( 1 );
-	}
-
-	process.stdout.write( 'Catalog is up to date.\n' );
-}
-
 const invokedDirectly =
 	process.argv[ 1 ] !== undefined &&
 	path.resolve( process.argv[ 1 ] ) === fileURLToPath( import.meta.url );
 
 if ( invokedDirectly ) {
-	if ( process.argv.includes( '--check' ) ) {
-		check();
-	} else {
-		write();
-	}
+	write();
 }

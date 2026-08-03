@@ -4,7 +4,7 @@
 	"type": "module",
 	"description": "Documentation site for @isudev/gutenberg, generated from the colocated component READMEs.",
 	"scripts": {
-		"sync": "node scripts/sync-content.mjs",
+		"sync": "node ../packages/gutenberg/scripts/catalog.ts && node scripts/sync-content.mjs",
 		"dev": "npm run sync && astro dev",
 		"build": "npm run sync && astro build",
 		"preview": "astro preview",
