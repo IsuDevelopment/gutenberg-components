@@ -1,6 +1,6 @@
 {
 	"name": "@isudev/gutenberg",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Standalone components, controls, fields and hooks for the WordPress Gutenberg editor.",
 	"keywords": [
 		"wordpress",
@@ -41,22 +41,70 @@
 	},
 	"exports": {
 		"./catalog.json": "./catalog.json",
-		".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
-		"./appenders": { "types": "./dist/appenders/index.d.ts", "import": "./dist/appenders/index.js" },
-		"./breakpoints": { "types": "./dist/breakpoints/index.d.ts", "import": "./dist/breakpoints/index.js" },
-		"./components": { "types": "./dist/components/index.d.ts", "import": "./dist/components/index.js" },
-		"./components/*": { "types": "./dist/components/*/index.d.ts", "import": "./dist/components/*/index.js" },
-		"./controls": { "types": "./dist/controls/index.d.ts", "import": "./dist/controls/index.js" },
-		"./controls/*": { "types": "./dist/controls/*/index.d.ts", "import": "./dist/controls/*/index.js" },
-		"./fields": { "types": "./dist/fields/index.d.ts", "import": "./dist/fields/index.js" },
-		"./fields/*": { "types": "./dist/fields/*/index.d.ts", "import": "./dist/fields/*/index.js" },
-		"./meta": { "types": "./dist/meta/index.d.ts", "import": "./dist/meta/index.js" },
-		"./meta/*": { "types": "./dist/meta/*/index.d.ts", "import": "./dist/meta/*/index.js" },
-		"./taxonomy": { "types": "./dist/taxonomy/index.d.ts", "import": "./dist/taxonomy/index.js" },
-		"./taxonomy/*": { "types": "./dist/taxonomy/*/index.d.ts", "import": "./dist/taxonomy/*/index.js" },
-		"./hooks": { "types": "./dist/hooks/index.d.ts", "import": "./dist/hooks/index.js" },
-		"./hooks/*": { "types": "./dist/hooks/*/index.d.ts", "import": "./dist/hooks/*/index.js" },
-		"./bindings": { "types": "./dist/bindings/index.d.ts", "import": "./dist/bindings/index.js" }
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./appenders": {
+			"types": "./dist/appenders/index.d.ts",
+			"import": "./dist/appenders/index.js"
+		},
+		"./breakpoints": {
+			"types": "./dist/breakpoints/index.d.ts",
+			"import": "./dist/breakpoints/index.js"
+		},
+		"./components": {
+			"types": "./dist/components/index.d.ts",
+			"import": "./dist/components/index.js"
+		},
+		"./components/*": {
+			"types": "./dist/components/*/index.d.ts",
+			"import": "./dist/components/*/index.js"
+		},
+		"./controls": {
+			"types": "./dist/controls/index.d.ts",
+			"import": "./dist/controls/index.js"
+		},
+		"./controls/*": {
+			"types": "./dist/controls/*/index.d.ts",
+			"import": "./dist/controls/*/index.js"
+		},
+		"./fields": {
+			"types": "./dist/fields/index.d.ts",
+			"import": "./dist/fields/index.js"
+		},
+		"./fields/*": {
+			"types": "./dist/fields/*/index.d.ts",
+			"import": "./dist/fields/*/index.js"
+		},
+		"./meta": {
+			"types": "./dist/meta/index.d.ts",
+			"import": "./dist/meta/index.js"
+		},
+		"./meta/*": {
+			"types": "./dist/meta/*/index.d.ts",
+			"import": "./dist/meta/*/index.js"
+		},
+		"./taxonomy": {
+			"types": "./dist/taxonomy/index.d.ts",
+			"import": "./dist/taxonomy/index.js"
+		},
+		"./taxonomy/*": {
+			"types": "./dist/taxonomy/*/index.d.ts",
+			"import": "./dist/taxonomy/*/index.js"
+		},
+		"./hooks": {
+			"types": "./dist/hooks/index.d.ts",
+			"import": "./dist/hooks/index.js"
+		},
+		"./hooks/*": {
+			"types": "./dist/hooks/*/index.d.ts",
+			"import": "./dist/hooks/*/index.js"
+		},
+		"./bindings": {
+			"types": "./dist/bindings/index.d.ts",
+			"import": "./dist/bindings/index.js"
+		}
 	},
 	"scripts": {
 		"catalog": "node scripts/catalog.ts",

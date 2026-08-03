@@ -270,6 +270,10 @@ Open follow-ups:
   `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` (secrets) and `DOCS_SITE` (variable) are set.
   The `DOCS_SITE` gate only checks the variable is non-empty, not that it resolves — the first
   deploy shipped an `llms.txt` full of links to a guessed hostname before it was corrected.
+- **`0.1.1`** is a deliberately empty patch: its tarball is identical in content to `0.1.0`
+  (the commits between them are documentation and a test, neither of which `files` ships). It
+  exists to prove the tag-driven release path — OIDC, provenance, the packaging gate — works
+  before a release anyone is waiting on depends on it.
 - **`0.1.0` published to npm 2026-08-03**, tagged `v0.1.0` with a GitHub release. Verified
   against the registry: all 35 public subpaths resolve out of the published tarball, `dist/`
   carries 79 `.js` and 119 `.d.ts`, and `AGENTS.md`/`catalog.json`/`bin/` are present.
