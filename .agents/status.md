@@ -21,10 +21,10 @@ responsive-value stack described below; only the plan's manual in-editor checks 
 step 4) remain undone — see "Next steps".
 
 Done:
-- Pre-publication package version is frozen at `0.0.1`. The main package README now serves
-  as the complete public module catalog, with a short purpose, narrowest import and link to
-  each colocated README. Agent instructions and a drift test enforce the catalog until the
-  planned GitBook is introduced.
+- First npm release prepared as `0.1.0` (2026-08-03); every module README's `since:` moved
+  from the never-published `0.0.1` to `0.1.0`. The main package README serves as the complete
+  public module catalog, with a short purpose, narrowest import and link to each colocated
+  README, enforced by a drift test.
 - Monorepo (npm workspaces): `packages/gutenberg` (library) + `examples/test-blocks` (WP plugin).
 - Toolchain targets **WP 7.0**: `@wordpress/*` deps pinned to the 7.0 line, `@wordpress/icons`
   declared as a peer, example plugin's `Requires at least` bumped to 7.0. All blocks
@@ -270,9 +270,15 @@ Open follow-ups:
   `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` (secrets) and `DOCS_SITE` (variable) are set.
   The `DOCS_SITE` gate only checks the variable is non-empty, not that it resolves — the first
   deploy shipped an `llms.txt` full of links to a guessed hostname before it was corrected.
-- The package is **not published to npm yet**; version is held at `0.0.1`. There is no release
-  workflow. `prepack` is what makes the generated artifacts land in the tarball, so publishing
-  must go through `npm publish`/`npm pack` rather than uploading a hand-assembled directory.
+- Version is `0.1.0` and the package is prepared for release, but **not published yet** — the
+  first publish has to be manual (`npm login` + `npm publish` from `packages/gutenberg`)
+  because npm trusted publishing is configured per package and the package must exist first.
+  Once it does: configure the trusted publisher on npm, add a release workflow with
+  `id-token: write`, then add `"provenance": true` to `publishConfig`. There is no release
+  workflow yet.
+- `prepack` runs the full build, which is what puts `dist/`, `AGENTS.md` and `catalog.json`
+  in the tarball. Publishing must go through `npm publish`/`npm pack`, never a hand-assembled
+  directory.
 - The reference pages use absolute links, so the site has to live at the root of its origin.
   Fine on Workers and on a custom domain; it rules out a GitHub Pages project site without
   teaching `sync-content.mjs` about a base path.

@@ -3,7 +3,7 @@ name: useCurrentPostType
 entrypoint: "@isudev/gutenberg/hooks"
 kind: hook
 status: stable
-since: 0.0.1
+since: 0.1.0
 ---
 
 ## Summary

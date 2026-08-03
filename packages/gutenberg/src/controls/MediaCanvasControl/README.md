@@ -3,7 +3,7 @@ name: MediaCanvasControl
 entrypoint: "@isudev/gutenberg/controls"
 kind: control
 status: stable
-since: 0.0.1
+since: 0.1.0
 ---
 
 ## Summary

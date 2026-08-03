@@ -59,10 +59,11 @@ import { useBreakpoint } from '@isudev/gutenberg/hooks/useBreakpoint';
    colocated README. This is the one catalog written by hand — it is for human readers
    arriving from npm, and `tests/readme-props-drift.test.ts` fails when it falls behind.
    Everything else is generated from the colocated READMEs.
-10. **Pre-publication version stays at `0.0.1`.** Until the first npm release is explicitly
-    prepared, keep `packages/gutenberg/package.json` and every module README `since:` value
-    at `0.0.1`. Do not infer or apply version bumps during feature work. Once publishing
-    begins, release versions and `since:` metadata follow the actual published history.
+10. **Versions follow the published history; never bump one during feature work.** A release
+    is a deliberate, separate step (`npm version` + a tag), not something a feature commit
+    does on the way past. A module README's `since:` is the version the module *first
+    shipped in*: for anything added after `0.1.0` that is the next unreleased minor, and it
+    stays put once released. Do not retroactively renumber a `since:` that has shipped.
 
 ## Language & style
 

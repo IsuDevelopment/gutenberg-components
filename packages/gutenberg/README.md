@@ -9,8 +9,8 @@ and React at runtime, and both are peer dependencies.
 
 ## Release status
 
-The package is currently held at pre-publication version **`0.0.1`**. Version history and
-semantic version increments will start with the first npm release.
+First release is **`0.1.0`**. While the major is `0`, a minor version may change the public
+API; pin a minor range (`~0.1.0`) if you need that not to happen mid-project.
 
 ## Install
 

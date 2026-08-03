@@ -3,8 +3,8 @@
 Standalone component library for the WordPress Gutenberg editor, published to npm and
 consumed **per component** via subpath exports.
 
-The package is currently held at pre-publication version **`0.0.1`**. Version history will
-start when the first npm release is prepared.
+First npm release is **`0.1.0`**. Pre-1.0: the public API is settled enough to build on, but
+minor versions may still change it — see the pre-1.0 cleanups listed in `.agents/status.md`.
 
 - Library: [`packages/gutenberg`](./packages/gutenberg)
 - Example blocks (WP plugin): [`examples/test-blocks`](./examples/test-blocks)

@@ -1,6 +1,6 @@
 {
 	"name": "@isudev/gutenberg",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Standalone components, controls, fields and hooks for the WordPress Gutenberg editor.",
 	"keywords": [
 		"wordpress",

@@ -117,7 +117,7 @@ name: MyThing
 entrypoint: "@isudev/gutenberg/components"
 kind: component        # component | control | field | hook
 status: stable         # stable | experimental
-since: 0.0.1           # keep 0.0.1 before publication; afterwards use its first release
+since: 0.2.0           # the next unreleased minor — the version this will first ship in
 ---
 
 ## Summary
