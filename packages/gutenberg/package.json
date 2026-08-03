@@ -2,9 +2,31 @@
 	"name": "@isudev/gutenberg",
 	"version": "0.0.1",
 	"description": "Standalone components, controls, fields and hooks for the WordPress Gutenberg editor.",
+	"keywords": [
+		"wordpress",
+		"gutenberg",
+		"block-editor",
+		"blocks",
+		"block-development",
+		"editor",
+		"react",
+		"components"
+	],
+	"homepage": "https://isudev-gutenberg-docs.isuke-priv.workers.dev",
+	"bugs": {
+		"url": "https://github.com/IsuDevelopment/gutenberg-components/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/IsuDevelopment/gutenberg-components.git",
+		"directory": "packages/gutenberg"
+	},
 	"license": "MIT",
 	"type": "module",
 	"sideEffects": false,
+	"publishConfig": {
+		"access": "public"
+	},
 	"files": [
 		"dist",
 		"bin",
