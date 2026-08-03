@@ -187,8 +187,11 @@ Current prior art:
 - JSX runtime: automatic, `jsxImportSource: "react"`. `@wordpress/*`, `react`, `react-dom`
   and `react/jsx-runtime` are external (decision 0002).
 - Tests: Jest + `@swc/jest` + `@testing-library/react` + jsdom.
-- `npm run verify:package` (`build && publint --strict && attw --profile esm-only`) is the
-  packaging gate and must stay clean.
+- `npm run verify:package` (`build && publint --strict && attw --profile esm-only &&
+  smoke:package`) is the packaging gate and must stay clean. `scripts/smoke-package.ts`
+  covers what `attw` cannot: it packs, extracts the tarball into a temporary `node_modules`
+  and resolves all 35 public subpaths from it, because `attw` reports the six wildcard
+  `exports` keys as `(wildcard)` and skips the 22 per-module subpaths entirely.
 
 ## Working agreement for agents
 
