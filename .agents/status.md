@@ -270,12 +270,17 @@ Open follow-ups:
   `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` (secrets) and `DOCS_SITE` (variable) are set.
   The `DOCS_SITE` gate only checks the variable is non-empty, not that it resolves — the first
   deploy shipped an `llms.txt` full of links to a guessed hostname before it was corrected.
-- Version is `0.1.0` and the package is prepared for release, but **not published yet** — the
-  first publish has to be manual (`npm login` + `npm publish` from `packages/gutenberg`)
-  because npm trusted publishing is configured per package and the package must exist first.
-  Once it does: configure the trusted publisher on npm, add a release workflow with
-  `id-token: write`, then add `"provenance": true` to `publishConfig`. There is no release
-  workflow yet.
+- **`0.1.0` published to npm 2026-08-03**, tagged `v0.1.0` with a GitHub release. Verified
+  against the registry: all 35 public subpaths resolve out of the published tarball, `dist/`
+  carries 79 `.js` and 119 `.d.ts`, and `AGENTS.md`/`catalog.json`/`bin/` are present.
+  The tag points at `adba28f` while the published content matches `10bc3fa` — the two commits
+  between them are documentation and a test, so the tarball is unaffected, but the tag does
+  not precisely identify what shipped.
+- No release workflow yet, and this first publish was manual by necessity: npm trusted
+  publishing is configured per package and the package had to exist first. Now unblocked —
+  configure the trusted publisher on npm, add a workflow with `id-token: write`, then add
+  `"provenance": true` to `publishConfig` (it would break a manual publish, which is why it
+  is not there yet).
 - `prepack` runs the full build, which is what puts `dist/`, `AGENTS.md` and `catalog.json`
   in the tarball. Publishing must go through `npm publish`/`npm pack`, never a hand-assembled
   directory.
