@@ -1,0 +1,61 @@
+name: release
+
+# Publishes @isudev/gutenberg when a v* tag is pushed. Authentication is npm trusted
+# publishing over OIDC — no NPM_TOKEN exists anywhere, and npm attaches a provenance
+# attestation linking the tarball to this workflow run.
+#
+# npm's trusted publisher configuration names *this file*. Renaming it, or moving the publish
+# step into a reusable workflow, breaks authentication: npm authorises the workflow that
+# starts the run, not one it calls.
+on:
+  push:
+    tags: [ 'v*' ]
+
+permissions:
+  contents: read
+  # Lets the runner mint the OIDC token npm exchanges for publish rights. Without it the
+  # publish fails with an authentication error rather than anything more suggestive.
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # Trusted publishing needs npm 11.5.1 or newer; Node 22 still ships npm 10.
+      # Deliberately no `registry-url` on setup-node above: it writes an .npmrc expecting
+      # NODE_AUTH_TOKEN, which is exactly what OIDC replaces.
+      - name: Use an npm that speaks OIDC
+        run: |
+          npm install -g npm@latest
+          npm --version
+
+      - run: npm ci
+
+      # A tag that disagrees with package.json publishes a version nobody asked for, under a
+      # tag that then points at the wrong tree. Cheaper to stop here.
+      - name: Tag matches the package version
+        run: |
+          tagged="${GITHUB_REF_NAME#v}"
+          declared="$(node -p "require('./packages/gutenberg/package.json').version")"
+          if [ "$tagged" != "$declared" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match package version ${declared}. Bump the version, commit, then tag."
+            exit 1
+          fi
+          echo "Publishing ${declared}."
+
+      - run: npm test
+
+      # build + publint --strict + attw + the tarball smoke test. The last one is what proves
+      # the per-module subpaths resolve, which attw skips.
+      - name: Packaging gate
+        run: npm run verify:package --workspace=packages/gutenberg
+
+      - name: Publish
+        run: npm publish --provenance --workspace=packages/gutenberg

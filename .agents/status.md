@@ -276,11 +276,14 @@ Open follow-ups:
   The tag points at `adba28f` while the published content matches `10bc3fa` — the two commits
   between them are documentation and a test, so the tarball is unaffected, but the tag does
   not precisely identify what shipped.
-- No release workflow yet, and this first publish was manual by necessity: npm trusted
-  publishing is configured per package and the package had to exist first. Now unblocked —
-  configure the trusted publisher on npm, add a workflow with `id-token: write`, then add
-  `"provenance": true` to `publishConfig` (it would break a manual publish, which is why it
-  is not there yet).
+- `.github/workflows/release.yml` publishes on a `v*` tag using npm trusted publishing over
+  OIDC — no `NPM_TOKEN` anywhere, and npm attaches a provenance attestation. **It needs the
+  trusted publisher configured on npmjs.com first** (package → Settings → Trusted Publisher →
+  GitHub Actions, repository `IsuDevelopment/gutenberg-components`, workflow `release.yml`);
+  until then the publish step fails on authentication. The workflow filename is part of that
+  configuration, so renaming it or moving the publish into a reusable workflow breaks auth.
+- `provenance` is passed as a `--provenance` flag in the workflow rather than set in
+  `publishConfig`, so a manual `npm publish` from a laptop still works as an escape hatch.
 - `prepack` runs the full build, which is what puts `dist/`, `AGENTS.md` and `catalog.json`
   in the tarball. Publishing must go through `npm publish`/`npm pack`, never a hand-assembled
   directory.
