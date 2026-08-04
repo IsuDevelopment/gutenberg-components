@@ -17,24 +17,53 @@ permissions:
   # publish fails with an authentication error rather than anything more suggestive.
   id-token: write
 
+# A single tag push has been observed starting two runs a second apart. Two concurrent
+# publishes of one version means one succeeds and the other fails confusingly, so serialize
+# them — and never cancel a publish that is already in flight.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      # Node 24, not the .nvmrc 22 the rest of the repo uses — the only job that diverges.
+      # Trusted publishing needs npm 11.5.1 or newer; Node 22 bundles npm 10.9.8 and Node 24
+      # bundles 11.17.0, so picking the Node is the whole of the fix.
+      #
+      # The obvious alternative, `npm install -g npm@latest`, is what broke both runs of the
+      # v0.1.1 tag: npm overwrites its own dependency tree while still running and dies with
+      # `Cannot find module 'promise-retry'`. Installing it into a private prefix instead
+      # works but took minutes locally, which is too slow to put in front of every release.
+      #
+      # Safe because this job runs the full gate — tests and verify:package — under the same
+      # Node that builds the tarball it publishes. Nothing ships unverified by the toolchain
+      # that produced it.
+      #
+      # Deliberately no `registry-url`: it writes an .npmrc expecting NODE_AUTH_TOKEN, which
+      # is exactly what OIDC replaces.
       - uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version: 24
           cache: npm
 
-      # Trusted publishing needs npm 11.5.1 or newer; Node 22 still ships npm 10.
-      # Deliberately no `registry-url` on setup-node above: it writes an .npmrc expecting
-      # NODE_AUTH_TOKEN, which is exactly what OIDC replaces.
-      - name: Use an npm that speaks OIDC
+      # A future Node 24 patch could regress the bundled npm below what OIDC needs. Better a
+      # named failure here than an authentication error at the publish step.
+      - name: npm supports trusted publishing
         run: |
-          npm install -g npm@latest
-          npm --version
+          version="$(npm --version)"
+          echo "npm ${version}"
+          node -e '
+            const [ major, minor, patch ] = process.argv[ 1 ].split( "." ).map( Number );
+            const ok = major > 11 || ( major === 11 && ( minor > 5 || ( minor === 5 && patch >= 1 ) ) );
+            if ( ! ok ) {
+              console.error( `::error::npm ${ process.argv[ 1 ] } predates trusted publishing, which needs 11.5.1 or newer.` );
+              process.exit( 1 );
+            }
+          ' "${version}"
 
       - run: npm ci
 
