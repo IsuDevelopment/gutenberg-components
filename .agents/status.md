@@ -270,10 +270,17 @@ Open follow-ups:
   `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` (secrets) and `DOCS_SITE` (variable) are set.
   The `DOCS_SITE` gate only checks the variable is non-empty, not that it resolves — the first
   deploy shipped an `llms.txt` full of links to a guessed hostname before it was corrected.
-- **`0.1.1`** is a deliberately empty patch: its tarball is identical in content to `0.1.0`
-  (the commits between them are documentation and a test, neither of which `files` ships). It
-  exists to prove the tag-driven release path — OIDC, provenance, the packaging gate — works
-  before a release anyone is waiting on depends on it.
+- **`0.1.1` published 2026-08-04 by the release workflow — the tag-driven path is proven.**
+  A deliberately empty patch: its tarball is identical in content to `0.1.0`, and its only job
+  was to exercise the pipeline while nothing depended on the outcome. It earned its keep,
+  catching `npm install -g npm@latest` breaking npm mid-self-upgrade (fixed by running the
+  release job on Node 24, which bundles npm 11.17) and a missing *Allowed actions* tick in the
+  trusted publisher configuration.
+  Provenance verified against the registry: the SLSA v1 attestation links the tarball to
+  `.github/workflows/release.yml` at `refs/tags/v0.1.1` on a GitHub-hosted runner, which is
+  something neither a token publish nor a manual one can produce. The tarball shasum matched
+  the one built by the earlier failed run, so the build is deterministic.
+  `RELEASING.md` is the runbook for every release after this one.
 - **`0.1.0` published to npm 2026-08-03**, tagged `v0.1.0` with a GitHub release. Verified
   against the registry: all 35 public subpaths resolve out of the published tarball, `dist/`
   carries 79 `.js` and 119 `.d.ts`, and `AGENTS.md`/`catalog.json`/`bin/` are present.
