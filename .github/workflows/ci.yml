@@ -2,7 +2,10 @@ name: ci
 
 on:
   push:
-    branches: [ main ]
+    # `stage` is where work lands and `main` is only ever fast-forwarded from it, so gating
+    # `stage` is what actually catches things. `main` is listed too: a release is tagged from
+    # it, and a broken `main` would be a broken release. See RELEASING.md.
+    branches: [ stage, main ]
   pull_request:
 
 concurrency:

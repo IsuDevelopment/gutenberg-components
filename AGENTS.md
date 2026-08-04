@@ -187,10 +187,11 @@ Current prior art:
 - JSX runtime: automatic, `jsxImportSource: "react"`. `@wordpress/*`, `react`, `react-dom`
   and `react/jsx-runtime` are external (decision 0002).
 - Tests: Jest + `@swc/jest` + `@testing-library/react` + jsdom.
-- **Releases** are tag-driven: bump `packages/gutenberg/package.json`, commit, push, then
-  push a `v<version>` tag. `.github/workflows/release.yml` checks the tag against the
-  declared version, runs the full gate and publishes over OIDC. Never publish by hand unless
-  the workflow is broken.
+- **Releases** are tag-driven and the procedure is `RELEASING.md` — follow it rather than
+  improvising. In short: work lands on `stage`, `main` is fast-forwarded from it, and a
+  `v<version>` tag on `main` makes `.github/workflows/release.yml` verify the tag against the
+  declared version, run the full gate and publish over OIDC. Never publish by hand unless the
+  workflow is broken.
 - `npm run verify:package` (`build && publint --strict && attw --profile esm-only &&
   smoke:package`) is the packaging gate and must stay clean. `scripts/smoke-package.ts`
   covers what `attw` cannot: it packs, extracts the tarball into a temporary `node_modules`

@@ -52,6 +52,12 @@ README — lives in the [package README](./packages/gutenberg/README.md#public-m
 - Decision [`0011`](./.agents/decisions/0011-agent-facing-documentation-pipeline.md)
   explains why there are four delivery paths and what each one is for.
 
+## Releasing
+
+[`RELEASING.md`](./RELEASING.md) is the runbook: every command in order, what to do when a
+release fails, and what each step of the release workflow means. Releases are tag-driven —
+nobody runs `npm publish` by hand.
+
 ## Local development
 
 Node 22 (see [`.nvmrc`](./.nvmrc)).
