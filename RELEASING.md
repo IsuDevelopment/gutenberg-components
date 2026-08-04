@@ -22,18 +22,34 @@ So `main` always describes what is published, and `stage` is whatever is next.
 
 One-time setup, and **the release will fail with `ENEEDAUTH` until it is done**:
 
-npmjs.com → `@isudev/gutenberg` → Settings → Trusted Publisher → GitHub Actions
+npmjs.com → Packages → `@isudev/gutenberg` → **Settings** → **Trusted publishing** → GitHub
+Actions.
 
 | Field | Value |
 | --- | --- |
 | Organization or user | `IsuDevelopment` |
 | Repository | `gutenberg-components` |
 | Workflow filename | `release.yml` |
-| Environment | *leave empty* |
+| Allowed actions | tick **`npm publish`** |
+| Environment name | *leave empty* |
+
+**Every field is case-sensitive**, the workflow filename includes its `.yml`, and *Allowed
+actions* is easy to miss — a configuration that allows nothing authorises nothing. A package
+can have only one trusted publisher at a time.
 
 The workflow filename is part of the authorisation. Renaming `release.yml`, or moving the
 publish step into a reusable workflow, breaks it — npm authorises the workflow that *starts*
 the run, not one it calls.
+
+Three requirements on our side, all already satisfied — worth knowing if this ever breaks:
+the job runs on a GitHub-hosted runner (self-hosted is not supported), it declares
+`id-token: write`, and `repository.url` in `packages/gutenberg/package.json` resolves to the
+same GitHub repository.
+
+Optional hardening, once it works: in the same settings page, *Require two-factor
+authentication and disallow tokens*. It blocks token-based publishing without affecting
+trusted publishing, which closes the manual-publish escape hatch — so only turn it on if you
+are content to fix the workflow rather than publish by hand.
 
 ---
 
