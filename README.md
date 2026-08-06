@@ -49,9 +49,7 @@ README — lives in the [package README](./packages/gutenberg/README.md#public-m
   committed. In a project that consumes the library, `npx @isudev/gutenberg init`
   vendors that guide and points the project's own `AGENTS.md` at it. The site publishes
   `llms.txt`, and [`context7.json`](./context7.json) covers agents using Context7.
-- Decision [`0011`](./.agents/decisions/0011-agent-facing-documentation-pipeline.md)
-  explains why there are four delivery paths and what each one is for.
-
+- Website [docs site](https://isudev-gutenberg-docs.isuke-priv.workers.dev/)
 ## Releasing
 
 [`RELEASING.md`](./RELEASING.md) is the runbook: every command in order, what to do when a
