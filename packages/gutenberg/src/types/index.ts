@@ -11,3 +11,12 @@ export type {
 	MediaSourceVisibility,
 	MediaValue,
 } from './media.js';
+export type {
+	PostPickerLabels,
+	PostPickerOptions,
+	PostPickerOrder,
+	PostPickerQuery,
+	PostReference,
+	PostSelectionField,
+	PostSelectionValue,
+} from './posts.js';

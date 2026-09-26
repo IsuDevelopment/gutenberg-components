@@ -195,8 +195,8 @@ Current prior art:
 - `npm run verify:package` (`build && publint --strict && attw --profile esm-only &&
   smoke:package`) is the packaging gate and must stay clean. `scripts/smoke-package.ts`
   covers what `attw` cannot: it packs, extracts the tarball into a temporary `node_modules`
-  and resolves all 35 public subpaths from it, because `attw` reports the six wildcard
-  `exports` keys as `(wildcard)` and skips the 22 per-module subpaths entirely.
+  and resolves all 40 public subpaths from it, because `attw` reports the six wildcard
+  `exports` keys as `(wildcard)` and skips the 27 per-module subpaths entirely.
 
 ## Working agreement for agents
 

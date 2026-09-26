@@ -107,7 +107,7 @@ Sanity-check what you are about to release:
 npm run verify:package --workspace=packages/gutenberg
 ```
 
-That builds, runs `publint --strict`, runs `attw`, and resolves all 35 public subpaths out of
+That builds, runs `publint --strict`, runs `attw`, and resolves all 40 public subpaths out of
 a real packed tarball. If it is green locally it will be green in the release job.
 
 ```bash

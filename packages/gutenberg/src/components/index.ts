@@ -26,3 +26,8 @@ export { MediaPreview, getMediaObjectPosition } from './MediaPreview/index.js';
 export type { MediaPreviewProps } from './MediaPreview/index.js';
 export { MediaFocalPointControl } from './MediaFocalPointControl/index.js';
 export type { MediaFocalPointControlProps } from './MediaFocalPointControl/index.js';
+export { SortablePostList } from './SortablePostList/index.js';
+export type {
+	SortablePostListItem,
+	SortablePostListProps,
+} from './SortablePostList/index.js';

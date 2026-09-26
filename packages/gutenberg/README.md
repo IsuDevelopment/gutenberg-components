@@ -112,15 +112,15 @@ the category barrel entirely.
 | --- | --- |
 | `@isudev/gutenberg` | Everything, re-exported. |
 | `@isudev/gutenberg/breakpoints` | `DEFAULT_BREAKPOINTS`, `resolveCascade`, `isPresent`, `validateBreakpoints` and the `Breakpoint` type. |
-| `@isudev/gutenberg/components` | Pure components — responsive switching, colors, icons and media/focal previews. |
+| `@isudev/gutenberg/components` | Pure components — responsive switching, colors, icons, media/focal previews and the sortable post list. |
 | `@isudev/gutenberg/components/*` | One component, e.g. `.../components/BreakpointSwitcher`. |
-| `@isudev/gutenberg/controls` | Editor controls — responsive, link and modular media editing surfaces. |
+| `@isudev/gutenberg/controls` | Editor controls — responsive, link, modular media editing surfaces and the post picker suite. |
 | `@isudev/gutenberg/controls/*` | One control, e.g. `.../controls/LinkPickerControl`. |
 | `@isudev/gutenberg/fields` | All fields — `SelectField`, `RadioField`. |
 | `@isudev/gutenberg/fields/*` | One field. |
 | `@isudev/gutenberg/hooks` | `useBreakpoint`, `useResponsiveAttribute`, `useCurrentPostType`, `useCurrentPostId`, `useDebouncedValue`, `usePrevious`. |
 | `@isudev/gutenberg/hooks/*` | One hook, e.g. `.../hooks/useBreakpoint`. |
-| `@isudev/gutenberg/meta` | Post-meta wrappers — `MetaSelectControl`, `MetaRadioControl`. |
+| `@isudev/gutenberg/meta` | Post-meta wrappers — `MetaSelectControl`, `MetaRadioControl`, `MetaPostSelectorControl`. |
 | `@isudev/gutenberg/meta/*` | One wrapper, e.g. `.../meta/MetaSelectControl`. |
 | `@isudev/gutenberg/taxonomy` | Taxonomy wrappers — `TaxonomySelectControl`. |
 | `@isudev/gutenberg/taxonomy/*` | One wrapper, e.g. `.../taxonomy/TaxonomySelectControl`. |
@@ -146,6 +146,7 @@ shown below are the narrowest supported entry points.
 | [`IconSelect`](./src/components/IconSelect/README.md) | Opens `IconPicker` from a compact select-style button with the current icon preview. | `import { IconSelect } from '@isudev/gutenberg/components/IconSelect';` |
 | [`MediaPreview`](./src/components/MediaPreview/README.md) | Renders a serializable image/video value with optional focal positioning. | `import { MediaPreview } from '@isudev/gutenberg/components/MediaPreview';` |
 | [`MediaFocalPointControl`](./src/components/MediaFocalPointControl/README.md) | Provides standalone WordPress focal-point editing for an image or video. | `import { MediaFocalPointControl } from '@isudev/gutenberg/components/MediaFocalPointControl';` |
+| [`SortablePostList`](./src/components/SortablePostList/README.md) | Renders an ordered post list with drag-and-drop and keyboard reordering and optional removal. | `import { SortablePostList } from '@isudev/gutenberg/components/SortablePostList';` |
 
 ### Controls
 
@@ -161,6 +162,9 @@ shown below are the narrowest supported entry points.
 | [`MediaToolbarControl`](./src/controls/MediaToolbarControl/README.md) | Adds configurable select, replace and remove actions to `BlockControls`. | `import { MediaToolbarControl } from '@isudev/gutenberg/controls/MediaToolbarControl';` |
 | [`MediaSidebarControl`](./src/controls/MediaSidebarControl/README.md) | Adds inspector actions with a static, focal-point or disabled preview. | `import { MediaSidebarControl } from '@isudev/gutenberg/controls/MediaSidebarControl';` |
 | [`MediaControl`](./src/controls/MediaControl/README.md) | Composes canvas, toolbar and sidebar media editing with per-location feature switches. | `import { MediaControl } from '@isudev/gutenberg/controls/MediaControl';` |
+| [`PostPickerModal`](./src/controls/PostPickerModal/README.md) | Searches, filters and selects posts across post types in a modal with a draft selection. | `import { PostPickerModal } from '@isudev/gutenberg/controls/PostPickerModal';` |
+| [`PostPickerControl`](./src/controls/PostPickerControl/README.md) | Opens the post picker modal from any consumer-rendered trigger through a render prop. | `import { PostPickerControl } from '@isudev/gutenberg/controls/PostPickerControl';` |
+| [`PostSelectorControl`](./src/controls/PostSelectorControl/README.md) | Combines a sortable selected-posts list, counter and picker button, controlled or bound. | `import { PostSelectorControl } from '@isudev/gutenberg/controls/PostSelectorControl';` |
 
 ### Fields
 
@@ -175,6 +179,7 @@ shown below are the narrowest supported entry points.
 | --- | --- | --- |
 | [`MetaSelectControl`](./src/meta/MetaSelectControl/README.md) | Binds `SelectField` to one post-meta key. | `import { MetaSelectControl } from '@isudev/gutenberg/meta/MetaSelectControl';` |
 | [`MetaRadioControl`](./src/meta/MetaRadioControl/README.md) | Binds `RadioField` to one post-meta key. | `import { MetaRadioControl } from '@isudev/gutenberg/meta/MetaRadioControl';` |
+| [`MetaPostSelectorControl`](./src/meta/MetaPostSelectorControl/README.md) | Binds `PostSelectorControl` to one post-meta key. | `import { MetaPostSelectorControl } from '@isudev/gutenberg/meta/MetaPostSelectorControl';` |
 | [`TaxonomySelectControl`](./src/taxonomy/TaxonomySelectControl/README.md) | Provides a single-term taxonomy picker bound to the current post. | `import { TaxonomySelectControl } from '@isudev/gutenberg/taxonomy/TaxonomySelectControl';` |
 
 ### Hooks

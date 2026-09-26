@@ -70,3 +70,12 @@ export type {
 	MediaControlSidebarOptions,
 	MediaControlToolbarOptions,
 } from './MediaControl/index.js';
+export { PostPickerModal } from './PostPickerModal/index.js';
+export type { PostPickerModalProps } from './PostPickerModal/index.js';
+export { PostPickerControl } from './PostPickerControl/index.js';
+export type {
+	PostPickerControlProps,
+	PostPickerRenderArgs,
+} from './PostPickerControl/index.js';
+export { PostSelectorControl } from './PostSelectorControl/index.js';
+export type { PostSelectorControlProps } from './PostSelectorControl/index.js';

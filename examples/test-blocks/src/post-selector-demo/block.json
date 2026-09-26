@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "isudev/post-selector-demo",
+	"title": "ISUdev Post Selector Demo",
+	"category": "widgets",
+	"icon": "list-view",
+	"description": "Exercises the post picker suite with block attributes: a custom trigger, single selection and the sidebar selector.",
+	"attributes": {
+		"pickedPosts": { "type": "array", "default": [] },
+		"featuredPost": { "type": "object" },
+		"relatedPosts": { "type": "array", "default": [] }
+	},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "isudev-test-blocks",
+	"editorScript": "file:./index.js"
+}

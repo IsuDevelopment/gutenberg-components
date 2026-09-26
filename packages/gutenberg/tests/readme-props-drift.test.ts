@@ -25,6 +25,36 @@ const PUBLIC_MODULE_CATEGORIES = [
  */
 const CASES = [
 	{
+		name: 'SortablePostList',
+		readme: path.join( SRC, 'components/SortablePostList/README.md' ),
+		types: path.join( SRC, 'components/SortablePostList/types.ts' ),
+		interfaceName: 'SortablePostListProps',
+	},
+	{
+		name: 'PostPickerModal',
+		readme: path.join( SRC, 'controls/PostPickerModal/README.md' ),
+		types: path.join( SRC, 'controls/PostPickerModal/types.ts' ),
+		interfaceName: 'PostPickerModalProps',
+	},
+	{
+		name: 'PostPickerControl',
+		readme: path.join( SRC, 'controls/PostPickerControl/README.md' ),
+		types: path.join( SRC, 'controls/PostPickerControl/types.ts' ),
+		interfaceName: 'PostPickerControlProps',
+	},
+	{
+		name: 'PostSelectorControl',
+		readme: path.join( SRC, 'controls/PostSelectorControl/README.md' ),
+		types: path.join( SRC, 'controls/PostSelectorControl/types.ts' ),
+		interfaceName: 'PostSelectorControlProps',
+	},
+	{
+		name: 'MetaPostSelectorControl',
+		readme: path.join( SRC, 'meta/MetaPostSelectorControl/README.md' ),
+		types: path.join( SRC, 'meta/MetaPostSelectorControl/types.ts' ),
+		interfaceName: 'MetaPostSelectorControlProps',
+	},
+	{
 		name: 'BreakpointSwitcher',
 		readme: path.join( SRC, 'components/BreakpointSwitcher/README.md' ),
 		types: path.join( SRC, 'components/BreakpointSwitcher/types.ts' ),

@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-08-01
+Last updated: 2026-09-25
 
 ## Layout convention (2026-07-30)
 
@@ -97,6 +97,18 @@ Done:
   `MediaCanvasControl.placeholder` can remove only the empty canvas surface and defaults to
   enabled. `MediaValue.source` preserves attachment/URL/featured identity so featured values
   can follow later post featured-image changes.
+- **Post picker suite** (spec `specs/2026-09-25-post-selector-design.md`, since 0.2.0,
+  `experimental`): `SortablePostList` (pure, drag-and-drop + arrow-key reorder),
+  `PostPickerModal` (search, type, per-type taxonomy filters, sort, All/Selected tabs, max,
+  draft + Save), `PostPickerControl` (render-prop trigger, controlled — the block-attribute
+  path), `PostSelectorControl` (sidebar all-in-one, controlled or `valueBinding`) and
+  `MetaPostSelectorControl`. Values: `ids` or `objects` snapshots, single or multiple.
+  "All types" fans out one `wp/v2` request per type and merges client-side. Example block
+  `isudev/post-selector-demo` and a page `PluginDocumentSettingPanel` demo
+  (`examples/test-blocks/src/plugins/page-sidebar.js`, meta registered in `test-blocks.php`).
+  The modal was exercised in the local editor on 2026-09-26: an inner list scroll and a
+  sticky footer that stopped at the modal's padding edge were fixed. The modules stay
+  `experimental` until the remaining checks in "Next steps" are done.
 - Each component/control ships a `README.md` with a YAML front-matter + prop table, checked
   against its `types.ts` by `tests/readme-props-drift.test.ts` — a drift guard that reads the
   interface off the TypeScript AST and fails the suite if the docs and the types disagree.
@@ -111,8 +123,9 @@ Done:
   as visible text.
 - `tsc` typecheck clean (library + `tests/`); library and all five example blocks build;
   `@isudev/gutenberg` bundles into each block while `wp-*` + `react-jsx-runtime` stay
-  external. `examples/test-blocks/test-blocks.php` registers every directory under
-  `build/` via `glob()`, so another example block needs no PHP change.
+  external. `examples/test-blocks/test-blocks.php` registers every `build/*/block.json` via `glob()`,
+  so another example block needs no PHP change. Non-block editor scripts are extra entries
+  in `examples/test-blocks/webpack.config.js` and land in `build/plugins/`.
 
 ## Environment notes
 
@@ -132,6 +145,11 @@ Done:
 
 ## Next steps
 
+0. **Manual verification of the post picker suite** on the local site: `isudev/post-selector-demo`
+   (custom trigger, single object, inspector list) and the two page sidebar panels
+   (`isudev_related_posts` IDs, `isudev_related_content` objects). Check save/reload of meta,
+   drag-and-drop and ↑/↓ reorder, "All types" merge order, taxonomy filter appearing only
+   with one type, `max` gating, and no `useSelect` warnings with `SCRIPT_DEBUG`.
 1. **Manual in-editor verification of `isudev/responsive-demo`** (the `feat/breakpoint-switcher`
    plan's task 10, step 4 — not yet done by anyone; no browser was available while landing
    this commit). Add the block to a post in a local WP 7.0 site and check:
