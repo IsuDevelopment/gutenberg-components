@@ -223,7 +223,12 @@ export function PostPickerModal( {
 	const exclude = useMemo(
 		() => [
 			...( query?.exclude ?? [] ),
-			...( excludeCurrentPost && currentPostId ? [ currentPostId ] : [] ),
+			...( excludeCurrentPost &&
+				typeof currentPostId === 'number' &&
+				Number.isSafeInteger( currentPostId ) &&
+				currentPostId > 0
+				? [ currentPostId ]
+				: [] ),
 		],
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[ queryKey, excludeCurrentPost, currentPostId ]

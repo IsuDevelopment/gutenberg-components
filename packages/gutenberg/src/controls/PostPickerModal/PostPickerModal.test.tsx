@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { usePostResults } from '../../_internal/post-picker/usePostResults.js';
+import { useCurrentPostId } from '../../hooks/useCurrentPostId/index.js';
 import { PostPickerModal } from './PostPickerModal.js';
 
 const DISPLAYS = [ 1, 2, 3 ].map( ( id ) => ( {
@@ -11,7 +13,7 @@ const DISPLAYS = [ 1, 2, 3 ].map( ( id ) => ( {
 } ) );
 
 jest.mock( '../../hooks/useCurrentPostId/index.js', () => ( {
-	useCurrentPostId: () => undefined,
+	useCurrentPostId: jest.fn(),
 } ) );
 jest.mock( '../../bindings/options/useTermsOptions.js', () => ( {
 	useTermsOptions: () => ( { options: [], isLoading: false, error: null } ),
@@ -24,13 +26,13 @@ jest.mock( '../../_internal/post-picker/usePickerTypes.js', () => {
 	};
 } );
 jest.mock( '../../_internal/post-picker/usePostResults.js', () => ( {
-	usePostResults: () => ( {
+	usePostResults: jest.fn( () => ( {
 		items: DISPLAYS,
 		total: 3,
 		hasMore: false,
 		isLoading: false,
 		error: null,
-	} ),
+	} ) ),
 } ) );
 jest.mock( '../../_internal/post-picker/usePostHydration.js', () => {
 	const displays = new Map();
@@ -41,6 +43,24 @@ jest.mock( '../../_internal/post-picker/usePostHydration.js', () => {
 } );
 
 describe( 'PostPickerModal', () => {
+	it.each( [
+		[ 'a template part', 'block-theme//header', '3' ],
+		[ 'a regular page', 12, '3,12' ],
+	] )( 'builds numeric REST exclusions for %s', ( _context, editorId, expectedExclude ) => {
+		jest.mocked( useCurrentPostId ).mockReturnValueOnce( editorId as number );
+
+		render(
+			<PostPickerModal
+				query={ { exclude: [ 3 ] } }
+				onChange={ jest.fn() }
+				onClose={ jest.fn() }
+			/>
+		);
+
+		expect( jest.mocked( usePostResults ).mock.calls.at( -1 )?.[ 0 ][ 0 ].query.exclude )
+			.toBe( expectedExclude );
+	} );
+
 	it( 'emits the draft once on save, in selection order', async () => {
 		const user = userEvent.setup();
 		const onChange = jest.fn();

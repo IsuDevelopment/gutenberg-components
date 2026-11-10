@@ -36,7 +36,7 @@ import { PostPickerModal } from '@isudev/gutenberg/controls/PostPickerModal';
 | `postTypes` | `string[]` | all viewable REST types | No | Allowed post type slugs. Unknown or non-REST types are dropped with a dev warning. |
 | `taxonomies` | `string[]` | all of the type's visible taxonomies | No | Taxonomy slugs offered as filters once a single post type is chosen. |
 | `query` | `PostPickerQuery` | `{ status: ['publish'] }` | No | Hard constraints on every request: `status`, `taxonomies` (term IDs per taxonomy slug) and `exclude`. |
-| `excludeCurrentPost` | `boolean` | `true` | No | Leave the post being edited out of the results. |
+| `excludeCurrentPost` | `boolean` | `true` | No | Leave the post being edited out of the results when it has a positive numeric ID. Site Editor template and template-part identifiers are ignored. |
 | `max` | `number` | unlimited | No | Maximum number of selected posts. Ignored when `multiple` is false. |
 | `multiple` | `boolean` | `true` | No | `false` stores one post (`number \| PostReference \| null`) and renders radio buttons. |
 | `valueShape` | `'ids' \| 'objects'` | `'ids'` | No | Store `number[]` or `PostReference[]` snapshots. |
